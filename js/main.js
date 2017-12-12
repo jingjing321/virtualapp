@@ -364,3 +364,10 @@ var tab3=new auiTab({
       $("#task .tabs").find(".tab").css("display","none");
       $("#task .tabs").find("#taskTab"+ret.index).css("display","");
 })
+
+var tab_task2=new auiTab({
+  element:document.getElementById("task2_tab")
+    },function(ret){
+      $("#task2 .tabs").find(".tab").css("display","none");
+      $("#task2 .tabs").find(".tab").eq(ret.index/1-1).css("display","");
+})

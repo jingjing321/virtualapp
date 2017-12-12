@@ -502,7 +502,10 @@ group_name
 */
 function getdeviceByGroup(group_id,group_name){
     turnPage("#devList","task2");
-    $("#devList header .aui-title").html(group_name);
+    if(group_name){
+        $("#devList header .aui-title").html(group_name);
+    }
+    $("#devList header .aui-title").attr("data-groupId",group_id);
     $.ajax({
         url:baseurl+"device/getlistbygroupid?group_id="+group_id,
         type: "get",
@@ -564,7 +567,7 @@ function openDeviceAction(id,name){
                     turnsitDeviceGroup(id);
                 }
                 else if(ret.buttonIndex==3){
-                    editDevice(id);
+                    turnEditDevice(id);
                 }
                 else if(ret.buttonIndex==4){
                     deleteDevice(id);
@@ -572,13 +575,44 @@ function openDeviceAction(id,name){
             }
         })
 }
+/*
+deleteDevice删除设备
+id 设备id 
+*/
+function deleteDevice(id){
+    dialog.alert({
+        title:"删除设备",
+        msg:'确认删除该设备?',
+        buttons:['取消','确定']
+    },function(ret){
+        if(ret.buttonIndex==2){
+            $.ajax({
+                url:baseurl+"device/del?device_id="+id,
+                type:"DELETE",
+                dataType:"json",
+                success:function(data){
+                    if(data.code==0){
+                        showToast("设备删除成功");
+                        getdeviceByGroup($("#devList header .aui-title").attr("data-groupId"));
+                    }
+                    else{
+                        showToast(data.msg);
+                    }
+                },
+                error:function(error){
+                    showToast("删除设备失败！请重试")
+                }
+            })
+        }
+    })
+}
 
 /*
 设置设备 负责人 跳转
 id设备ID
 */
 function turndeviceSitPrincipal(id){
-    turnPage("#sit-principal"."task2");
+    turnPage("#sit-principal","devList");
     $("#sit-principal header .aui-title").html("选择负责人");
     $("#sit-principal header .aui-pull-right").attr("onclick","deviceSitPrincipal("+id+")");
     $.ajax({
@@ -661,6 +695,57 @@ function turndeviceSitPrincipal(id){
 }
 
 /*
+turn 编辑设备详情 
+id 设备id
+*/
+function turnEditDevice(id){
+    $("#add-dev header .aui-title").html("编辑设备");
+    $("#add-dev header .aui-pull-right").attr("onclick","editDevice("+id+")");
+    turnPage("#add-dev","devList");
+    $.ajax({
+        url:baseurl+"device/getdevicedetail?device_id="+id,
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                console.log(data.data);
+            }
+            else{
+                showToast(data.msg);
+            }
+        },
+        error:function(error){
+            showToast("获取设备详情失败！")
+        }
+    })
+}
+
+/*
+editDevice 编辑设备详情
+id 设备id
+*/
+function editDevice(id){
+    $.ajax({
+        url:baseurl+"device/edit",
+        type:"PATCH",
+        data:$("#add-dev form").serialize(),
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                showToast("设备详情修改成功");
+                pageBack();
+            }
+            else{
+                showToast(data.msg);
+            }
+        },
+        error:function(error){
+            showToast("设备详情修改失败")
+        }
+    })
+}
+
+/*
 设置设备 负责人 设置
 id设备ID
 */
@@ -688,10 +773,11 @@ function deviceSitPrincipal(id){
 
 /*
 turn 设备设置分组
+id 设备id
 */
 function turnsitDeviceGroup(id){
     turnPage("#sit-group","devList");
-    $("#sit-group header .aui-pull-right").attr("onclick","turnsitDeviceGroup("+id+")");
+    $("#sit-group header .aui-pull-right").attr("onclick","sitDeviceGroup("+id+")");
     $.ajax({
         url:baseurl+"devicegroup/get_list_comp?comp_id="+sessionStorage.getItem("CompanyId"),
         type:"get",
@@ -701,13 +787,13 @@ function turnsitDeviceGroup(id){
             ele.html("");
             if(data.code==0){
                 for(var i=0;i<data.data.length;i++){
-                    ele.append('<li class="aui-list-item">'
+                    ele.append('<li class="aui-list-item">'+
                                     '<div class="aui-list-item-inner">'+
-                                        '<div class="aui-list-item-title">'data.data[i].DeviceGroupName'</div>'+
+                                        '<div class="aui-list-item-title">'+data.data[i].DeviceGroupName+'</div>'+
                                     '</div>'+
                                     '<div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white" type="radio" name="radio" value="'+data.data[i].DeviceGroupId+'" checked></div>'+
                                 '</li>');
-                    
+
                 }
             }
             else{
@@ -720,6 +806,250 @@ function turnsitDeviceGroup(id){
     })
 
 }
+
+/*
+设置设备分组
+id 设备id
+*/
+function sitDeviceGroup(id){
+    $("#sit-group .aui-content input:checked").val();
+    $.ajax({
+        url:baseurl+"device/setgroup",
+        type:"post",
+        data:{"device_ids":[id],"group_id":$("#sit-group .aui-content input:checked").val()},
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                showToast("设置分组成功！");
+                pageBack();
+            }
+            else{
+                showToast(data.msg);
+            }
+        },
+        error:function(error){
+            showToast("设置分组失败！请重试");
+        }
+    })
+}
+
+/*
+turn 添加设备
+*/
+function turnAddDev(){
+    $("#add-dev form")[0].reset()
+    turnPage("#add-dev","task2");
+}
+
+/*
+turn 添加设备
+*/
+function turnAddDev(){
+    $("#add-dev form")[0].reset();
+    turnPage("#add-dev","task2");
+}
+
+/*
+添加设备
+*/
+function addDev(){
+    var formData=$("#add-dev form").series()
+    $.ajax({
+        url:baseurl+"device/add",
+        type:"POST",
+        data:formData,
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                showToast("设备添加成功！");
+                pageBack();
+            }
+            else{
+                showToast(data.msg)
+            }
+        },
+        error:function(error){
+            showToast("设备添加失败！请重试");
+        }
+    })
+}
+
+/*
+turn设备详情中 设置分组
+*/
+function turnDeviceDetailSitGroup(){
+    $("#sit-group header .aui-pull-right").attr("onclick","deviceDetailSitGroup()");
+    turnPage("#sit-group","add-dev");
+}
+
+/*
+设备详情中 设置分组
+*/
+function deviceDetailSitGroup(){
+    $("#add-dev #groupName .aui-list-item-right").html($("#sit-group .aui-content input:checked").val());
+    // $("#sit-group .aui-content input:checked").val();
+}
+
+/*
+添加设备分组
+num 0:设备；1：人员；
+*/
+function addGroup(num){
+    dialog.prompt({
+        title:"添加分类",
+        text:'1-4个字符即可',
+        type:'text',
+        buttons:['取消','确定']
+    },function(ret){
+        if(ret.buttonIndex == 2){
+            var data={comp_id:sessionStorage.getItem("CompanyId"),user_id:sessionStorage.getItem("UserId")};
+            if(num==0){
+                var url="devicegroup/add";
+                data['group_name']=ret.text;
+            }
+            else{
+                var url="usergroup/add";
+                data['dt_name']=ret.text;
+            }
+            if(ret.text.length>0&&ret.text.length<5){
+                $.ajax({
+                    url:baseurl+url,
+                    type: "post",
+                    data:data,
+                    dataType: "json",
+                    success: function(data, textStatus){
+                        if(data.code==0){
+                            showToast("添加分组成功！");
+                            if(num==0){
+                                getdevicegroup();
+                            }
+                            else{
+                                getUserGroup();
+                            }
+                            
+                        }
+                        else{
+                            showToast(data.msg)
+                        }
+                    },
+                    error:function(error){
+                        showToast("添加失败！请重试")
+                    }
+                })
+            }
+            else{
+                showToast("组名称为1-4个字符");
+            }
+        }
+    })
+}
+
+/*
+编辑设备分组
+num 设备：0；人员：1
+*/
+function editGroup(id,name,num){
+    console.log(name);
+    dialog.prompt({
+        title:"编辑分类",
+        value:name,
+        type:'text',
+        buttons:['取消','确定']
+    },function(ret){
+        if(ret.buttonIndex == 2){
+            var data={comp_id:sessionStorage.getItem("CompanyId"),user_id:sessionStorage.getItem("UserId"),dt_id:id,dt_name:ret.text};
+            if(num==0){
+                var url="devicegroup/edit";
+            }
+            else{
+                var url="usergroup/edit";
+            }
+            $.ajax({
+                url:baseurl+url,
+                type:"PATCH",
+                data:data,
+                dataType:"json",
+                success:function(data){
+                    if(data.code==0){
+                        showToast("修改成功！");
+                        if(num==0){
+                            getdevicegroup();
+                        }
+                        else{
+                            getUserGroup();
+                        }
+                    }
+                    else{
+                        showToast(data.msg);
+                    }
+                },
+                error:function(error){
+                    showToast("修改失败！请重试")
+                }
+            })
+        }
+    })
+}
+
+/*
+删除设备分组
+*/
+function deleteGroup(id){
+    dialog.alert({
+        title:"删除分组",
+        msg:'确认删除该分组?',
+        buttons:['取消','确定']
+    },function(ret){
+        if(ret.buttonIndex==2){
+            $.ajax({
+                url:baseurl+"devicegroup/del?group_id="+id,
+                type:"DELETE",
+                dataType: "json",
+                success: function(data, textStatus){
+                    if(data.code==0){
+                        showToast("删除分组成功！");
+                    }
+                    else{
+                        showToast(data.msg);
+                    }
+                },
+                error:function(error){
+                    showToast("删除设备失败！请重试")
+                }
+            })
+        }
+    })
+    
+}
+
+/*
+任务-我的人员 弹出popup
+*/
+function myUserPopup(location){
+    popup.init({
+        frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+        location:location,//位置，top(默认：顶部中间),top-left top-right,bottom,bottom-left,bottom-right
+        buttons:[{
+            icon:'user-plus',
+            text:'添加人员',
+            value:''//可选
+        },{
+            icon:'folder-o',
+            text:'添加分类',
+            value:''//可选
+        }],
+    },function(ret){
+        if(ret){
+            if(ret.buttonIndex==1){
+                turnAddUser()
+            }
+            else{
+                addGroup();
+            }
+        }
+    })
+}
+
 
 // 饼状图生成；
 // var run_pie= echarts.init(document.getElementById('run_pie'));
@@ -941,102 +1271,7 @@ var line_2_option = {
     ]
 };
 line_2.setOption(line_2_option);
-/*
-添加设备
-*/
-function addDev(){
-    turnPage("#add-dev","task2");
 
-
-}
-/*
-添加设备分组
-*/
-function addGroup(){
-    dialog.prompt({
-        title:"添加分类",
-        text:'1-4个字符即可',
-        type:'text',
-        buttons:['取消','确定']
-    },function(ret){
-        if(ret.buttonIndex == 2){
-            if(ret.text.length>0&&ret.text.length<5){
-                $.ajax({
-                    url:baseurl+"devicegroup/add",
-                    type: "post",
-                    data:{comp_id:sessionStorage.getItem("CompanyId"),user_id:sessionStorage.getItem("UserId"),group_name:ret.text},
-                    dataType: "json",
-                    success: function(data, textStatus){
-                        if(data.code==0){
-                            showToast("添加设备分组成功！");
-                            getdevicegroup();
-                        }
-                        else{
-                            showToast(data.msg)
-                        }
-                    },
-                    error:function(error){
-
-                    }
-                })
-            }
-            // else{
-            //     return;
-            // }
-        }
-    })
-}
-
-/*
-编辑设备分组
-*/
-function editGroup(id,name){
-    dialog.prompt({
-        title:"编辑分类",
-        value:name,
-        type:'text',
-        buttons:['取消','确定']
-    },function(ret){
-        if(ret.buttonIndex == 2){
-            dialog.alert({
-                title:"提示",
-                msg: "您输入的内容是："+ret.text,
-                buttons:['确定']
-            });
-        }
-    })
-}
-
-/*
-删除设备分组
-*/
-function deleteGroup(id){
-    dialog.alert({
-        title:"删除分组",
-        msg:'确认删除该分组?',
-        buttons:['取消','确定']
-    },function(ret){
-        if(ret.buttonIndex==2){
-            $.ajax({
-                url:baseurl+"devicegroup/del?group_id="+id,
-                type:"DELETE",
-                dataType: "json",
-                success: function(data, textStatus){
-                    if(data.code==0){
-                        showToast("删除分组成功！");
-                    }
-                    else{
-                        showToast(data.msg);
-                    }
-                },
-                error:function(error){
-                    showToast("删除设备失败！请重试")
-                }
-            })
-        }
-    })
-    
-}
 
 /*
 获取企业设备分组列表
