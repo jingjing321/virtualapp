@@ -1,0 +1,272 @@
+#login .logo-center img{
+    border-radius: 50%;
+    margin: auto;
+    width:30%;
+    display: block;
+}
+#login .logo-center{
+    padding:20%;
+}
+
+.accordion {
+ 	width: 100%;
+ 	max-width: 360px;
+ 	margin: 30px auto 20px;
+ 	background: #FFF;
+ 	-webkit-border-radius: 4px;
+ 	-moz-border-radius: 4px;
+ 	border-radius: 4px;
+ }
+
+.accordion .link {
+	cursor: pointer;
+	display: block;
+	padding: 15px 15px 15px 15px;
+	color: #4D4D4D;
+	font-size: 14px;
+	border-bottom: 1px solid #CCC;
+	position: relative;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li:last-child .link {
+	border-bottom: 0;
+}
+
+.accordion li i {
+	position: absolute;
+	top: 16px;
+	left: 12px;
+	font-size: 18px;
+	color: #595959;
+	-webkit-transition: all 0.4s ease;
+	-o-transition: all 0.4s ease;
+	transition: all 0.4s ease;
+}
+
+.accordion li i.fa-chevron-down {
+	right: 12px;
+	left: auto;
+	font-size: 16px;
+}
+
+.accordion li.open .link {
+	color: #b63b4d;
+}
+
+.accordion li.open i {
+	color: #b63b4d;
+}
+.accordion li.open i.fa-chevron-down {
+	-webkit-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+/**
+ * Submenu
+ -----------------------------*/
+ .submenu {
+ 	display: none;
+ 	background: #ffffff;
+ 	font-size: 14px;
+ }
+
+ .submenu li {
+ 	border-bottom: 1px solid #4b4a5e;
+ }
+
+ .submenu a {
+ 	display: block;
+ 	text-decoration: none;
+ 	color: #d9d9d9;
+ 	padding: 12px;
+ 	padding-left: 42px;
+ 	-webkit-transition: all 0.25s ease;
+ 	-o-transition: all 0.25s ease;
+ 	transition: all 0.25s ease;
+ }
+
+ .submenu a:hover {
+ 	background: #b63b4d;
+ 	color: #FFF;
+ }
+.aui-bar-light .aui-btn{
+	color:#00B7FF;
+}
+
+.aui-card-list-content, .aui-card-list-content-padded{
+	padding:0rem 1rem;
+}
+
+.aui-card-list-title{
+	padding:.5rem;
+}
+.equipment-detail {
+    background-color: white;
+    padding: 1rem;
+    line-height: 1.1rem;
+    margin-top: 1rem;
+}
+span.title {
+    font-weight: 600;
+}
+.progress {
+    height: 30px;
+    overflow: hidden;
+    background-color: #fff;
+    border:1px solid rgb(175,175,175);
+}
+.progress-bar {
+    float: left;
+    width: 0;
+    height: 100%;
+    font-size: 12px;
+    line-height: 20px;
+    color: #fff;
+    text-align: center;
+    background-color: #337ab7;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+    -webkit-transition: width .6s ease;
+    -o-transition: width .6s ease;
+    transition: width .6s ease;
+}
+.progress-block{
+	padding: 1rem 1rem .5rem 1rem;
+}
+/*正常运行*/
+.progress-bar-green{
+	background-color: #23ad3a;
+}
+.aui-radio.aui-radio-green:checked{
+	background-color: #23ad3a;
+    border: solid 1px #23ad3a;
+}
+/*故障运行*/
+.progress-bar-dark-green{
+	background-color: #036a32;
+}
+.aui-radio.aui-radio-dark-green:checked{
+	background-color: #036a32;
+    border: solid 1px #036a32;
+}
+/*正常停机*/
+.progress-bar-gray{
+	background-color: #b7b7b7;
+}
+.aui-radio.aui-radio-gray:checked{
+	background-color: #b7b7b7;
+    border: solid 1px #b7b7b7;
+}
+/*调试*/
+.progress-bar-blue{
+	background-color: #1b82d2;
+}
+.aui-radio.aui-radio-blue:checked{
+	background-color: #1b82d2;
+    border: solid 1px #1b82d2;
+}
+/*维修保养*/
+.progress-bar-yellow{
+	background-color: #f4a523;
+}
+.aui-radio.aui-radio-yellow:checked{
+	background-color: #f4a523;
+    border: solid 1px #f4a523;
+}
+/*故障停机*/
+.progress-bar-red{
+	background-color: #e10621;
+}
+.aui-radio.aui-radio-red:checked{
+	background-color: #e10621;
+    border: solid 1px #e10621;
+}
+
+.scale{
+	background-color: #03a9f4;
+	width: 100%;
+    padding: 0rem 1rem;
+    position: absolute;
+    bottom: 2.8rem;
+}
+.scale li{
+	list-style: none;
+    display: inline-block;
+    width: 3.9%;
+    border-right: 1px solid white;
+    margin-bottom: .7rem;
+    color: white;
+}
+.scale span{
+	position: relative;
+    top: .7rem;
+    left: .4rem;
+    font-size: .5rem;
+}
+
+.check{
+	padding: .5rem;
+    background-color: white;
+    margin-top: 1px;
+}
+.sit-position{
+	position: relative;
+    top: .4rem;
+}
+.aui-media-list .aui-list-item{
+	display: block;
+    margin-top: 1px;
+}
+.white-back{
+	background-color: white;
+	margin-top: 1px;
+	padding:.5rem;
+}
+#wrap{position: relative;padding: 10px 0px;overflow: hidden;}
+#gradient{width: 100%;height: 35px;repeat-x;position: absolute;bottom: 0;left: 0;}
+#read-more{background: #fff;color: #333;}
+#read-more a{padding-right: 22px;no-repeat 100% 50%;font-weight: bold;text-decoration: none;}
+#read-more a: hover{color: #000;}
+
+ li{list-style-type: none;}
+    a,input{outline: none;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+    #choose{display: none;}
+    .upload{
+    	color: gray;
+    	font-size: 1.3rem;
+    	margin: .4rem .5rem;
+    }
+    canvas{width: 100%;border: 1px solid #000000;}
+    .touch{background-color: #ddd;}
+    .img-list{margin: 10px 5px;}
+    .img-list li{position: relative;display: inline-block;width: 100px;height: 100px;margin: 5px 5px 20px 5px;border: 1px solid rgb(100,149,198);background: #fff no-repeat center;background-size: cover;}
+    .progress{position: absolute;width: 100%;height: 20px;line-height: 20px;bottom: 0;left: 0;background-color:rgba(100,149,198,.5);}
+    .progress span{display: block;width: 0;height: 100%;background-color:rgb(100,149,198);text-align: center;color: #FFF;font-size: 13px;}
+    .size{position: absolute;width: 100%;height: 15px;line-height: 15px;bottom: -18px;text-align: center;font-size: 13px;color: #666;}
+    .tips{display: block;text-align:center;font-size: 13px;margin: 10px;color: #999;}
+    .pic-list{margin: 10px;line-height: 18px;font-size: 13px;}
+    .pic-list a{display: block;margin: 10px 0;}
+    .pic-list a img{vertical-align: middle;max-width: 30px;max-height: 30px;margin: -4px 0 0 10px;}
+
+    #index .progress{
+        position: inherit;
+        background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .aui-toast {
+        min-height: 1em;
+    }
+    .aui-toast-content {
+        margin: .3rem;
+    }
+    .userIcon{
+        font-size: 2rem;
+        border: 2px solid white;
+        border-radius: 50%;
+        padding: .5rem;
+    }
