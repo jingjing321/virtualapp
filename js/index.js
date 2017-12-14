@@ -507,12 +507,11 @@ function getdeviceByGroup(group_id,group_name){
     }
     $("#devList header .aui-title").attr("data-groupId",group_id);
     $.ajax({
-        url:baseurl+"device/getlistbygroupid?group_id="+group_id,
+        url:baseurl+"device/getlistbygroupid?comp_id="+sessionStorage.getItem("CompanyId")+"&group_id="+group_id,
         type: "get",
         dataType: "json",
         success:function(data){
             if(data.code==0){
-                console.log(data.data);
                 var ele=$("#devList .content .aui-list");
                 ele.html("");
                 if(data.data.length>0){
@@ -522,7 +521,7 @@ function getdeviceByGroup(group_id,group_name){
                             '<div class="aui-list-item-inner">'+
                                 '<div class="aui-list-item-text">'+
                                     '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].DeviceName+'</div>'+
-                                    '<div class="aui-list-item-right sit-position" onclick="openDeviceAction('+data.data[i].DeviceId+',\''+data.data[i].DeviceName+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
+                                    '<div class="aui-list-item-right sit-position" onclick="openDeviceAction(\''+data.data[i].DeviceId+'\',\''+data.data[i].DeviceName+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
                                 '</div>'+
                                 '<div class="aui-list-item-text">'+
                                     '设备型号：'+data.data[i].DeviceModel+
@@ -542,6 +541,8 @@ function getdeviceByGroup(group_id,group_name){
             }
         },
         error:function(error){
+            var ele=$("#devList .content .aui-list");
+            ele.html("");
             showToast("设备列表获取失败！")
         }
     })
@@ -752,7 +753,7 @@ id设备ID
 function deviceSitPrincipal(id){
     $("#sit-principal .content input:checked").val();
     $.ajax({
-        url:baseurl+"device/setadmin",
+        url:baseurl+"device/setdirector",
         type:"post",
         data:{"device_id":id,"user_id":sessionStorage.getItem("UserId")},
         dataType:"json",
@@ -777,13 +778,21 @@ id 设备id
 */
 function turnsitDeviceGroup(id){
     turnPage("#sit-group","devList");
-    $("#sit-group header .aui-pull-right").attr("onclick","sitDeviceGroup("+id+")");
+    $("#sit-group header .aui-pull-right").attr("onclick","sitDeviceGroup('"+id+"')");
+    var ele=$("#sit-group .content-block .aui-list");
+    getDeviceGroup(ele);
+}
+
+/*
+获取设备分组 带radio
+ele 父元素
+*/
+function getDeviceGroup(ele){
     $.ajax({
         url:baseurl+"devicegroup/get_list_comp?comp_id="+sessionStorage.getItem("CompanyId"),
         type:"get",
         dataType:"json",
         success:function(data){
-            var ele=$("#sit-group .content-block .aui-list");
             ele.html("");
             if(data.code==0){
                 for(var i=0;i<data.data.length;i++){
@@ -791,20 +800,19 @@ function turnsitDeviceGroup(id){
                                     '<div class="aui-list-item-inner">'+
                                         '<div class="aui-list-item-title">'+data.data[i].DeviceGroupName+'</div>'+
                                     '</div>'+
-                                    '<div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white" type="radio" name="radio" value="'+data.data[i].DeviceGroupId+'" checked></div>'+
+                                    '<div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white" type="radio" name="radio" value="'+data.data[i].DeviceGroupId+'" checked data-name="'+data.data[i].DeviceGroupName+'"></div>'+
                                 '</li>');
 
                 }
             }
             else{
-                showToast(msg)
+                showToast(msg);
             }
         },
         error:function(error){
             showToast("获取企业设备分组列表失败！");
         }
     })
-
 }
 
 /*
@@ -821,7 +829,8 @@ function sitDeviceGroup(id){
         success:function(data){
             if(data.code==0){
                 showToast("设置分组成功！");
-                pageBack();
+                getdevicegroup();
+                turnPage("#task2",'sit-group');
             }
             else{
                 showToast(data.msg);
@@ -838,14 +847,6 @@ turn 添加设备
 */
 function turnAddDev(){
     $("#add-dev form")[0].reset()
-    turnPage("#add-dev","task2");
-}
-
-/*
-turn 添加设备
-*/
-function turnAddDev(){
-    $("#add-dev form")[0].reset();
     turnPage("#add-dev","task2");
 }
 
@@ -880,13 +881,16 @@ turn设备详情中 设置分组
 function turnDeviceDetailSitGroup(){
     $("#sit-group header .aui-pull-right").attr("onclick","deviceDetailSitGroup()");
     turnPage("#sit-group","add-dev");
+    var ele=$("#sit-group .aui-content .aui-list");
+    getDeviceGroup(ele);
 }
 
 /*
 设备详情中 设置分组
 */
 function deviceDetailSitGroup(){
-    $("#add-dev #groupName .aui-list-item-right").html($("#sit-group .aui-content input:checked").val());
+    $("#add-dev #groupName .aui-list-item-right").html($("#sit-group .aui-content input:checked").attr("data-name")).attr("data-id",$("#sit-group .aui-content input:checked").val());
+    pageBack();
     // $("#sit-group .aui-content input:checked").val();
 }
 
@@ -1003,7 +1007,8 @@ function deleteGroup(id){
         if(ret.buttonIndex==2){
             $.ajax({
                 url:baseurl+"devicegroup/del?group_id="+id,
-                type:"DELETE",
+                type:"delete",
+                data:{"group_id":id},
                 dataType: "json",
                 success: function(data, textStatus){
                     if(data.code==0){

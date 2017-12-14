@@ -425,7 +425,7 @@
                                 设备名称
                             </div>
                             <div class="aui-list-item-input">
-                                <input type="text" placeholder="请填写设备名称" name='devName'>
+                                <input type="text" placeholder="请填写设备名称" name='device_name'>
                             </div>
                         </div>
                     </li>
@@ -435,7 +435,7 @@
                                 设备型号
                             </div>
                             <div class="aui-list-item-input">
-                                <input type="text" placeholder="请填写设备型号" name="devType">
+                                <input type="text" placeholder="请填写设备型号" name="device_model">
                             </div>
                         </div>
                     </li>
@@ -445,7 +445,7 @@
                                 生产厂家
                             </div>
                             <div class="aui-list-item-input">
-                                <input type="text" placeholder="请填写生产厂家" name="devFactory">
+                                <input type="text" placeholder="请填写生产厂家" name="factory">
                             </div>
                         </div>
                     </li>
@@ -455,7 +455,7 @@
                                 功能描述
                             </div> <br>
                             <div class="aui-list-item-input">
-                                <textarea placeholder="请填写功能描述" name="devdesc"></textarea> 
+                                <textarea placeholder="请填写功能描述" name="description"></textarea> 
                             </div>
                         </div>
                     </li>
@@ -469,7 +469,7 @@
                                     出厂时间
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" name="time_factory" id="time_factory" placeholder="请填写出厂时间">
+                                    <input type="text" name="made_time" id="time_factory" placeholder="请填写出厂时间">
                                 </div>
                             </div>
                         </li>
@@ -479,7 +479,7 @@
                                     入库时间
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" name="time_storage" id="time_storage" placeholder="请填写入库时间">
+                                    <input type="text" name="storage_time" id="time_storage" placeholder="请填写入库时间">
                                 </div>
                             </div>
                         </li>
@@ -503,14 +503,14 @@
                                     设置编号
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" name="numbering" placeholder="请填写编号">
+                                    <input type="text" name="encoding" placeholder="请填写编号">
                                 </div>
                             </div>
                         </li>
-                        <li class="aui-list-item" onclick="deviceDetailSitGroup()" id="groupName">
+                        <li class="aui-list-item" onclick="turnDeviceDetailSitGroup()" id="groupName">
                             <div class="aui-list-item-inner aui-list-item-arrow">
                                 <div class="aui-list-item-title">设置分组</div>
-                                 <div class="aui-list-item-right"></div>
+                                 <div class="aui-list-item-right" name="group_id">11</div>
                             </div>
                         </li>
                     </ul>
