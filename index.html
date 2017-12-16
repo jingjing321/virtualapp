@@ -266,7 +266,7 @@
                     <!-- 我的人员 -->
                     <div  class="tab" style="display:none;">
                         <div class="aui-searchbar" id="search">
-                            <i class="fa fa-plus-circle plus-icon" onclick="showPopup('top-left')"></i>
+                            <i class="fa fa-plus-circle plus-icon" onclick="myUserPopup('top-left')"></i>
                             <div class="aui-searchbar-input aui-border-radius">
                                 <i class="aui-iconfont aui-icon-search"></i>
                                 <input type="search" placeholder="请输入搜索内容" id="search-input">
@@ -510,7 +510,7 @@
                         <li class="aui-list-item" onclick="turnDeviceDetailSitGroup()" id="groupName">
                             <div class="aui-list-item-inner aui-list-item-arrow">
                                 <div class="aui-list-item-title">设置分组</div>
-                                 <div class="aui-list-item-right" name="group_id">11</div>
+                                 <div class="aui-list-item-right" name="group_id"></div>
                             </div>
                         </li>
                     </ul>
@@ -714,7 +714,7 @@
         </div>
     </div>
 <!-- 我的人员-分组 -->
-    <div class="page" id="dev" style="display:none;">
+    <div class="page" id="user_list" style="display:none;">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
@@ -759,7 +759,7 @@
         </div>
     </div>
 <!-- 添加人员 -->
-    <div class="page nofooter" id="sit-group" style="display:none;">
+    <div class="page nofooter" id="add-user" style="display:none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
             <a class="aui-pull-left aui-btn">取消
             </a  onclick="pageBack()">
@@ -2116,7 +2116,7 @@
     }
     var dialog = new auiDialog();
     var actionsheet = new auiActionsheet();
-    function openActionsheet(id,name){
+    function openActionsheet(id,name,num){
         actionsheet.init({
             frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
             cancelTitle:'取消',
@@ -2125,10 +2125,10 @@
         },function(ret){
             if(ret){
                 if(ret.buttonIndex==1){
-                    editGroup(id,name);
+                    editGroup(id,name,num);
                 }
                 else if(ret.buttonIndex==2){
-                    deleteGroup(id);
+                    deleteGroup(num,id);
                 }
             }
         })
@@ -2143,6 +2143,27 @@
             duration:2000
         });
     }
+
+//扩展jquery的格式化方法
+    (function($){
+        $.fn.parseForm=function(){
+            var serializeObj={};
+            var array=this.serializeArray();
+            var str=this.serialize();
+            $(array).each(function(){
+                if(serializeObj[this.name]){
+                    if($.isArray(serializeObj[this.name])){
+                        serializeObj[this.name].push(this.value);
+                    }else{
+                        serializeObj[this.name]=[serializeObj[this.name],this.value];
+                    }
+                }else{
+                    serializeObj[this.name]=this.value; 
+                }
+            });
+            return serializeObj;
+        };
+    })(jQuery);
 </script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src='js/main.js'></script>

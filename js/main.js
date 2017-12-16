@@ -344,7 +344,8 @@ var tab = new auiTab({
           initIndex();
         }
         else if(ret.index==2){
-          getdevicegroup()
+          var ele=$("#task2 .tab").eq(0).find(".aui-content ul");
+          getgroup(0,ele);
         }
         else if(ret.index==3){
           initUser();
@@ -370,4 +371,15 @@ var tab_task2=new auiTab({
     },function(ret){
       $("#task2 .tabs").find(".tab").css("display","none");
       $("#task2 .tabs").find(".tab").eq(ret.index/1-1).css("display","");
+      if(ret.index==1){
+        var ele=$("#task2 .tab").eq(0).find(".aui-content ul");
+        getgroup(0,ele);
+      }
+      else if(ret.index==2){
+        var ele=$("#task2 .tab").eq(1).find(".aui-content ul");
+        getgroup(1,ele);
+      }
+      else{
+        
+      }
 })

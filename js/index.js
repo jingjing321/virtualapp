@@ -451,29 +451,37 @@ function switchType(thiz){
 }
 
 /*
-获取设备分组列表
+获取设备/人员分组列表；
+num 0：设备；1：人员；
+ele 父元素；
 */
-function getdevicegroup(){
+function getgroup(num,ele){
+    if(num){
+        var url="usergroup/getlist?comp_id=";
+    }
+    else{
+        var url="devicegroup/get_list_comp?comp_id=";
+    }
+    ele.html("");
     if(sessionStorage.getItem("CompanyId")){
         $.ajax({
-            url:baseurl+"devicegroup/get_list_comp?comp_id="+sessionStorage.getItem("CompanyId"),
+            url:baseurl+url+sessionStorage.getItem("CompanyId"),
             type: "get",
             dataType: "json",
             success: function(data, textStatus){
                 if(data.code==0){
-                    var ele=$("#task2 #task2-tab1 .aui-content .aui-list");
+                    // var ele=$("#task2 #task2-tab1 .aui-content .aui-list");
                     if(data.data.length>0){
-                        ele.html("");
                         for(var i=0;i<data.data.length;i++){
                             ele.append('<li class="aui-list-item aui-list-item-middle">'+
                                     '<div class="aui-media-list-item-inner">'+
                                         '<div class="aui-list-item-inner">'+
                                             '<div class="aui-list-item-text">'+
-                                                '<div class="aui-list-item-title aui-font-size-14"  onclick="getdeviceByGroup(\''+data.data[i].DeviceGroupId+'\',\''+data.data[i].DeviceGroupName+'\')">'+data.data[i].DeviceGroupName+'</div>'+
-                                                '<div class="aui-list-item-right sit-position" onclick="openActionsheet(\''+data.data[i].DeviceGroupId+'\',\''+data.data[i].DeviceGroupName+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
+                                                '<div class="aui-list-item-title aui-font-size-14"  onclick="'+(num?'userList':'getdeviceByGroup')+'(\''+(num?data.data[i].UserGroupId:data.data[i].DeviceGroupId)+'\',\''+(num?data.data[i].UserGroupName:data.data[i].DeviceGroupName)+'\')">'+(num?data.data[i].UserGroupName:data.data[i].DeviceGroupName)+'</div>'+
+                                                '<div class="aui-list-item-right sit-position" onclick="openActionsheet('+num+',\''+(num?data.data[i].UserGroupId:data.data[i].DeviceGroupId)+'\',\''+(num?data.data[i].UserGroupName:data.data[i].UserGroupName)+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
                                             '</div>'+
                                             '<div class="aui-list-item-text">'+
-                                                data.data[i].DeviceCount+'台'+
+                                                (num?"":(data.data[i].DeviceCount+'台'))+
                                             '</div>'+
                                         '</div>'+
                                     '</div>'+
@@ -481,7 +489,7 @@ function getdevicegroup(){
                         }
                     }
                     else{
-                        ele.html("未添加设备分组");
+                        ele.html("未添加分组");
                     }
                 }
                 else{
@@ -489,7 +497,7 @@ function getdevicegroup(){
                 }
             },
             error:function(error){
-                showToast("获取企业设备分组列表失败！")
+                showToast("获取分组列表失败！")
             }
         })
     }
@@ -702,18 +710,21 @@ id 设备id
 function turnEditDevice(id){
     $("#add-dev header .aui-title").html("编辑设备");
     $("#add-dev header .aui-pull-right").attr("onclick","editDevice("+id+")");
-    turnPage("#add-dev","devList");
+    
     $.ajax({
         url:baseurl+"device/getdevicedetail?device_id="+id,
         type:"get",
         dataType:"json",
         success:function(data){
-            if(data.code==0){
-                console.log(data.data);
-            }
-            else{
-                showToast(data.msg);
-            }
+            var ele=$("#add-dev .aui-content");
+            ele.find("input[name=device_name]").val(data.F_Name);
+            ele.find("input[name=device_model]").val(data.F_Model);
+            ele.find("input[name=factory]").val(data.F_Factory);
+            ele.find("input[name=description]").val(data.F_Description);
+            ele.find("input[name=made_time]").val(data.F_CreatorTime.split("T")[0].replace(/-/g,"/"));
+            elel.find("input[name=time_storage]")
+            turnPage("#add-dev","devList");
+            
         },
         error:function(error){
             showToast("获取设备详情失败！")
@@ -829,7 +840,8 @@ function sitDeviceGroup(id){
         success:function(data){
             if(data.code==0){
                 showToast("设置分组成功！");
-                getdevicegroup();
+                var ele=$("#task2 .tab").eq(1).find(".aui-content ul");
+                getgroup(0,ele);
                 turnPage("#task2",'sit-group');
             }
             else{
@@ -854,7 +866,11 @@ function turnAddDev(){
 添加设备
 */
 function addDev(){
-    var formData=$("#add-dev form").series()
+    var formData=$("#add-dev form").parseForm();
+    formData.company_id=sessionStorage.getItem("CompanyId");
+    formData.user_id=sessionStorage.getItem("UserId");
+    formData.group_id=$("#add-dev #groupName div.aui-list-item-right").attr("data-id");
+    formData.annex="";
     $.ajax({
         url:baseurl+"device/add",
         type:"POST",
@@ -863,6 +879,8 @@ function addDev(){
         success:function(data){
             if(data.code==0){
                 showToast("设备添加成功！");
+                var ele=$("#task2 .tab").eq(1).find(".aui-content ul");
+                getgroup(0,ele);
                 pageBack();
             }
             else{
@@ -924,13 +942,8 @@ function addGroup(num){
                     success: function(data, textStatus){
                         if(data.code==0){
                             showToast("添加分组成功！");
-                            if(num==0){
-                                getdevicegroup();
-                            }
-                            else{
-                                getUserGroup();
-                            }
-                            
+                            var ele=$("#task2 .tab").eq(num/1+1).find(".aui-content ul");
+                            getgroup(num,ele);
                         }
                         else{
                             showToast(data.msg)
@@ -977,7 +990,8 @@ function editGroup(id,name,num){
                     if(data.code==0){
                         showToast("修改成功！");
                         if(num==0){
-                            getdevicegroup();
+                            var ele=$("#task2 .tab").eq(1).find(".aui-content ul");
+                            getgroup(0,ele);
                         }
                         else{
                             getUserGroup();
@@ -996,19 +1010,26 @@ function editGroup(id,name,num){
 }
 
 /*
-删除设备分组
+删除分组
+设备：0；人员：1
 */
-function deleteGroup(id){
+function deleteGroup(id,num){
     dialog.alert({
         title:"删除分组",
         msg:'确认删除该分组?',
         buttons:['取消','确定']
     },function(ret){
         if(ret.buttonIndex==2){
+            if(num){
+                var url="usergroup/delete?dt_id=";
+            }
+            else{
+                var url="devicegroup/del?group_id=";
+            }
             $.ajax({
-                url:baseurl+"devicegroup/del?group_id="+id,
+                url:baseurl+url+id,
                 type:"delete",
-                data:{"group_id":id},
+                // data:{"group_id":id},
                 dataType: "json",
                 success: function(data, textStatus){
                     if(data.code==0){
@@ -1019,7 +1040,7 @@ function deleteGroup(id){
                     }
                 },
                 error:function(error){
-                    showToast("删除设备失败！请重试")
+                    showToast("删除分组失败！请重试")
                 }
             })
         }
@@ -1051,6 +1072,73 @@ function myUserPopup(location){
             else{
                 addGroup();
             }
+        }
+    })
+}
+
+/*
+turn 添加用户界面
+*/
+function turnAddUser(){
+    $("#add-user header .aui-title").html("添加人员");
+    $("#add-user header .aui-pull-right").attr("onclick","addUser()");
+    $("#add-user form")[0].reset();
+    turnPage("#add-user","task2");
+}
+
+/*
+添加用户
+*/
+function addUser(){
+    var formData=$("#add-user form").parseForm();
+}
+
+/*
+turn 人员列表
+*/
+function userList(usergroupid){
+    turnPage("#user_list","task2");
+    var ele=$("#user_list .aui-content ul");
+    ele.html("");
+    $.ajax({
+        url:baseurl+"user/getlistbygroupid?group_id="+usergroupid,
+        type:"get",
+        dataType:"JSON",
+        success:function(data){
+            if(data.code==0){
+                console.log(data.data);
+                if(data.data.length>0){
+                    for(var i=0;i<data.data.length;i++){
+                        ele.append('<li class="aui-list-item aui-list-item-middle">'+
+                                        '<div class="aui-media-list-item-inner">'+
+                                            '<div class="aui-list-item-media" style="width: 3rem;">'+
+                                                '<img src="images/demo5.png" class="aui-img-round aui-list-img-sm">'+
+                                            '</div>'+
+                                            '<div class="aui-list-item-inner ">'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '<div class="aui-list-item-title aui-font-size-14">王学东</div>'+
+                                                    '<div class="aui-list-item-right sit-position" ><i class="fa fa-ellipsis-h"></i></div>'+
+                                                '</div>'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '电气一组  197-9708-9780'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</li>');
+                    }
+                }
+                else{
+                    ele.html("该分组下没有用户！");
+                }
+                
+            }
+            else{
+                showToast(data.msg);
+                ele.html(data.msg);
+            }
+        },
+        error:function (error){
+            showToast("获取用户列表失败！请重试");
         }
     })
 }
