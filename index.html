@@ -121,32 +121,22 @@
             </div>
             <div class="content-block">
                 <div class="tabs">
-                    <div id="taskTab1" class="tab" style="">
-                        <div class="check">
-                            <span class="title">
-                                A01:YQBD-25液压起拔道机
-                            </span> <br> <br>
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-green" type="radio" name="demo1" checked> 正常运行</label>
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-dark-green" type="radio" name="demo1" checked> 故障运行</label>
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-gray" type="radio" name="demo1" checked> 正常停机</label> 
-                            <div class="clearfix"></div> <br> 
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-blue" type="radio" name="demo1" checked> 调试</label>  
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-yellow" type="radio" name="demo1" checked> 维修保养</label> 
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-red" type="radio" name="demo1" checked> 故障停机</label>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="check">
-                            <span class="title">
-                                A01:YQBD-25液压起拔道机
-                            </span> <br> <br>
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-green" type="radio" name="demo1" checked> 正常运行</label>
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-dark-green" type="radio" name="demo1" checked> 故障运行</label>
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-gray" type="radio" name="demo1" checked> 正常停机</label> 
-                            <div class="clearfix"></div> <br> 
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-blue" type="radio" name="demo1" checked> 调试</label>  
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-yellow" type="radio" name="demo1" checked> 维修保养</label> 
-                            <label class="aui-col-xs-4"><input class="aui-radio aui-radio-red" type="radio" name="demo1" checked> 故障停机</label>
-                            <div class="clearfix"></div>
+                    <div id="taskTab1" class="tab" style="padding:0px .5rem;">
+                        <p><div class="aui-btn aui-btn-info"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
+                        <div class="aui-content">
+                            <div class="check">
+                                <span class="title">
+                                    A01:YQBD-25液压起拔道机
+                                </span> <br> <br>
+                                <label class="aui-col-xs-4"><input class="aui-radio aui-radio-green" type="radio" name="demo1" checked> 正常运行</label>
+                                <label class="aui-col-xs-4"><input class="aui-radio aui-radio-dark-green" type="radio" name="demo1" checked> 故障运行</label>
+                                <label class="aui-col-xs-4"><input class="aui-radio aui-radio-gray" type="radio" name="demo1" checked> 正常停机</label> 
+                                <div class="clearfix"></div> <br> 
+                                <label class="aui-col-xs-4"><input class="aui-radio aui-radio-blue" type="radio" name="demo1" checked> 调试</label>  
+                                <label class="aui-col-xs-4"><input class="aui-radio aui-radio-yellow" type="radio" name="demo1" checked> 维修保养</label> 
+                                <label class="aui-col-xs-4"><input class="aui-radio aui-radio-red" type="radio" name="demo1" checked> 故障停机</label>
+                                <div class="clearfix"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="taskTab2 tab" id="taskTab2" class="tab active" style="display: none;">
@@ -778,7 +768,7 @@
                                     姓名
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" placeholder="请填写姓名" name='userName'>
+                                    <input type="text" placeholder="请填写姓名" name='F_Account'>
                                 </div>
                             </div>
                         </li>
@@ -788,7 +778,7 @@
                                     手机号
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" placeholder="请填写手机号码" name='userPhone'>
+                                    <input type="text" placeholder="请填写手机号码" name='F_MobilePhone'>
                                 </div>
                             </div>
                         </li>
@@ -798,7 +788,7 @@
                                     职位
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" placeholder="请填写职位" name='userPosition'>
+                                    <input type="text" placeholder="请填写职位" name='F_Position'>
                                 </div>
                             </div>
                         </li>
@@ -889,14 +879,14 @@
         </div>
     </div>
 <!-- 分配任务 -->
-    <div class="page nofooter" id="sit-group" style="display: none;">
+    <div class="page nofooter" id="add-task" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
-            <a class="aui-pull-left aui-btn">取消
-            </a onclick="pageBack()">
+            <a class="aui-pull-left aui-btn" onclick="pageBack()">取消
+            </a>
             <div class="aui-title ">分配任务</div>
-                <a class="aui-pull-right aui-btn">
-                    完成
-                </a>
+            <a class="aui-pull-right aui-btn">
+                完成
+            </a>
         </header>
         <div class="content-block">
             <div class="aui-content aui-margin-b-15">
@@ -1057,7 +1047,7 @@
         </div>
     </div>
 <!-- 选择设备 -->
-    <div class="page nofooter" id="sit-group" style="display: none;">
+    <div class="page nofooter" id="select-device" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
@@ -2116,7 +2106,7 @@
     }
     var dialog = new auiDialog();
     var actionsheet = new auiActionsheet();
-    function openActionsheet(id,name,num){
+    function openActionsheet(num,id,name){
         actionsheet.init({
             frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
             cancelTitle:'取消',
@@ -2129,6 +2119,26 @@
                 }
                 else if(ret.buttonIndex==2){
                     deleteGroup(num,id);
+                }
+            }
+        })
+    }
+    function openUserActionSheet(id,name){
+        actionsheet.init({
+            frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+            cancelTitle:'取消',
+            destructiveTitle:'删除',
+            buttons:["设置分组",'编辑']
+        },function(ret){
+            if(ret){
+                if(ret.buttonIndex==1){
+                    turnsitUserGroup(id);
+                }
+                else if(ret.buttonIndex==2){
+                    turneditUser(id);
+                }
+                else{
+                    deleteUser(id)
                 }
             }
         })

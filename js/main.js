@@ -331,7 +331,7 @@ var tab = new auiTab({
     },function(ret){
         var page=["yunxing.png","rw.png","me.png"];
         var pageOn=["yunxin_on.png","rw_on.png","me_on.png"];
-        var ele=["#index","#task2","#mine"];
+        var ele=["#index","#task","#mine"];
         var num=ret.index/1-1;
         $(".page").css("display","none");
         $(ele[num]).css("display","");
@@ -344,8 +344,8 @@ var tab = new auiTab({
           initIndex();
         }
         else if(ret.index==2){
-          var ele=$("#task2 .tab").eq(0).find(".aui-content ul");
-          getgroup(0,ele);
+          var ele=$("#task .tab").eq(0).find(".aui-content");
+          getUserTask(1,ele);
         }
         else if(ret.index==3){
           initUser();
@@ -364,6 +364,16 @@ var tab3=new auiTab({
     },function(ret){
       $("#task .tabs").find(".tab").css("display","none");
       $("#task .tabs").find("#taskTab"+ret.index).css("display","");
+      if(ret.index==1){
+        var ele=$("#task .tabs .tab").eq(0).find(".aui-content");
+      }
+      else if(ret.index==2){
+        var ele=$("#task .tabs .tab").eq(1).find("ul");
+      }
+      else{
+        var ele=$("#task .tabs .tab").eq(2).find("ul");
+      }
+      getUserTask(ret.index,ele);
 })
 
 var tab_task2=new auiTab({
