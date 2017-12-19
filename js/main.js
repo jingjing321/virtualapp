@@ -298,6 +298,30 @@ $('#time_storage').mobiscroll().date({
     lang: "zh"        // Specify language like: lang: 'pl' or omit setting to use default 
 });
 
+$('#time_start').mobiscroll().time({
+    theme: "android-holo-light",     // Specify theme like: theme: 'ios' or omit setting to use default 
+    mode: "mixed",       // Specify scroller mode like: mode: 'mixed' or omit setting to use default 
+    display: "modal", // Specify display mode like: display: 'bottom' or omit setting to use default 
+    lang: "zh"        // Specify language like: lang: 'pl' or omit setting to use default 
+});
+
+$('#time_end').mobiscroll().time({
+    theme: "android-holo-light",     // Specify theme like: theme: 'ios' or omit setting to use default 
+    mode: "mixed",       // Specify scroller mode like: mode: 'mixed' or omit setting to use default 
+    display: "modal", // Specify display mode like: display: 'bottom' or omit setting to use default 
+    lang: "zh"        // Specify language like: lang: 'pl' or omit setting to use default 
+});
+
+for(var i=1;i<61;i++){
+    $("#time_select").append('<option value="'+i+'">提前'+i+'分钟</option>');
+}
+$('#time_select').mobiscroll().select({
+    theme:"android-holo-light",     // Specify theme like: theme: 'ios' or omit setting to use default 
+    mode:"mixed",       // Specify scroller mode like: mode: 'mixed' or omit setting to use default 
+    display: "bottom", // Specify display mode like: display: 'bottom' or omit setting to use default 
+    lang: "zh"        // Specify language like: lang: 'pl' or omit setting to use default 
+});
+
 /*
 页面跳转
 page 页面id:#page

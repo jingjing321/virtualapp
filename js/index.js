@@ -617,24 +617,18 @@ function deleteDevice(id){
 }
 
 /*
-设置设备 负责人 跳转
-id设备ID
+负责人列表生成
 */
-function turndeviceSitPrincipal(id){
-    turnPage("#sit-principal","devList");
-    $("#sit-principal header .aui-title").html("选择负责人");
-    $("#sit-principal header .aui-pull-right").attr("onclick","deviceSitPrincipal("+id+")");
+function initPrincipal(ele){
     $.ajax({
         url:baseurl+"usergroup/group_list?comp_id="+sessionStorage.getItem("CompanyId"),
         type:"get",
         dataType:'json',
         success:function(data){
-            var ele=$("#sit-principal .content .aui-list");
             ele.html("");
             if(data.code==0){
                 console.log(data.data);
                 if(data.data.length>0){
-
                     for(var i=0;i<data.data.length;i++){
                         ele.append('<div class="aui-collapse-item"><li class="aui-list-item aui-collapse-header" tapmode>'+
                             '<div class="aui-list-item-inner">'+
@@ -701,6 +695,18 @@ function turndeviceSitPrincipal(id){
             ele.html("用户列表获取失败！")
         }
     })
+}
+
+/*
+设置设备 负责人 跳转
+id设备ID
+*/
+function turndeviceSitPrincipal(id){
+    turnPage("#sit-principal","devList");
+    $("#sit-principal header .aui-title").html("选择负责人");
+    $("#sit-principal header .aui-pull-right").attr("onclick","deviceSitPrincipal("+id+")");
+    var ele=$("#sit-principal .content .aui-list");
+    initPrincipal(ele);
 }
 
 /*
@@ -1313,14 +1319,6 @@ function turnAddTask(num){
 }
 
 /*
-添加任务
-num 任务类型
-*/
-function addTask(num){
-
-}
-
-/*
 turn 选择设备
 */
 function turnSelectDevice(){
@@ -1341,7 +1339,7 @@ function turnSelectDevice(){
                                                 '<div class="aui-list-item-text">'+
                                                     '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].DeviceGroupName+'</div> &nbsp;&nbsp;'+
                                                     '<div class="aui-list-item-text">'+
-                                                        '20台'+
+                                                        data.data[i].DeviceCount+"台"+
                                                     '</div>'+
                                                 '</div>'+
                                                 '<div class="aui-list-item-right">'+
@@ -1361,13 +1359,13 @@ function turnSelectDevice(){
                                         for(var i=0;i<data.data.length;i++){
                                             ele.find(".aui-collapse-content").last().append('<li class="aui-list-item">'+
                                                                                                 '<div class="aui-list-item-inner">'+
-                                                                                                    '<div class="aui-list-item-title">A01 567-454液压起拔道机</div>'+
+                                                                                                    '<div class="aui-list-item-title">'+data.data[i].DeviceName+'</div>'+
                                                                                                     '<div class="aui-list-item-right">'+
-                                                                                                        '<input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>'+
+                                                                                                        '<input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="'+data.data[i].DeviceId+'" data-value="'+data.data[i].DeviceName+'">'+
                                                                                                     '</div>'+
                                                                                                 '</div>'+
                                                                                             '</li>');
-                                            
+
                                         }
                                     }
                                 }
@@ -1377,6 +1375,9 @@ function turnSelectDevice(){
                             }
                         })
                     }
+                    var collapse = new auiCollapse({
+                        autoHide:false //是否自动隐藏已经展开的容器
+                    });
                 }
                 else{
                     showToast("未获取到设备")
@@ -1391,6 +1392,122 @@ function turnSelectDevice(){
         }
     })
 
+}
+
+/*
+选择设备
+*/
+function selectDevice(){
+    var data=$("#select-device .content input:checked");
+    if(data.val()){
+        $("#add-task .content-block li").eq(0).find(".aui-list-item-right").html(data.attr("data-value")).attr("data-value",data.val());
+        pageBack();
+    }
+
+}
+
+/*
+设置重复
+*/
+function sitRepeat(){
+    if($("#sit-repeat input:checked").length){
+        $("#add-task .content-block #sitRepeat div.aui-list-item-right").html($("#sit-repeat input:checked").attr("data-value")).attr("data-value",$("#sit-repeat input:checked").val());
+        pageBack();
+    }
+}
+
+/*
+选择提醒时间
+*/
+function selectTime(){
+    var btn=[];
+    for(var i=1;i<61;i++){
+        btn.push("提前"+i+"分钟");
+    }
+    actionsheet.init({
+        frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+        buttons:btn
+    },function(ret){
+        $("#sit-remind .content-block li").eq(1).find("input").val(ret.text).attr("data-value",ret.index);
+    })
+}
+
+/*
+设置重复
+*/
+function sitRemind(num){
+    if(num==0){
+        $("#add-task .content-block li").eq(3).find("aui-list-item-right").html("从不").attr("data-value",0);
+        pageBack();
+        return;
+    }
+    else{
+        $("#add-task .content-block li").eq(3).find("aui-list-item-right").html($("#time_select").text()).attr("data-value",$("#time_select").val());
+        pageBack();
+    }
+}
+
+/*
+turn 选择点检人
+*/
+function turnSelectPreson(){
+    $("#sit-principal header .aui-title").html("选择点检人");
+    $("#sit-principal header .aui-pull-right").attr("onclick","selectPreson()");
+    var ele=$("#sit-principal .content .aui-list");
+    initPrincipal(ele);
+}
+
+/*
+设置负责人
+*/
+function selectPreson(){
+    if($("#sit-principal .content input").val()){
+        $("#add-task .content-block ul").eq(1).find("li .aui-list-item-right").html($("#sit-principal .content input").val());
+    }
+    pageBack();
+}
+
+/*
+分配任务 提交
+*/
+function addTask(num){
+    var ele=$("#add-task .content-block")
+    var data={"title":"",
+            "type":num,
+            "device_id":ele.find("li").eq(0).find(".aui-list-item-right").attr("data-value"),
+            "comp_id":sessionStorage.getItem("CompanyId"),
+            "user_id":sessionStorage.getItem("UserId"),
+            "start_time":ele.find("input").eq(0).val(),
+            "end_time":ele.find("input").eq(0).val(),
+            "repeat":ele.find("#sitRepeat .aui-list-item-right").attr("data-value"),
+            "remind":ele.find("li").eq(3).find(".aui-list-item-right").attr("data-value"),
+            "admin_id":ele.find("ul").eq(1).find("li .aui-list-item-right").attr("data-value")};
+    $.ajax({
+        url:baseurl+"task/submit",
+        type:"post",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                showToast("任务添加成功！");
+                if(num==1){
+                    var ele=$("#task .tabs .tab").eq(0).find(".aui-content");
+                  }
+                  else if(num==2){
+                    var ele=$("#task .tabs .tab").eq(1).find("ul");
+                  }
+                  else{
+                    var ele=$("#task .tabs .tab").eq(2).find("ul");
+                  }
+                  getUserTask(num,ele);
+            }
+            else{
+                showToast(data.msg);
+            }
+        },
+        error:function(error){
+            showToast("添加任务失败！请重试")
+        }
+    })
 }
 
 // 饼状图生成；

@@ -122,7 +122,7 @@
             <div class="content-block">
                 <div class="tabs">
                     <div id="taskTab1" class="tab" style="padding:0px .5rem;">
-                        <p><div class="aui-btn aui-btn-info"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
+                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(1)"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
                         <div class="aui-content">
                             <div class="check">
                                 <span class="title">
@@ -577,7 +577,7 @@
             </a>
         </header>
         <div class="content">
-            <div class="aui-searchbar" id="search">
+            <!-- <div class="aui-searchbar" id="search">
                 <i class="fa fa-plus-circle plus-icon" onclick="showPopup('top-left')"></i>
                 <div class="aui-searchbar-input aui-border-radius">
                     <i class="aui-iconfont aui-icon-search"></i>
@@ -587,7 +587,7 @@
                     </div>
                 </div>
                 <div class="aui-searchbar-btn" tapmode>取消</div>
-            </div>
+            </div> -->
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-media-list">
                     <li class="aui-list-item aui-list-item-middle">
@@ -884,14 +884,14 @@
             <a class="aui-pull-left aui-btn" onclick="pageBack()">取消
             </a>
             <div class="aui-title ">分配任务</div>
-            <a class="aui-pull-right aui-btn">
+            <a class="aui-pull-right aui-btn" onclick="selectDevice()">
                 完成
             </a>
         </header>
         <div class="content-block">
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick="turnSelectDevice()">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">选择设备</div>
                             <div class="aui-list-item-right">
@@ -906,17 +906,17 @@
                             </div>
                             <div class="aui-list-item-text aui-ellipsis-2">
                                 <div class="left">
-                                    <span>开始时间</span> <br> <span>09:00</span>
+                                    <span>开始时间</span> <br> <input type="text" name="made_time" id="time_start" placeholder="开始时间">
                                 </div>
-                                <div class="line" style="width: 6rem;text-align: center;"> <span style="display: block;border-bottom: 1px solid #ababab;">1h</span> <br> <span></span></div>
+                                <div class="line" style="width: 6rem;text-align: center;"> <span style="display: block;border-bottom: 1px solid #ababab;"></span> <br> <span></span></div>
                                 <div class="right">
-                                    <span>截止时间</span> <br> <span>10:00</span>
+                                    <span>截止时间</span> <br> <input type="text" name="made_time" id="time_end" placeholder="截止时间">
                                 </div>
                             </div>
                         </div>
                         
                     </li>
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick='turnPage("#sit-repeat","add-task")' id="sitRepeat">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">重复</div>
                             <div class="aui-list-item-right">
@@ -924,7 +924,7 @@
                             </div>
                         </div>
                     </li>
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick='turnPage("#sit-remind","add-task")'>
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">提前15分钟</div>
                             <div class="aui-list-item-right">
@@ -936,7 +936,7 @@
             </div>
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick="turnSelectPreson()">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">选择点检人</div>
                             <div class="aui-list-item-right">
@@ -949,13 +949,13 @@
         </div>
     </div>
 <!-- 设置重复 -->
-    <div class="page nofooter" id="sit-group" style="display: none;">
+    <div class="page nofooter" id="sit-repeat" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
             <div class="aui-title ">重复</div>
-                <a class="aui-pull-right aui-btn">
+                <a class="aui-pull-right aui-btn" onclick="sitRepeat()">
                     确定
                 </a>
         </header>
@@ -966,7 +966,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周一</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" value="1" checked data-value="每周一">
                             </div>
                         </div>
                     </li>
@@ -974,7 +974,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周二</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="2" data-value="每周二">
                             </div>
                         </div>
                     </li>
@@ -982,7 +982,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周三</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="3" data-value="每周三">
                             </div>
                         </div>
                     </li>
@@ -990,7 +990,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周四</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="4" data-value="每周四">
                             </div>
                         </div>
                     </li>
@@ -998,7 +998,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周五</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="5" data-value="每周五">
                             </div>
                         </div>
                     </li>
@@ -1006,7 +1006,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周六</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="6" data-value="每周六">
                             </div>
                         </div>
                     </li>
@@ -1014,7 +1014,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周日</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="7" data-value="每周日">
                             </div>
                         </div>
                     </li>
@@ -1022,7 +1022,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每周</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="8" data-value="每周">
                             </div>
                         </div>
                     </li>
@@ -1030,7 +1030,7 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每月</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="9" data-value="每月">
                             </div>
                         </div>
                     </li>
@@ -1038,8 +1038,42 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">每年</div>
                             <div class="aui-list-item-right">
-                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="10" data-value="每年">
                             </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+<!-- 提醒 -->
+    <div class="page nofooter" id="sit-remind" style="display: none;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+            <a class="aui-pull-left aui-btn" onclick="pageBack()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title ">提醒</div>
+                <a class="aui-pull-right aui-btn" onclick="sitRemind()">
+                    确定
+                </a>
+        </header>
+        <div class="content-block">
+            <div class="aui-content aui-margin-b-15">
+                <ul class="aui-list aui-list-in">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"  onclick="sitRemind(0)">永不</div>
+                            <div class="aui-list-item-right">
+                                <!-- <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked value="0"> -->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">分钟</div>
+                            <select name="time" id="time_select" data-role="none">
+                                <option value="">请选择时间</option>
+                            </select>   
                         </div>
                     </li>
                 </ul>
@@ -1053,12 +1087,12 @@
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
             <div class="aui-title ">选择设备</div>
-                <a class="aui-pull-right aui-btn">
+                <a class="aui-pull-right aui-btn" onclick="selectDevice()">
                     确定
                 </a>
         </header>
         <div class="content">
-            <div class="aui-searchbar" id="search">
+            <!-- <div class="aui-searchbar" id="search">
                 <div class="aui-searchbar-input aui-border-radius">
                     <i class="aui-iconfont aui-icon-search"></i>
                     <input type="search" placeholder="请输入搜索内容" id="search-input">
@@ -1067,7 +1101,7 @@
                     </div>
                 </div>
                 <div class="aui-searchbar-btn" tapmode>取消</div>
-            </div>
+            </div> -->
             <ul class="aui-list aui-collapse aui-border">
                 <div class="aui-collapse-item">
                     <li class="aui-list-item aui-collapse-header" tapmode>
@@ -2033,6 +2067,7 @@
 <script src="js/mobiscroll.android-holo-light.js"></script>
 <script src="js/mobiscroll.util.datetime.js"></script>
 <script src="js/mobiscroll.datetimebase.js"></script>
+<script type="text/javascript" src="js/mobiscroll.select.js"></script>
 <script type="text/javascript" src="js/mobiscroll.i18n.zh.js"></script>
 <script type="text/javascript" src="js/echarts.min.js"></script>
 <script type="text/javascript" src="js/bootstrap-table.js"></script>
@@ -2143,9 +2178,7 @@
             }
         })
     }
-    var collapse = new auiCollapse({
-        autoHide:false //是否自动隐藏已经展开的容器
-    });
+    
     var toast = new auiToast();
     function showToast(text){
         toast.custom({
