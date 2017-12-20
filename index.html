@@ -109,7 +109,7 @@
     <div class="page" id="task" style="display:none;">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <div class="aui-title">任务</div>
-            <a class="aui-pull-right aui-btn">
+            <a class="aui-pull-right aui-btn" onclick="submitResult(1)">
                 提交
             </a>
         </header>
@@ -121,8 +121,8 @@
             </div>
             <div class="content-block">
                 <div class="tabs">
-                    <div id="taskTab1" class="tab" style="padding:0px .5rem;">
-                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(1)"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
+                    <div id="taskTab1" class="tab">
+                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(1)" style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
                         <div class="aui-content">
                             <div class="check">
                                 <span class="title">
@@ -140,6 +140,7 @@
                         </div>
                     </div>
                     <div class="taskTab2 tab" id="taskTab2" class="tab active" style="display: none;">
+                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(2)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加维修任务</div></p>
                         <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-media-list">
                                 <li class="aui-list-item aui-list-item-middle">
@@ -173,6 +174,7 @@
                         </div>
                     </div>
                     <div class="taskTab3 tab" id="taskTab3" class="tab active" style="display: none;">
+                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(3)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加保养任务</div></p>
                         <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-media-list">
                                 <li class="aui-list-item aui-list-item-middle">
@@ -323,7 +325,7 @@
             </a>
         </header>
         <div class="content">
-            <div class="my-title" onclick="turnPage('#my-info','mine')">
+            <div class="my-title" onclick="turnUserInfo()">
                 <div class="avatar"> 
                     <span class="fa fa-user-plus userIcon"></span>
                 </div>
@@ -1187,7 +1189,7 @@
         <div class="content">
              <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick="turnMyAccount()">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">我的账号</div>
                         </div>
@@ -1198,7 +1200,7 @@
                 <ul class="aui-list aui-list-in">
                     <li class="aui-list-item">
                         <div class="aui-list-item-inner aui-list-item-arrow">
-                            <div class="aui-list-item-title">我的账号</div>
+                            <div class="aui-list-item-title">我的缓存</div>
                             <div class="aui-list-item-right">
                                 11.2MB
                             </div>
@@ -1220,7 +1222,7 @@
                     </li>
                 </ul>
             </div>
-            <p><div class="aui-btn aui-btn-block aui-btn-white">退出登录</div></p>
+            <p><div class="aui-btn aui-btn-block aui-btn-white" onclick="quit()">退出登录</div></p>
         </div>
     </div>
 <!-- 我的账号 -->
@@ -1249,7 +1251,7 @@
             </div>
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick="turnPage('#find-password',this)">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">修改密码</div>
                         </div>
@@ -1259,12 +1261,12 @@
         </div>
     </div>
 <!-- 修改手机号 -->
-    <div class="page nofooter" id="sit-group" style="display: none;">
+    <div class="page nofooter" id="alert-phone" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
-            <div class="aui-title ">我的账号</div>
+            <div class="aui-title ">修改手机号</div>
                 <!-- <a class="aui-pull-right aui-btn">
                     确定
                 </a> -->
@@ -1284,7 +1286,7 @@
                                     <i class="aui-iconfont aui-icon-mobile"></i>
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" placeholder="新手机号">
+                                    <input type="text" placeholder="新手机号" name="phone">
                                 </div>
                             </div>
                         </li>
@@ -1294,16 +1296,16 @@
                                     <i class="fa fa-shield"></i>
                                 </div>
                                 <div class="aui-list-item-input">
-                                    <input type="text" placeholder="验证码">
+                                    <input type="text" placeholder="验证码" name="verify">
                                 </div>
                                 <div class="aui-list-item-label-icon">
-                                    <div class="aui-btn aui-btn-white" style="color: #414141;font-size: .6rem;border: 1px solid #9e9e9e;margin-right: 2rem;">获取验证码</div>
+                                    <div class="aui-btn aui-btn-white" style="color: #414141;font-size: .6rem;border: 1px solid #9e9e9e;margin-right: 2rem;" onclick="getverifyforchangephone()">获取验证码</div>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </div>
-                <p><div class="aui-btn aui-btn-info aui-btn-block">确认</div></p>
+                <p><div class="aui-btn aui-btn-info aui-btn-block" onclick="alertPhone()">确认</div></p>
             </form>
         </div>
     </div>
@@ -1365,7 +1367,7 @@
         <div class="content-block">
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick="turnHistoryTask(2)">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">维修任务</div>
                         </div>
@@ -1374,7 +1376,7 @@
             </div>
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item">
+                    <li class="aui-list-item" onclick="turnHistoryTask(3)">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">保养任务</div>
                         </div>
@@ -1384,7 +1386,7 @@
         </div>
     </div>
 <!-- 维修任务 -->
-    <div class="page nofooter" id="sit-group" style="display: none;">
+    <div class="page nofooter" id="history-task" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
@@ -1666,27 +1668,42 @@
         </div>
     </div>
 <!-- 维修任务详情 -->
-    <div class="page" id="repair-detail" style="display: none;">
+    
+
+<!-- 历史维修任务详情 -->
+    <div class="page" id="history-repair-detail" style="display: none;">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
             <div class="aui-title">维修任务详情</div>
-            <a class="aui-pull-right aui-btn">
+            <!-- <a class="aui-pull-right aui-btn">
                 完成
-            </a>
+            </a> -->
         </header>
-        <div class="content">
+        <div class="content-block">
             <div class="white-back">
                 <span>A01:YQBD-25液压起拔道机</span> <br>
                 <span>负责人：王学东</span>
             </div>
-            <div class="white-back">
-                <textarea placeholder="请描述你的维修过程..." style="height: 10rem;"></textarea>
+            <div class="white-back" style="height: 8rem;">
+                dddddddddd
             </div>
-            <input type="file" id="choose" accept="image/*" multiple>
-            <ul class="img-list"></ul>
-            <a id="upload" class="fa fa-file-image-o upload"></a>
+             <!-- <div class="aui-row aui-row-padded">
+                <div class="aui-col-xs-3">
+                    <img src="images/demo1.png"/>
+                </div>
+                <div class="aui-col-xs-3">
+                    <img src="images/demo2.png" />
+                </div>
+                <div class="aui-col-xs-3">
+                    <img src="images/demo3.png" />
+                </div>
+                <div class="aui-col-xs-3">
+                    <img src="images/demo3.png" />
+                </div>
+            </div> -->
+            <p><a href="#" onclick="turnTaskDetail()"><span class="fa fa-pencil"></span> 新增记录</a></p>
         </div>
     </div>
 <!-- 设备详情 -->

@@ -85,7 +85,9 @@
         },
         close: function(){
             var self = this;
-            // document.querySelector(".aui-mask").classList.remove("aui-mask-in");
+            if(document.querySelector(".aui-mask").length){
+                document.querySelector(".aui-mask").classList.remove("aui-mask-in");
+            }
             document.querySelector(".aui-dialog").classList.remove("aui-dialog-in");
             document.querySelector(".aui-dialog").classList.add("aui-dialog-out");
             if (document.querySelector(".aui-dialog:not(.aui-dialog-out)")) {
@@ -95,7 +97,9 @@
                     return true;
                 },200)
             }else{
-                // document.querySelector(".aui-mask").classList.add("aui-mask-out");
+                if(document.querySelector(".aui-mask").length){
+                    document.querySelector(".aui-mask").classList.add("aui-mask-out");
+                }
                 document.querySelector(".aui-dialog").addEventListener("webkitTransitionEnd", function(){
                     self.remove();
                 })
