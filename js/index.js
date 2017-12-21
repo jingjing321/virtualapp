@@ -381,39 +381,81 @@ index页面初始化
 */
 function initIndex(){
     $("#index header .aui-title").html(sessionStorage.getItem("CompanyName"));
+    $("#index #indexTab1 select").html("");
     $.ajax({
-        url:baseurl+"devicetype/getlist?comp_id="+sessionStorage.getItem("CompanyId"),
+        url:baseurl+"devicegroup/get_list_comp?comp_id="+sessionStorage.getItem("CompanyId"),
         type: "get",
         dataType: "json",
         success: function(data, textStatus){
             if(data.code==0){
-                // console.log(data);
-                $("#index #indexTab1 select").html("");
+                $("#index #indexTab1 select").html('<option value="" checked>全部分组</option>');
                 for(var i=0;i<data.data.length;i++){
-                    $("#index #indexTab1 select").append("<option value='"+data.data[i].DeviceTypeId+"'>"+data.data[i].DeviceTypeName+"</option>");
+                    $("#index #indexTab1 select").append("<option value='"+data.data[i].DeviceGroupId+"'>"+data.data[i].DeviceGroupName+"</option>");
                 }
+                getPieData();
             }
             else{
                 showToast(data.msg);
+                getPieData();
             }
         },
         error:function(error){
             showToast("获取设备类型失败！");
+            getPieData();
         }
     });
+    
+
+}
+
+/*
+获取首页饼图数据并生成饼图
+同时生成表格
+*/
+function getPieData(){
     $.ajax({
-        url:baseurl+"records/statestoday?comp_id="+sessionStorage.getItem("CompanyId")+"&group_id=68198864-660c-461a-bc15-bfd289744bc8",
-        type: "get",
-        dataType: "json",
-        success: function(data, textStatus){
-            console.log(data);
+        url:baseurl+"records/statecountslist?comp_id="+sessionStorage.getItem("CompanyId")+"&group_id="+$("#index #indexTab1 select").val(),
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                var todayRun=0,yesRun=0,todayDev=0,yesDev=0;
+                for(var i=0;i<data.data.length;i++){
+                    option.series[0].data[i].value=data.data[i].CurCount;
+                    if(data.data[i].State==0||data.data[i].State==1){
+                        todayRun+=(data.data[i].CurCount/1);
+                        yesRun+=(data.data[i].YesCount/1);
+                    }
+                    todayDev+=(data.data[i].CurCount/1);
+                    yesDev+=(data.data[i].YesCount/1);
+                }
+                if(todayDev!=0){
+                    option.title.text="总运行率\n "+todayRun/todayDev+"%"
+                }
+                if(yesDev!=0){
+                    if(yesRun/yesDev>todayRun/todayDev){
+                        option.title.subtext="较昨日此时有所下降";
+                    }
+                    else if(yesRun/yesDev<todayRun/todayDev){
+                        option.title.subtext="较昨日此时有所上升";
+                    }
+                    else{
+                        option.title.subtext="与昨日此时相等";
+                    }
+                }
+                run_pie.setOption(option);
+                run_pie.on("click",function(params){
+                    pieClick(params.name);
+                });
+                $('#table').bootstrapTable("load",data.data);
+            }
         },
         error:function(error){
 
         }
     })
-
 }
+
 
 /*
 用户界面初始化
@@ -1748,18 +1790,22 @@ function turnHistoryTask(num){
                                         '</div>'+
                                     '</div>'+
                                 '</li>');
+                    turnPage("#history-task","my-task");
                 }
                 else{
                     ele.html("没有历史任务");
+                    turnPage("#history-task","my-task");
                 }
             }
             else{
                 showToast(data.msg);
                 ele.html("获取任务失败");
+                turnPage("#history-task","my-task");
             }
         },
         error:function(error){
             showToast("获取任务失败！");
+            turnPage("#history-task","my-task");
         }
     })
 }
@@ -1777,7 +1823,8 @@ function getTaskDetail(taskId,num){
         success:function(data){
             if(data.code==0){
                 console.log(data.data);
-                $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(0).html(data.data.DeviceName);
+                $("#history-repair-detail header .aui-title").attr("data-value",data.data.TaskId).attr("data-type",num);
+                $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(0).html(data.data.DeviceName).attr("data-value",data.data.DeviceId);
                 $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(1).html(data.data.UserName);  
                 $("#history-repair-detail .content-block .white-back").eq(1).html(data.data.detail);
                 turnPage("#history-repair-detail","history-task");
@@ -1794,75 +1841,214 @@ function getTaskDetail(taskId,num){
     })
 }
 
-// 饼状图生成；
-// var run_pie= echarts.init(document.getElementById('run_pie'));
-// option = {
-//     title:{
-//         text:"总运行率\n  43%",
-//         subtext:"较昨日此时有所下降",
-//         top:'30%',
-//         left:'center',
-//         textStyle:{
-//             color:"#585858",
-//             align:'center',
-//             fontWeight:"400",
-//             verticalAlign:"center"
-//         },
-//         subtextStyle:{
-//             align:'center'
-//         }
-//     },
-//     tooltip: {
-//         trigger: 'item',
-//         formatter: "{a} <br/>{b}: {c} ({d}%)"
-//     },
-//     backgroundColor:"white",
-//     legend: {
-//         orient: 'horizontal',
-//         x: 'center',
-//         y:'bottom',
-//         itemWidth:10,
-//         itemHeight:10,
-//         textStyle:{
-//             fontSize:8,
-//             textAlign:'center'
-//         },
-//         data:['正常运行','故障运行','正常停机','调试','维修保养','故障停机']
-//     },
-//     series: [
-//         {
-//             name:'访问来源',
-//             type:'pie',
-//             radius: ['50%', '70%'],
-//             center:["50%","40%"],
-//             avoidLabelOverlap: false,
-//             color:["#23ad3a","#036a36","#b7b7b7","#1b82d2","#f4a523","#e10621"],
-//             label: {
-//                 normal: {
-//                     show: false,
-//                     position: 'center'
-//                 }
-//             },
-//             labelLine: {
-//                 normal: {
-//                     show: false
-//                 }
-//             },
-//             data:[
-//                 {value:335, name:'正常运行'},
-//                 {value:310, name:'故障运行'},
-//                 {value:234, name:'正常停机'},
-//                 {value:135, name:'调试'},
-//                 {value:1548, name:'维修保养'},
-//                 {value:1548, name:'故障停机'}
-//             ]
-//         }
-//     ]
-// };
-// run_pie.setOption(option);
-// run_pie.on("click",function(params){
-//     pieClick(params.name);
-// })
+/*
+编辑历史任务
+*/
+function editHistoryTask(){
+    var text=$("#history-repair-detail .white-back").eq(1).html();
+    $("#history-repair-detail .white-back").eq(1).html('<textarea placeholder="请描述你的维修过程..." style="height: 10rem;" value="'+text+'"></textarea>');
+    $("#history-repair-detail .content-block p").css("display","none");
+    $("#history-repair-detail header .aui-pull-right").css("display","").attr("onclick","submitHistoryTask()");
+}
+
+/*
+提交编辑的历史任务
+*/
+function submitHistoryTask(){
+    var data={"type":($("#history-repair-detail header .aui-title").attr("data-type")/1+2),"task_id":$("#history-repair-detail header .aui-title").attr("data-value"),solution:$("$history-repair-detail textarea").val()};
+    $.ajax({
+        url:baseurl+"task/result",
+        type:"post",
+        data:data,
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                showToast("修改成功！");
+                $("#history-repair-detail .white-back").eq(1).html($("#history-repair-detail .white-back textarea").val());
+                $("#history-repair-detail .content-block p").css("display","");
+                $("#history-repair-detail header .aui-pull-right").css("display","none");
+            }
+            else{
+                showToast(data.msg);
+            }
+        },
+        error:function(error){
+            showToast("修改失败！请重试");
+        }
+    })
+}
+
+/*
+获取未读消息
+*/
+function getMsg(){
+    if(msg()){
+        $("footer .aui-bar-tab-label").eq(2).find(".aui-dot").css("display","");
+        $("#mine header .aui-dot").css("display","");
+    }
+    else{
+        $("footer .aui-bar-tab-label").eq(2).find(".aui-dot").css("display","none");
+        $("#mine header .aui-dot").css("display","none");
+    }
+}
+
+/*
+判断是否有未读消息
+*/
+function msg(){
+    $.ajax({
+        url:baseurl+"message/msg_flag?user_id="+sessionStorage.getItem("UserId"),
+        type:"get",
+        async:false,
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                if(data.data.MsgFlag){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        },
+        error:function(error){
+
+        }
+    })
+}
+
+setInterval(getMsg,5000);
+
+/*
+turn 消息界面
+*/
+function turnMessage(){
+    if(msg()){
+        $("#message .content-block li .aui-dot").css("display","");
+    }
+    else{
+        $("#message .content-block li .aui-dot").css("display","none");
+    }
+    turnPage("#message","mine");
+}
+
+/*
+turnMessageDetail turn 消息详情
+*/
+function turnMessageDetail(){
+    $("#message-detail .aui-chat").html("");
+    $.ajax({
+        url:baseurl+"message/msg_list?user_id="+sessionStorage.getItem("UserId")+"&type=0",
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                if(data.data.lists.length>0){
+                    $("#message-detail .aui-chat").html('<div class="aui-chat-item aui-chat-left">'+
+                                                            '<div class="aui-chat-media">'+
+                                                                '<img src="images/demo2.png" />'+
+                                                            '</div>'+
+                                                            '<div class="aui-chat-inner">'+
+                                                                '<div class="aui-chat-name">系统 </div>'+
+                                                                '<div class="aui-chat-content">'+
+                                                                    '<div class="aui-chat-arrow"></div>'+
+                                                                    'message'+
+                                                                '</div>'+
+                                                            '</div>'+
+                                                        '</div>');
+                    turnPage("#message-detail","message");
+
+                }
+                else{
+                    $("#message-detail .aui-chat").html("无消息");
+                    turnPage("#message-detail","message");
+                }
+            }
+            else{
+                showToast(data.msg);
+                $("#message-detail .aui-chat").html("无消息");
+                turnPage("#message-detail","message");
+            }
+        },
+        error:function(error){
+            showToast("消息获取失败！请重试");
+            $("#message-detail .aui-chat").html("无消息");
+            turnPage("#message-detail","message");
+        }
+    })
+}
+
+//饼状图生成；
+var run_pie= echarts.init(document.getElementById('run_pie'));
+option = {
+    title:{
+        text:"总运行率\n  43%",
+        subtext:"较昨日此时有所下降",
+        top:'30%',
+        left:'center',
+        textStyle:{
+            color:"#585858",
+            align:'center',
+            fontWeight:"400",
+            verticalAlign:"center"
+        },
+        subtextStyle:{
+            align:'center'
+        }
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    backgroundColor:"white",
+    legend: {
+        orient: 'horizontal',
+        x: 'center',
+        y:'bottom',
+        itemWidth:10,
+        itemHeight:10,
+        textStyle:{
+            fontSize:8,
+            textAlign:'center'
+        },
+        data:['正常运行','故障运行','正常停机','调试','维修保养','故障停机']
+    },
+    series: [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius: ['50%', '70%'],
+            center:["50%","40%"],
+            avoidLabelOverlap: false,
+            color:["#23ad3a","#036a36","#b7b7b7","#1b82d2","#f4a523","#e10621"],
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+                {value:335, name:'正常运行'},
+                {value:310, name:'故障运行'},
+                {value:234, name:'正常停机'},
+                {value:135, name:'调试'},
+                {value:1548, name:'维修保养'},
+                {value:1548, name:'故障停机'}
+            ]
+        }
+    ]
+};
+run_pie.setOption(option);
+run_pie.on("click",function(params){
+    pieClick(params.name);
+})
+
+$("#index").css("display","none");
 function pieClick(name){
     $("#table").bootstrapTable("destroy");
     $('#table').bootstrapTable({
@@ -1896,24 +2082,23 @@ function pieClick(name){
 $('#table').bootstrapTable({
     striped:true,
     classes:"table table-no-bordered",
-    data: [{
-        1: "正常运行",
-        2: '30',
-        3: '5'
-    }, {
-        1: "故障停机",
-        2: '45',
-        3: '6'
-    }, {
-        1: "故障停机",
-        2: '45',
-        3: '6'
-    }],
+    data: [],
     columns: [
-        {field: '1',title: '设备状态',align:"center"}, 
-        {field: '2',title: '台数',align:"center"}, 
-        {field: '3',title: '比前一天',align:"center",formatter:function(value,index,row){
-            return value+"<span class='fa fa-long-arrow-down'></span>"
+        {field: 'State',title: '设备状态',align:"center",formatter:function(value,row,index){
+            var name=["正常运行","故障运行","正常停机","故障停机","维修保养","调试"];
+            return name[value];
+        }}, 
+        {field: 'CurCount',title: '台数',align:"center"}, 
+        {field: 'YesCount',title: '比前一天',align:"center",formatter:function(value,row,index){
+            if(row.CurCount>row.YesCount){
+                return (row.CurCount/1-row.YesCount/1)+"<span class='fa fa-long-arrow-up'></span>"
+            }
+            else if(row.CurCount<row.YesCount){
+                return (row.YesCount/1-row.CurCount/1)+"<span class='fa fa-long-arrow-up'></span>"
+            }
+            else{
+                return 0;
+            }
         }}
     ],
     onClickRow:function(row,ele,field){
