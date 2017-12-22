@@ -22,6 +22,45 @@
     </style>
 </head>
 <body>
+<!-- 登录 -->
+    <div class="page nofooter" style="" id="login">
+        <!-- <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        </header> -->
+        <div class="content">
+            <div class="list-block aui-content aui-margin-b-15">
+              <ul class="aui-list aui-form-list">
+                <div class="logo-center" style="padding: 4rem 0;">
+                    <img src="images/demo2.png" alt="logo" style="width: 20%;margin: auto;border-radius: 50%;">
+                </div>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            手机号
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" name="userPhone" placeholder="请输入手机号码" oninput="btn_status('login')">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            密码
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="password" placeholder="请输入密码" name="userPassword" id="register_password" style="display: inline-block;width: 90%;" oninput="btn_status('login')">
+                            <span class="fa fa-eye" style="color: #b3b3b3;" onclick="switchType(this)"></span>
+                        </div>
+                    </div>
+                </li>
+              </ul>
+            </div>
+            <p><div class="aui-btn aui-btn-info aui-btn-block disabled" onclick="login(this)">登录</div></p>
+            <a href="#" class="left" onclick="turnPage('#register',this)">新用户注册</a>
+            <a class="right" href="#" onclick="turnPage('#find-password',this)">忘记密码</a>
+        </div>
+    </div>
+<!-- index -->
     <div class="page" id="index" style="">
 		<header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <!-- <a class="aui-pull-left">
@@ -107,6 +146,7 @@
 			</div>
 		</div>
 	</div>
+<!-- task -->
     <div class="page" id="task" style="display:none;">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <div class="aui-title">任务</div>
@@ -213,6 +253,7 @@
             </div>
         </div>
     </div>
+<!-- task2 -->
     <div class="page" id="task2"  style="display: none;">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             任务
@@ -318,6 +359,7 @@
             </div>
         </div>
     </div>
+<!-- mine -->
     <div class="page" id="mine"  style="display: none;">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <a class="aui-pull-right aui-btn" onclick="turnMessage()">
@@ -383,6 +425,7 @@
             </div>
         </div>
     </div>
+<!-- footer -->
     <footer class="aui-bar aui-bar-tab" id="footer" style="display: none;">
         <div class="aui-bar-tab-item aui-active" tapmode>
             <span class="icon"><img src="images/yunxin_on.png" alt="运行"></span>
@@ -524,7 +567,7 @@
     </div>
 <!-- 设置分组 -->
 
-     <div class="page nofooter" id="sit-group" style="display:none;">
+    <div class="page nofooter" id="sit-group" style="display:none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
@@ -1484,44 +1527,6 @@
             </div>
         </section>
     </div>
-<!-- 登录 -->
-    <div class="page nofooter" style="" id="login">
-        <!-- <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
-        </header> -->
-        <div class="content">
-            <div class="list-block aui-content aui-margin-b-15">
-              <ul class="aui-list aui-form-list">
-                <div class="logo-center" style="padding: 4rem 0;">
-                    <img src="images/demo2.png" alt="logo" style="width: 20%;margin: auto;border-radius: 50%;">
-                </div>
-                <li class="aui-list-item">
-                    <div class="aui-list-item-inner">
-                        <div class="aui-list-item-label">
-                            手机号
-                        </div>
-                        <div class="aui-list-item-input">
-                            <input type="text" name="userPhone" placeholder="请输入手机号码" oninput="btn_status('login')">
-                        </div>
-                    </div>
-                </li>
-                <li class="aui-list-item">
-                    <div class="aui-list-item-inner">
-                        <div class="aui-list-item-label">
-                            密码
-                        </div>
-                        <div class="aui-list-item-input">
-                            <input type="password" placeholder="请输入密码" name="userPassword" id="register_password" style="display: inline-block;width: 90%;" oninput="btn_status('login')">
-                            <span class="fa fa-eye" style="color: #b3b3b3;" onclick="switchType(this)"></span>
-                        </div>
-                    </div>
-                </li>
-              </ul>
-            </div>
-            <p><div class="aui-btn aui-btn-info aui-btn-block disabled" onclick="login(this)">登录</div></p>
-            <a href="#" class="left" onclick="turnPage('#register',this)">新用户注册</a>
-            <a class="right" href="#" onclick="turnPage('#find-password',this)">忘记密码</a>
-        </div>
-    </div>
 <!-- 注册 -->
     <div class="page nofooter" id="register" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
@@ -1751,7 +1756,7 @@
         </div>
     </div>
 <!-- 设备详情 -->
-    <div class="page nofooter" id="index-detail" style="display:none;">
+    <div class="page nofooter" id="index-detail" style="">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
@@ -1759,13 +1764,13 @@
             <div class="aui-title">设备详情</div>
         </header>
         <div class="content">
-            <div class="aui-tab" id="tab">
+            <div class="aui-tab" id="index-detail-tab">
                 <div class="aui-tab-item aui-active">设备状态一览图</div>
                 <div class="aui-tab-item">管理记录</div>
                 <div class="aui-tab-item">基本情况</div>
             </div>
             <div class="tabs">
-                <div id="tab1" class="tab active" style="display:none;">
+                <div id="tab1" class="tab active" style="">
                     <div class="content-block">
                         <div class="line-block">
                             <div class="left">
@@ -1818,7 +1823,7 @@
                     <div class="content-block">
                         <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-list-in">
-                                <li class="aui-list-item aui-list-item-middle">
+                                <li class="aui-list-item aui-list-item-middle" onclick="turnSitPrincipal()">
                                     <div class="aui-list-item-inner aui-list-item-arrow">
                                         <div class="aui-list-item-title">负责人</div>
                                         <div class="aui-list-item-right">王学东</div>
@@ -1859,7 +1864,7 @@
                         </div>  
                     </div>
                 </div>
-                <div id="tab3" class="tab active">
+                <div id="tab3" class="tab active" style="display: none;">
                     <div class="content-block">
                         <div class="equipment-detail">
                             <span class="title">
@@ -2066,7 +2071,7 @@
         </div>
     </div>
 <!-- 运行记录 -->
-    <div class="page nofooter" id="index-charge" style="display: none;">
+    <div class="page nofooter" id="run-record" style="display: none;">
         <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>

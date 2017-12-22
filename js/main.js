@@ -417,3 +417,10 @@ var tab_task2=new auiTab({
         
       }
 })
+
+var tab_index_detail=new auiTab({
+  element:document.getElementById("index-detail-tab")
+    },function(ret){
+      $("#index-detail .tabs").find(".tab").css("display","none");
+      $("#index-detail .tabs").find(".tab").eq(ret.index/1-1).css("display","");
+})

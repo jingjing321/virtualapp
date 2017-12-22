@@ -376,6 +376,323 @@ function find_password(thiz){
     }
 }
 
+//饼状图生成；
+var run_pie= echarts.init(document.getElementById('run_pie'));
+option = {
+    title:{
+        text:"总运行率\n  43%",
+        subtext:"较昨日此时有所下降",
+        top:'30%',
+        left:'center',
+        textStyle:{
+            color:"#585858",
+            align:'center',
+            fontWeight:"400",
+            verticalAlign:"center"
+        },
+        subtextStyle:{
+            align:'center'
+        }
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    backgroundColor:"white",
+    legend: {
+        orient: 'horizontal',
+        x: 'center',
+        y:'bottom',
+        itemWidth:10,
+        itemHeight:10,
+        textStyle:{
+            fontSize:8,
+            textAlign:'center'
+        },
+        data:['正常运行','故障运行','正常停机','调试','维修保养','故障停机']
+    },
+    series: [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius: ['50%', '70%'],
+            center:["50%","40%"],
+            avoidLabelOverlap: false,
+            color:["#23ad3a","#036a36","#b7b7b7","#1b82d2","#f4a523","#e10621"],
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+                {value:335, name:'正常运行'},
+                {value:310, name:'故障运行'},
+                {value:234, name:'正常停机'},
+                {value:135, name:'调试'},
+                {value:1548, name:'维修保养'},
+                {value:1548, name:'故障停机'}
+            ]
+        }
+    ]
+};
+run_pie.setOption(option);
+run_pie.on("click",function(params){
+    console.log(params);
+    pieClick(params.name,params.dataIndex);
+})
+
+$("#index").css("display","none");
+function pieClick(name,index){
+    $("#table").bootstrapTable("destroy");
+    $.ajax({
+        url:baseurl+"records/statedetails?comp_id="+sessionStorage.getItem("CompanyId")+"&state="+index+"&group_id="+$("#index #indexTab1 select").val(),
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(index==0||index==1||index==2){
+                var columns=[{field: 'Encode',title: name,align:"center"}, 
+                             {field: 'DeviceName',title: '设备名称',align:"center"}]
+            }
+            else{
+                var columns=[{field: 'Encode',title: name,align:"center"}, 
+                             {field: 'DeviceName',title: '设备名称',align:"center"},
+                             {field:"CheckTime",title:"点检时间",align:"center",formatter:function(value,row,index){
+                                return value.split("T")[1];
+                             }}]
+            }
+            $('#table').bootstrapTable({
+                striped:true,
+                classes:"table table-no-bordered",
+                data: data.data,
+                columns: columns,
+                onClickRow:function(row,ele,field){
+                    turnDeviceDetail(row.DeviceId);
+                }
+            });
+            
+        },
+        error:function(error){
+
+        }
+    })
+}
+
+//table init
+$('#table').bootstrapTable({
+    striped:true,
+    classes:"table table-no-bordered",
+    data: [],
+    columns: [
+        {field: 'State',title: '设备状态',align:"center",formatter:function(value,row,index){
+            var name=["正常运行","故障运行","正常停机","故障停机","维修保养","调试"];
+            return name[value];
+        }}, 
+        {field: 'CurCount',title: '台数',align:"center"}, 
+        {field: 'YesCount',title: '比前一天',align:"center",formatter:function(value,row,index){
+            if(row.CurCount>row.YesCount){
+                return (row.CurCount/1-row.YesCount/1)+"<span class='fa fa-long-arrow-up'></span>"
+            }
+            else if(row.CurCount<row.YesCount){
+                return (row.YesCount/1-row.CurCount/1)+"<span class='fa fa-long-arrow-up'></span>"
+            }
+            else{
+                return 0;
+            }
+        }}
+    ],
+    onClickRow:function(row,ele,field){
+        console.log(row);
+    }
+});
+
+var line_1= echarts.init(document.getElementById('line-1'));
+var line_1_option = {
+    grid: {
+        left: '0',
+        right: '4%',
+        bottom: '3%',
+        top:'4%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            splitLine: { //网格线
+                show: true
+            },
+            axisLine:{
+                show:false
+            },
+            data : ['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+            splitLine: { //网格线
+                show: false
+            },
+            axisLine:{
+                show:false
+            },
+            axisLabel:{
+                show:false
+            },
+        }
+    ],
+    series : [
+        {
+            name:'邮件营销',
+            type:'line',
+            stack: '总量',
+            data:[120, 132, 101, 134, 90, 230, 210]
+        }
+    ]
+};
+line_1.setOption(line_1_option);
+
+var line_2= echarts.init(document.getElementById('line-2'));
+var line_2_option = {
+    grid: {
+        left: '0',
+        right: '4%',
+        bottom: '3%',
+        top:'4%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            splitLine: { //网格线
+                show: true
+            },
+            axisLine:{
+                show:false
+            },
+            data : ['周一','周二','周三','周四','周五','周六','周日']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+            splitLine: { //网格线
+                show: false
+            },
+            axisLine:{
+                show:false
+            },
+            axisLabel:{
+                show:false
+            },
+        }
+    ],
+    series : [
+        {
+            name:'邮件营销',
+            type:'line',
+            stack: '总量',
+            data:[120, 132, 101, 134, 90, 230, 210]
+        }
+    ]
+};
+line_2.setOption(line_2_option);
+$("#index-detail").css("display","none");
+
+/*
+turn 设备详情
+deviceid 设备id
+*/
+function turnDeviceDetail(id,num){
+    turnPage("#index-detail","index");
+    $.ajax({
+        url:baseurl+"records/datecountsperwmy?comp_id="+sessionStorage.getItem("CompanyId")+"&state=0&startdate=2017-12-22&enddate=2017-11-22",
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            console.log(data);
+        },
+        error:function(error){
+
+        }
+    })
+}
+
+/*
+获取设备详情
+id 设备id
+*/
+function getDeviceDetail(id){
+    $.ajax({
+        url:baseurl+"device/getdevicedetail?device_id="+id,
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                $("#index-detail #tabs2 li").eq(0).find(".aui-list-item-right").value(daata.data.userName);
+                $("#index-detail #tabs2 li").eq(0).attr("onclick","turnSitPrincipal("+id+")");
+                $("#index-detail #tabs2 li").eq(3).attr("onclick","turnRunRecord("+id+")");
+                $("#index-detail #tabs2 li").eq(4).attr("onclick","turnRecord(0,"+id+")");
+                $("#index-detail #tabs2 li").eq(5).attr("onclick","turnRecord(1,"+id+")");
+            }
+            else{
+                showToast(data.msg)
+            }
+        },
+        error:function(error){
+
+        }
+    })
+}
+
+/*
+turnRunRecord turn运行记录
+id deviceid
+ */
+function turnRunRecord(id){
+    var ele=$("#run-record .aui-content");
+    ele.html("");
+    $.ajax({
+        url:baseurl+"records/checkrecords?user_id="+sessionStorage.getItem("UserId")+"&device_id="+id,
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                if(data.data.length>0){
+                    for(var i=0;i<data.data.length;i++){
+                        ele.append('<div class="aui-card-list">'+
+                                        '<div class="aui-card-list-title"></div>'+
+                                        '<div class="aui-card-list-content">'+
+                                            '<span class="aui-col-xs-6">负责人：王学东</span>  <span class="aui-col-xs-6">维修人：程晨</span> <br>'+
+                                            '<span class="aui-col-xs-6">开机时间：09:08</span> <span class="aui-col-xs-6">关机时间：09:20</span>'+
+                                        '</div>'+
+                                        '<div class="aui-card-list-footer">'+
+                                            '8.09 9：00'+
+                                        '</div>'+
+                                    '</div>');
+                    }
+                }
+                else{
+                    ele.html("无记录");
+                }
+            }
+            else{
+                showToast(data.msg)
+            }
+        },
+        error:function(error){
+            showToast("获取记录失败！请重试")
+        }
+    })
+}
+
 /*
 index页面初始化
 */
@@ -430,24 +747,58 @@ function getPieData(){
                     yesDev+=(data.data[i].YesCount/1);
                 }
                 if(todayDev!=0){
-                    option.title.text="总运行率\n "+todayRun/todayDev+"%"
+                    var todayRate=todayRun/todayDev;
                 }
+                else{
+                    var todayRate=0;
+                }
+                option.title.text="总运行率\n "+todayRate*100+"%";
                 if(yesDev!=0){
-                    if(yesRun/yesDev>todayRun/todayDev){
-                        option.title.subtext="较昨日此时有所下降";
-                    }
-                    else if(yesRun/yesDev<todayRun/todayDev){
-                        option.title.subtext="较昨日此时有所上升";
-                    }
-                    else{
-                        option.title.subtext="与昨日此时相等";
-                    }
+                    var yesRate=yesRun/yesDev;
+                }
+                else{
+                    var yesRate=0;
+                }
+                if(todayRate<yesRate){
+                    option.title.subtext="较昨日此时有所下降";
+                }
+                else if(todayRate>yesRate){
+                    option.title.subtext="较昨日此时有所上升";
+                }
+                else{
+                    option.title.subtext="与昨日此时相等";
                 }
                 run_pie.setOption(option);
                 run_pie.on("click",function(params){
                     pieClick(params.name);
                 });
-                $('#table').bootstrapTable("load",data.data);
+                $("#table").bootstrapTable("destroy");
+                $('#table').bootstrapTable({
+                    striped:true,
+                    classes:"table table-no-bordered",
+                    data: data.data,
+                    columns: [
+                        {field: 'State',title: '设备状态',align:"center",formatter:function(value,row,index){
+                            var name=["正常运行","故障运行","正常停机","故障停机","维修保养","调试"];
+                            return name[value];
+                        }}, 
+                        {field: 'CurCount',title: '台数',align:"center"}, 
+                        {field: 'YesCount',title: '比前一天',align:"center",formatter:function(value,row,index){
+                            if(row.CurCount>row.YesCount){
+                                return (row.CurCount/1-row.YesCount/1)+"<span class='fa fa-long-arrow-up'></span>"
+                            }
+                            else if(row.CurCount<row.YesCount){
+                                return (row.YesCount/1-row.CurCount/1)+"<span class='fa fa-long-arrow-up'></span>"
+                            }
+                            else{
+                                return 0;
+                            }
+                        }}
+                    ],
+                    onClickRow:function(row,ele,field){
+                        console.log(row);
+                    }
+                });
             }
         },
         error:function(error){
@@ -456,6 +807,39 @@ function getPieData(){
     })
 }
 
+/*
+生成色卡图
+*/
+function generateBar(){
+    $.ajax({
+        url:baseurl+"records/statestoday?comp_id="+sessionStorage.getItem("CompanyId")+"&group_id="+$("#index #indexTab1 select").val(),
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+
+            }
+            else{
+
+            }
+        },
+        error:function(error){
+
+        }
+    })
+}
+
+/*
+首页设备详情中 设置负责人 跳转
+id设备ID
+*/
+function turnSitPrincipal(id){
+    turnPage("#sit-principal","index-detail");
+    $("#sit-principal header .aui-title").html("选择负责人");
+    $("#sit-principal header .aui-pull-right").attr("onclick","deviceSitPrincipal("+id+")");
+    var ele=$("#sit-principal .content .aui-list");
+    initPrincipal(ele);
+}
 
 /*
 用户界面初始化
@@ -1977,228 +2361,6 @@ function turnMessageDetail(){
         }
     })
 }
-
-//饼状图生成；
-var run_pie= echarts.init(document.getElementById('run_pie'));
-option = {
-    title:{
-        text:"总运行率\n  43%",
-        subtext:"较昨日此时有所下降",
-        top:'30%',
-        left:'center',
-        textStyle:{
-            color:"#585858",
-            align:'center',
-            fontWeight:"400",
-            verticalAlign:"center"
-        },
-        subtextStyle:{
-            align:'center'
-        }
-    },
-    tooltip: {
-        trigger: 'item',
-        formatter: "{a} <br/>{b}: {c} ({d}%)"
-    },
-    backgroundColor:"white",
-    legend: {
-        orient: 'horizontal',
-        x: 'center',
-        y:'bottom',
-        itemWidth:10,
-        itemHeight:10,
-        textStyle:{
-            fontSize:8,
-            textAlign:'center'
-        },
-        data:['正常运行','故障运行','正常停机','调试','维修保养','故障停机']
-    },
-    series: [
-        {
-            name:'访问来源',
-            type:'pie',
-            radius: ['50%', '70%'],
-            center:["50%","40%"],
-            avoidLabelOverlap: false,
-            color:["#23ad3a","#036a36","#b7b7b7","#1b82d2","#f4a523","#e10621"],
-            label: {
-                normal: {
-                    show: false,
-                    position: 'center'
-                }
-            },
-            labelLine: {
-                normal: {
-                    show: false
-                }
-            },
-            data:[
-                {value:335, name:'正常运行'},
-                {value:310, name:'故障运行'},
-                {value:234, name:'正常停机'},
-                {value:135, name:'调试'},
-                {value:1548, name:'维修保养'},
-                {value:1548, name:'故障停机'}
-            ]
-        }
-    ]
-};
-run_pie.setOption(option);
-run_pie.on("click",function(params){
-    pieClick(params.name);
-})
-
-$("#index").css("display","none");
-function pieClick(name){
-    $("#table").bootstrapTable("destroy");
-    $('#table').bootstrapTable({
-        striped:true,
-        classes:"table table-no-bordered",
-        data: [{
-            1: "a122",
-            2: '冷压机',
-            3: '08:55'
-        }, {
-            1: "a122",
-            2: '冷压机',
-            3: '08:55'
-        }, {
-            1: "a122",
-            2: '冷压机',
-            3: '08:55'
-        }],
-        columns: [
-            {field: '1',title: name,align:"center"}, 
-            {field: '2',title: '设备名称',align:"center"}, 
-            {field: '3',title: '点检时间',align:"center"}
-        ],
-        onClickRow:function(row,ele,field){
-            console.log(row);
-        }
-    });
-}
-
-//table init
-$('#table').bootstrapTable({
-    striped:true,
-    classes:"table table-no-bordered",
-    data: [],
-    columns: [
-        {field: 'State',title: '设备状态',align:"center",formatter:function(value,row,index){
-            var name=["正常运行","故障运行","正常停机","故障停机","维修保养","调试"];
-            return name[value];
-        }}, 
-        {field: 'CurCount',title: '台数',align:"center"}, 
-        {field: 'YesCount',title: '比前一天',align:"center",formatter:function(value,row,index){
-            if(row.CurCount>row.YesCount){
-                return (row.CurCount/1-row.YesCount/1)+"<span class='fa fa-long-arrow-up'></span>"
-            }
-            else if(row.CurCount<row.YesCount){
-                return (row.YesCount/1-row.CurCount/1)+"<span class='fa fa-long-arrow-up'></span>"
-            }
-            else{
-                return 0;
-            }
-        }}
-    ],
-    onClickRow:function(row,ele,field){
-        console.log(row);
-    }
-});
-
-var line_1= echarts.init(document.getElementById('line-1'));
-var line_1_option = {
-    grid: {
-        left: '0',
-        right: '4%',
-        bottom: '3%',
-        top:'4%',
-        containLabel: true
-    },
-    xAxis : [
-        {
-            type : 'category',
-            boundaryGap : false,
-            splitLine: { //网格线
-                show: true
-            },
-            axisLine:{
-                show:false
-            },
-            data : ['周一','周二','周三','周四','周五','周六','周日']
-        }
-    ],
-    yAxis : [
-        {
-            type : 'value',
-            splitLine: { //网格线
-                show: false
-            },
-            axisLine:{
-                show:false
-            },
-            axisLabel:{
-                show:false
-            },
-        }
-    ],
-    series : [
-        {
-            name:'邮件营销',
-            type:'line',
-            stack: '总量',
-            data:[120, 132, 101, 134, 90, 230, 210]
-        }
-    ]
-};
-line_1.setOption(line_1_option);
-
-var line_2= echarts.init(document.getElementById('line-2'));
-var line_2_option = {
-    grid: {
-        left: '0',
-        right: '4%',
-        bottom: '3%',
-        top:'4%',
-        containLabel: true
-    },
-    xAxis : [
-        {
-            type : 'category',
-            boundaryGap : false,
-            splitLine: { //网格线
-                show: true
-            },
-            axisLine:{
-                show:false
-            },
-            data : ['周一','周二','周三','周四','周五','周六','周日']
-        }
-    ],
-    yAxis : [
-        {
-            type : 'value',
-            splitLine: { //网格线
-                show: false
-            },
-            axisLine:{
-                show:false
-            },
-            axisLabel:{
-                show:false
-            },
-        }
-    ],
-    series : [
-        {
-            name:'邮件营销',
-            type:'line',
-            stack: '总量',
-            data:[120, 132, 101, 134, 90, 230, 210]
-        }
-    ]
-};
-line_2.setOption(line_2_option);
 
 
 /*
