@@ -381,6 +381,12 @@ var tab2=new auiTab({
     },function(ret){
       $("#index .tabs").find(".tab").css("display","none");
       $("#index .tabs").find("#indexTab"+ret.index).css("display","");
+      if(ret.index==1){
+        getPieData()
+      }
+      else{
+        generateBar();
+      }
 })
 
 var tab3=new auiTab({
@@ -423,4 +429,13 @@ var tab_index_detail=new auiTab({
     },function(ret){
       $("#index-detail .tabs").find(".tab").css("display","none");
       $("#index-detail .tabs").find(".tab").eq(ret.index/1-1).css("display","");
+      if(ret.index==1){
+        turnDeviceDetail($("#index-detail header .aui-title").attr("data-deviceId"));
+      }
+      else if(ret.index==2){
+        getDeviceDetail($("#index-detail header .aui-title").attr("data-deviceId"));
+      }
+      else{
+        deviceDetail($("#index-detail header .aui-title").attr("data-deviceId"));
+      }
 })

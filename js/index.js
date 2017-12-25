@@ -1,5 +1,6 @@
 
 var baseurl="http://xnapi.sanlogic.cn/";
+// var baseurl="http://47.96.129.11/";
 function setCookie(cname,cvalue,exdays)
 {
   var d = new Date();
@@ -607,7 +608,7 @@ line_2.setOption(line_2_option);
 $("#index-detail").css("display","none");
 
 /*
-turn 设备详情
+turn 设备详情-设备状态
 deviceid 设备id
 */
 function turnDeviceDetail(id,num){
@@ -618,6 +619,8 @@ function turnDeviceDetail(id,num){
         dataType:"json",
         success:function(data){
             console.log(data);
+            $("#index-detail header .aui-title").attr("data-deviceId",id);
+            turnPage("#index-detail","index");
         },
         error:function(error){
 
@@ -626,7 +629,7 @@ function turnDeviceDetail(id,num){
 }
 
 /*
-获取设备详情
+获取设备详情-管理记录
 id 设备id
 */
 function getDeviceDetail(id){
@@ -639,8 +642,8 @@ function getDeviceDetail(id){
                 $("#index-detail #tabs2 li").eq(0).find(".aui-list-item-right").value(daata.data.userName);
                 $("#index-detail #tabs2 li").eq(0).attr("onclick","turnSitPrincipal("+id+")");
                 $("#index-detail #tabs2 li").eq(3).attr("onclick","turnRunRecord("+id+")");
-                $("#index-detail #tabs2 li").eq(4).attr("onclick","turnRecord(0,"+id+")");
-                $("#index-detail #tabs2 li").eq(5).attr("onclick","turnRecord(1,"+id+")");
+                $("#index-detail #tabs2 li").eq(4).attr("onclick","turnRecord(2,"+id+")");
+                $("#index-detail #tabs2 li").eq(5).attr("onclick","turnRecord(3,"+id+")");
             }
             else{
                 showToast(data.msg)
@@ -694,11 +697,103 @@ function turnRunRecord(id){
 }
 
 /*
+turn 运行-设备详情-维修/保养记录
+num 点检:1 维修：2 保养：3 默认：0
+id 设备id
+*/
+function turnRecord(num,id){
+    if(num==2){
+        $("#index-record header .aui-title").html("维修记录");
+    }
+    else{
+        $("#index-record header .aui-title").html("保养记录");
+    }
+    var ele=$("#index-record .aui-content");
+    ele.html("");
+    $.ajax({
+        url:baseurl+"task/gettaskbyuserid?user_id="+sessionStorage.getItem("UserId")+"&type="+num,
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                if(data.data.pgList.length>0){
+                    for(var i=0;i<data.data.pgList.length;i++){
+                        ele.append('<div class="aui-card-list">'+
+                                        '<div class="aui-card-list-footer">'+
+                                            data.data.pgList[i].FinishTime+
+                                        '</div>'+
+                                        '<div class="aui-card-list-content">'+
+                                            '<span>负责人：'+data.data.pgList[i].ChargerName+'</span> &nbsp;&nbsp;&nbsp; <span>维修人：'+data.data.pgList[i].UserName+'</span> <br>'+
+                                            '<div id="wrap" class="wrap">'+
+                                                '<div>'+
+                                                    '<p>'+data.data.pgList.Solution+'</p>'+
+                                                '</div>'+
+                                                '<div id="gradient" class="gradient"></div>'+
+                                            '</div>'+
+                                            '<div id="read-more" class="read-more"></div>'+
+                                            '<span></span>'+
+                                            // '<div class="aui-row aui-row-padded">'+
+                                            //     '<div class="aui-col-xs-3">'+
+                                            //         '<img src="images/demo1.png"/>'+
+                                            //     '</div>'+
+                                            //     '<div class="aui-col-xs-3">'+
+                                            //         '<img src="images/demo2.png" />'+
+                                            //     '</div>'+
+                                            //     '<div class="aui-col-xs-3">'+
+                                            //         '<img src="images/demo3.png" />'+
+                                            //     '</div>'+
+                                            //     '<div class="aui-col-xs-3">'+
+                                            //         '<img src="images/demo3.png" />'+
+                                            //     '</div>'+
+                                            // '</div>'+
+                                            '<div class="aui-card-list-footer">'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</div>');
+                    }
+                }
+                else{
+                    ele.html("无记录");
+                }
+            }
+            else{
+                showToast(data.msg);
+                ele.html(data.msg);
+            }
+        },
+        error:function(error){
+
+        }
+    })
+}
+
+/*
+turn 设备详情-设备详情
+id 设备id
+*/
+function deviceDetail(id){
+    $.ajax({
+        url:baseurl+"device/getdevicedetail?device_id="+id,
+        type:"get",
+        dataType:"json",
+        success:function(data){
+
+        },
+        error:function(error){
+
+        }
+    })
+}
+
+/*
 index页面初始化
 */
 function initIndex(){
     $("#index header .aui-title").html(sessionStorage.getItem("CompanyName"));
     $("#index #indexTab1 select").html("");
+    $("footer div.aui-bar-tab-item").removeClass("aui-active").eq(0).addClass("aui-active");
+    $("footer img").eq(2)[0].src="images/me.png";
+    $("footer img").eq(0)[0].src="images/yunxin_on.png";
     $.ajax({
         url:baseurl+"devicegroup/get_list_comp?comp_id="+sessionStorage.getItem("CompanyId"),
         type: "get",
@@ -952,18 +1047,18 @@ function getdeviceByGroup(group_id,group_name){
                 if(data.data.length>0){
                     for(var i=0;i<data.data.length;i++){
                         ele.append('<li class="aui-list-item aui-list-item-middle">'+
-                        '<div class="aui-media-list-item-inner">'+
-                            '<div class="aui-list-item-inner">'+
-                                '<div class="aui-list-item-text">'+
-                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].DeviceName+'</div>'+
-                                    '<div class="aui-list-item-right sit-position" onclick="openDeviceAction(\''+data.data[i].DeviceId+'\',\''+data.data[i].DeviceName+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
-                                '</div>'+
-                                '<div class="aui-list-item-text">'+
-                                    '设备型号：'+data.data[i].DeviceModel+
-                                '</div>'+
-                            '</div>'+
-                        '</div>'+
-                    '</li>');
+                                        '<div class="aui-media-list-item-inner">'+
+                                            '<div class="aui-list-item-inner">'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].DeviceName+'</div>'+
+                                                    '<div class="aui-list-item-right sit-position" onclick="openDeviceAction(\''+data.data[i].DeviceId+'\',\''+data.data[i].DeviceName+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
+                                                '</div>'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '设备型号：'+data.data[i].DeviceModel+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</li>');
                     }
                     
                 }
@@ -2056,11 +2151,13 @@ function alterUserInfo(num,text){
                     }
                 })
             }
+            else{
+                // $(".aui-mask").remove();
+            }
         }
         else{
             showToast("请输入内容！");
         }
-        
     })
 }
 
@@ -2266,7 +2363,26 @@ function submitHistoryTask(){
 获取未读消息
 */
 function getMsg(){
-    if(msg()){
+    var message=$.ajax({
+        url:baseurl+"message/notread?user_id="+sessionStorage.getItem("UserId"),
+        type:"get",
+        async:false,
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                if(!data.data.ReadFlag){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        },
+        error:function(error){
+            return false
+        }
+    });
+    if(message){
         $("footer .aui-bar-tab-label").eq(2).find(".aui-dot").css("display","");
         $("#mine header .aui-dot").css("display","");
     }
@@ -2281,13 +2397,13 @@ function getMsg(){
 */
 function msg(){
     $.ajax({
-        url:baseurl+"message/msg_flag?user_id="+sessionStorage.getItem("UserId"),
+        url:baseurl+"message/notread?user_id="+sessionStorage.getItem("UserId"),
         type:"get",
         async:false,
         dataType:"json",
         success:function(data){
             if(data.code==0){
-                if(data.data.MsgFlag){
+                if(!data.data.ReadFlag){
                     return true;
                 }
                 else{
@@ -2296,7 +2412,7 @@ function msg(){
             }
         },
         error:function(error){
-
+            return false
         }
     })
 }
@@ -2307,7 +2423,26 @@ setInterval(getMsg,5000);
 turn 消息界面
 */
 function turnMessage(){
-    if(msg()){
+    var message=$.ajax({
+        url:baseurl+"message/notread?user_id="+sessionStorage.getItem("UserId"),
+        type:"get",
+        async:false,
+        dataType:"json",
+        success:function(data){
+            if(data.code==0){
+                if(!data.data.ReadFlag){
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }
+        },
+        error:function(error){
+            return false
+        }
+    });
+    if(message){
         $("#message .content-block li .aui-dot").css("display","");
     }
     else{
@@ -2322,24 +2457,41 @@ turnMessageDetail turn 消息详情
 function turnMessageDetail(){
     $("#message-detail .aui-chat").html("");
     $.ajax({
-        url:baseurl+"message/msg_list?user_id="+sessionStorage.getItem("UserId")+"&type=0",
+        url:baseurl+"message/getlist?user_id="+"5ecb7a47-eaef-44d5-ae29-5ddfacf4db34"+"&type=0",
         type:"get",
         dataType:"json",
         success:function(data){
             if(data.code==0){
-                if(data.data.lists.length>0){
-                    $("#message-detail .aui-chat").html('<div class="aui-chat-item aui-chat-left">'+
+                if(data.data.pgList.length>0){
+                    for(var i=0;i<data.data.pgList.length;i++){
+                        $("#message-detail .aui-chat").append('<div class="aui-chat-item aui-chat-left" data-msgId="'+data.data.pgList[i].MsgId+'">'+
                                                             '<div class="aui-chat-media">'+
                                                                 '<img src="images/demo2.png" />'+
                                                             '</div>'+
                                                             '<div class="aui-chat-inner">'+
-                                                                '<div class="aui-chat-name">系统 </div>'+
+                                                                '<div class="aui-chat-name">'+data.data.pgList[i].UserName+' </div>'+
                                                                 '<div class="aui-chat-content">'+
                                                                     '<div class="aui-chat-arrow"></div>'+
-                                                                    'message'+
+                                                                    data.data.pgList[i].Content+
                                                                 '</div>'+
                                                             '</div>'+
                                                         '</div>');
+                        if(!data.data.pgList[i].ReadFlag){
+                            $.ajax({
+                                url:baseurl+"message/setread?msg_id="+data.data.pgList[i].MsgId,
+                                type:"get",
+                                dataType:"json",
+                                success:function(data){
+                                    if(data.code==0){
+
+                                    }
+                                },
+                                error:function(error){
+
+                                }
+                            })
+                        }
+                    }
                     turnPage("#message-detail","message");
 
                 }
@@ -2362,6 +2514,13 @@ function turnMessageDetail(){
     })
 }
 
+/*
+turn 我的账号
+*/
+function turnMyAccount(){
+    $("#my-account .content .aui-list-item-right").eq(0).html(sessionStorage.getItem("phone"));
+    turnPage("#my-account","set");
+}
 
 /*
 获取企业设备分组列表
