@@ -640,10 +640,7 @@ function getDeviceDetail(id){
         success:function(data){
             if(data.code==0){
                 $("#index-detail #tabs2 li").eq(0).find(".aui-list-item-right").value(daata.data.userName);
-                $("#index-detail #tabs2 li").eq(0).attr("onclick","turnSitPrincipal("+id+")");
-                $("#index-detail #tabs2 li").eq(3).attr("onclick","turnRunRecord("+id+")");
-                $("#index-detail #tabs2 li").eq(4).attr("onclick","turnRecord(2,"+id+")");
-                $("#index-detail #tabs2 li").eq(5).attr("onclick","turnRecord(3,"+id+")");
+                
             }
             else{
                 showToast(data.msg)
@@ -653,6 +650,10 @@ function getDeviceDetail(id){
 
         }
     })
+    $("#index-detail #tabs2 li").eq(0).attr("onclick","turnSitPrincipal("+id+")");
+    $("#index-detail #tabs2 li").eq(3).attr("onclick","turnRunRecord("+id+")");
+    $("#index-detail #tabs2 li").eq(4).attr("onclick","turnRecord(2,"+id+")");
+    $("#index-detail #tabs2 li").eq(5).attr("onclick","turnRecord(3,"+id+")");
 }
 
 /*
@@ -906,13 +907,34 @@ function getPieData(){
 生成色卡图
 */
 function generateBar(){
+    var color=["#23ad3a","#036a36","#b7b7b7","#1b82d2","#f4a523","#e10621"];
+    var ele=$("#index .tabs #indexTab2 .content-block");
+    ele.html("");
     $.ajax({
         url:baseurl+"records/statestoday?comp_id="+sessionStorage.getItem("CompanyId")+"&group_id="+$("#index #indexTab1 select").val(),
         type:"get",
         dataType:"json",
         success:function(data){
             if(data.code==0){
+                if(data.data.length>0){
+                    for(var i=0;i<data.data.length;i++){
+                        ele.append('<div class="progress-block">'+
+                                        '<span>'+data.data[i].DeviceName+'</span>'+
+                                        '<div class="progress">'+
+                                        '</div>'+
+                                    '</div>');
+                        for(var i2=0;i2<data.data[i].StateTimes.length;i2++){
+                            var width=0;
+                            if(i2==0){
+                                
+                            }
+                            ele.find(".progress").last().append('<div class="progress-bar progress-bar-gray" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" style="min-width: 0em;width:30%">');
+                        }
+                    }
+                }
+                else{
 
+                }
             }
             else{
 
@@ -2172,7 +2194,7 @@ function turnMyAccout(){
 /*
 turn 修改手机号
 */
-function alertPhone(){
+function turnAlertPhone(){
     $("#alert-phone .changePhoneTitle a").html(sessionStorage.getItem("phone"));
     turnPage("#alert-phone","my-account");
 }

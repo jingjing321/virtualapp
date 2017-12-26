@@ -412,6 +412,11 @@
                             <div class="aui-list-item-title">我的任务</div>
                         </div>
                     </li>
+                    <li class="aui-list-item" onclick="">
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-title">设备管理</div>
+                        </div>
+                    </li>
                 </ul>
             </div>
             <div class="aui-content aui-margin-b-15">
@@ -440,6 +445,37 @@
             <div class="aui-bar-tab-label">我的<div class="aui-dot" style="display: none;"></div></div>
         </div>
     </footer>
+<!-- 设备管理 -->
+    <div class="page nofooter" id="dev-manage" style="display: none;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+            <a class="aui-pull-left" onclick="pageBack()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title ">设备管理</div>
+            <a class="aui-pull-right aui-btn" onclick="showPopup('top-left')">
+                添加
+            </a>
+        </header>
+        <div class="content">
+            <div class="aui-content aui-margin-b-15">
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title aui-font-size-14">电气设备</div>
+                                    <div class="aui-list-item-right sit-position" onclick="openActionsheet(1,'电气设备')"><i class="fa fa-ellipsis-h"></i></div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    11台
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 <!-- 添加设备 -->
     <div class="page nofooter" id="add-dev" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
@@ -1283,7 +1319,7 @@
         <div class="content">
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-list-in">
-                    <li class="aui-list-item" onclick="alertPhone()">
+                    <li class="aui-list-item" onclick="turnAlertPhone()">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">手机号</div>
                             <div class="aui-list-item-right">
