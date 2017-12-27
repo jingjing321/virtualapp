@@ -1,4 +1,5 @@
 
+var dialog = new auiDialog();
 var baseurl="http://xnapi.sanlogic.cn/";
 // var baseurl="http://47.96.129.11/";
 function setCookie(cname,cvalue,exdays)
@@ -280,6 +281,7 @@ function searchCompany(){
 加入企业
 */
 function joinCompany(CompanyId){
+
     dialog.alert({
         title:"加入企业",
         msg:'确认申请加入该企业?',
@@ -329,7 +331,7 @@ function createCompany(thiz){
         type: "post",
         dataType: "json",
         url: baseurl+"company/create",
-        data:{user_id:sessionStorage.getItem("UserId"),comp_name:$("#sit-company input[name=companyName]").val(),comp_add:$("#sit-company input[name=companyAddr]").val()} ,
+        data:{user_id:sessionStorage.getItem("UserId"),comp_name:$("#sit-company input[name=companyName]").val(),comp_addr:$("#sit-company input[name=companyAddr]").val()} ,
         success: function(data, textStatus){
             if(data.code==0){
                 showToast("企业创建成功！");
@@ -926,22 +928,27 @@ function generateBar(){
                         for(var i2=0;i2<data.data[i].StateTimes.length;i2++){
                             var width=0;
                             if(i2==0){
-                                
+                                width=(data.data[i].StateTimes[i2].Time.split("T")[1].split(":")[0]/1)/24;
                             }
-                            ele.find(".progress").last().append('<div class="progress-bar progress-bar-gray" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" style="min-width: 0em;width:30%">');
+                            else{
+                                width=(data.data[i].StateTimes[i2].Time.split("T")[1].split(":")[0]/1-data.data[i].StateTimes[i2-1].Time.split("T")[1].split(":")[0]/1)/24;
+                            }
+                            ele.find(".progress").last().append('<div class="progress-bar progress-bar-gray" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" style="min-width: 0em;width:'+width*100+'%'+' background-color:'+color[(data.data[i].StateTimes[i2].State/1-1)]+'"></div>');
                         }
                     }
                 }
                 else{
-
+                    ele.html("未获取到设备");
                 }
             }
             else{
-
+                showToast(data.msg);
+                ele.html("未获取到设备");
             }
         },
         error:function(error){
-
+            showToast("获取失败！请重试");
+            ele.html("未获取到设备");
         }
     })
 }
@@ -992,6 +999,15 @@ function switchType(thiz){
         $(thiz).siblings("input")[0].type="text"
     }
     $(thiz).toggleClass("fa-eye").toggleClass("fa-eye-slash");
+}
+
+/*
+turn 设备管理
+*/
+function turnDevManage(){
+    getgroup(0,$("#dev-manage .content .aui-list"));
+    turnPage("#dev-manage","mine");
+
 }
 
 /*
@@ -1480,10 +1496,11 @@ function deviceDetailSitGroup(){
 num 0:设备；1：人员；
 */
 function addGroup(num){
+    var dialog = new auiDialog();
     dialog.prompt({
         title:"添加分类",
         text:'1-4个字符即可',
-        type:'text',
+        type:'number',
         buttons:['取消','确定']
     },function(ret){
         if(ret.buttonIndex == 2){
@@ -1530,10 +1547,11 @@ num 设备：0；人员：1
 */
 function editGroup(id,name,num){
     console.log(name);
+    var dialog = new auiDialog();
     dialog.prompt({
         title:"编辑分类",
         value:name,
-        type:'text',
+        type:'number',
         buttons:['取消','确定']
     },function(ret){
         if(ret.buttonIndex == 2){
@@ -2129,6 +2147,7 @@ num 0:NickName;1:position;
 text 原名称;
 */
 function alterUserInfo(num,text){
+    var dialog = new auiDialog();
     dialog.prompt({
         title:"修改用户名",
         value:text,
@@ -2542,6 +2561,29 @@ turn 我的账号
 function turnMyAccount(){
     $("#my-account .content .aui-list-item-right").eq(0).html(sessionStorage.getItem("phone"));
     turnPage("#my-account","set");
+}
+
+/*
+上传文件
+*/
+function uploadFile(){
+    var form = $("form#repaireFile");
+    var options  = {
+        url:baseurl+'device/upld_annex',
+        type:'post',
+        success:function(data){
+            if(data.code==0){
+                
+            }
+            else{
+                showToast(data.msg)
+            }
+        },
+        error:function(error){
+            showToast("上传失败！请重试")
+        }
+    };
+    form.ajaxSubmit(options);
 }
 
 /*

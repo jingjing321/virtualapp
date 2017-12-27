@@ -24,7 +24,7 @@
             var headerHtml = params.title ? '<div class="aui-dialog-header">' + params.title + '</div>' : '<div class="aui-dialog-header">' + self.params.title + '</div>';
             if(params.input){
                 params.text = params.text ? params.text: '';
-                var msgHtml = '<div class="aui-dialog-body"><input type="text" placeholder="'+params.text+'" value="'+(params.value?params.value:"")+'"></div>';
+                var msgHtml = '<div class="aui-dialog-body"><input type="text" placeholder="'+params.text+'"></div>';
             }else{
                 var msgHtml = params.msg ? '<div class="aui-dialog-body">' + params.msg + '</div>' : '<div class="aui-dialog-body">' + self.params.msg + '</div>';
             }
@@ -46,7 +46,7 @@
                             if(params.input){
                                 callback({
                                     buttonIndex: parseInt(this.getAttribute("button-index"))+1,
-                                    text: $(".aui-dialog input").val()
+                                    text: document.querySelector("input").value
                                 });
                             }else{
                                 callback({
@@ -85,9 +85,7 @@
         },
         close: function(){
             var self = this;
-            if(document.querySelector(".aui-mask").length){
-                document.querySelector(".aui-mask").classList.remove("aui-mask-in");
-            }
+            document.querySelector(".aui-mask").classList.remove("aui-mask-in");
             document.querySelector(".aui-dialog").classList.remove("aui-dialog-in");
             document.querySelector(".aui-dialog").classList.add("aui-dialog-out");
             if (document.querySelector(".aui-dialog:not(.aui-dialog-out)")) {
@@ -97,9 +95,7 @@
                     return true;
                 },200)
             }else{
-                if(document.querySelector(".aui-mask").length){
-                    document.querySelector(".aui-mask").classList.add("aui-mask-out");
-                }
+                document.querySelector(".aui-mask").classList.add("aui-mask-out");
                 document.querySelector(".aui-dialog").addEventListener("webkitTransitionEnd", function(){
                     self.remove();
                 })

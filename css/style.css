@@ -91,7 +91,7 @@ button, input, optgroup, select, textarea {
     margin-left: 8px;
 }
 .aui-popup-top, .aui-popup-top-left, .aui-popup-top-right{
-  top: 8rem;
+  top: 4rem;
 }
 .picUpload{
     display: inline-block;

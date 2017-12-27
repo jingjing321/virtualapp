@@ -412,7 +412,7 @@
                             <div class="aui-list-item-title">我的任务</div>
                         </div>
                     </li>
-                    <li class="aui-list-item" onclick="">
+                    <li class="aui-list-item" onclick="turnDevManage()">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">设备管理</div>
                         </div>
@@ -452,7 +452,7 @@
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
             <div class="aui-title ">设备管理</div>
-            <a class="aui-pull-right aui-btn" onclick="showPopup('top-left')">
+            <a class="aui-pull-right aui-btn" onclick="showPopup('top-right')">
                 添加
             </a>
         </header>
@@ -592,10 +592,15 @@
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-title">添加附件</div>
                         </div>
-                        <div class="picUpload">
+                        <form id="repaireFile" enctype="multipart/form-data" method="post" action="http://xnapi.sanlogic.cn/device/upld_annex">
+                <input type="file" id="choose" accept="image/*" multiple name="file">
+                <ul class="img-list"></ul>
+                <a id="upload" class="fa fa-file-image-o upload"></a>
+            </form>
+                        <!-- <div class="picUpload">
                             <i class="fa fa-plus"></i> <br>
                             上传图片
-                        </div>
+                        </div> -->
                     </ul>
                 </div>
             </form>
@@ -1750,9 +1755,12 @@
             <div class="white-back">
                 <textarea placeholder="请描述你的维修过程..." style="height: 10rem;"></textarea>
             </div>
-            <input type="file" id="choose" accept="image/*" multiple>
-            <ul class="img-list"></ul>
-            <a id="upload" class="fa fa-file-image-o upload"></a>
+            <form id="repaireFile" enctype="multipart/form-data" method="post" action="http://xnapi.sanlogic.cn/device/upld_annex">
+                <input type="file" id="choose" accept="image/*" multiple name="file">
+                <ul class="img-list"></ul>
+                <a id="upload" class="fa fa-file-image-o upload"></a>
+            </form>
+            
         </div>
     </div>
 <!-- 历史维修任务详情 -->
@@ -2160,6 +2168,7 @@
 <script type="text/javascript" src="js/aui-dialog.js" ></script>
 
 <!-- <script type="text/javascript" src="js/bootstrap.min.js"></script> -->
+<script type="text/javascript" src="js/jquery.form.js"></script>
 <script src="js/mobiscroll.core.js"></script>
 <script src="js/mobiscroll.frame.js"></script>
 <script src="js/mobiscroll.scroller.js"></script>
@@ -2241,7 +2250,7 @@
             }
         })
     }
-    var dialog = new auiDialog();
+
     var actionsheet = new auiActionsheet();
     function openActionsheet(num,id,name){
         actionsheet.init({
@@ -2337,4 +2346,5 @@
 </script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src='js/main.js'></script>
+<div class="aui-mask"></div>
 </html>

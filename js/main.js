@@ -94,7 +94,17 @@ var filechooser = document.getElementById("choose");
         //如果图片大小小于100kb，则直接上传
         if (result.length <= maxsize) {
           img = null;
-          upload(result, file.type, $(li));
+          // upload(result, file.type, $(li));
+          var form = $("form#repaireFile");
+          var options  = {
+              url:baseurl+'device/upld_annex',
+              type:'post',
+              success:function(data)
+              {
+                  console.log(data);
+              }
+          };
+          form.ajaxSubmit(options);
           return;
         }
 //      图片加载完毕之后进行压缩，然后上传
@@ -105,7 +115,8 @@ var filechooser = document.getElementById("choose");
         }
         function callback() {
           var data = compress(img);
-          upload(data, file.type, $(li));
+          // upload(data, file.type, $(li));
+          
           img = null;
         }
       };
