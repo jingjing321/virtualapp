@@ -672,15 +672,16 @@ function turnRunRecord(id){
         success:function(data){
             if(data.code==0){
                 if(data.data.length>0){
-                    for(var i=0;i<data.data.length;i++){
+                    for(var i=0;i<data.data.pgList.length;i++){
+                        var result=['正常运行','故障运行','正常停机','调试','维修保养','故障停机'];
                         ele.append('<div class="aui-card-list">'+
                                         '<div class="aui-card-list-title"></div>'+
                                         '<div class="aui-card-list-content">'+
-                                            '<span class="aui-col-xs-6">负责人：王学东</span>  <span class="aui-col-xs-6">维修人：程晨</span> <br>'+
-                                            '<span class="aui-col-xs-6">开机时间：09:08</span> <span class="aui-col-xs-6">关机时间：09:20</span>'+
+                                            '<span class="aui-col-xs-6">负责人：'+data.data.pgList[i].UserName+'</span>  <span class="aui-col-xs-6">点检结果：'+result[data.data.pgList[i].State]+'</span> <br>'+
+                                            '<span class="aui-col-xs-6">开机时间：'+data.data.pgList[i].startTime+'</span> <span class="aui-col-xs-6">关机时间：'+data.data.pgList[i].endTime+'</span>'+
                                         '</div>'+
                                         '<div class="aui-card-list-footer">'+
-                                            '8.09 9：00'+
+                                            
                                         '</div>'+
                                     '</div>');
                     }
@@ -780,12 +781,37 @@ function deviceDetail(id){
         type:"get",
         dataType:"json",
         success:function(data){
-
+            var ele=$("#index-detail .tab").eq(2);
+            ele.find("span").eq(0).html(data.data.F_Name);
+            ele.find("span").eq(1).html("功能描述："+verifyData(data.data.F_Description));
+            ele.find("span").eq(3).html("设备型号："+verifyData(data.data.F_Model));
+            ele.find("span").eq(4).html("生产厂家："+verifyData(data.data.F_Factory));
+            ele.find("span").eq(5).html("出厂时间："+verifyData(data.data.F_CreatorTime));
+            ele.find("span").eq(6).html("购买单价："+verifyData(data.data.F_Price));
+            ele.find("span").eq(7).html("入库时间："+verifyData(data.data.F_StorageTime));
+            ele.find("span").eq(8).html("设备编号："+verifyData(data.data.F_EnCode));
+            ele.find("span").eq(9).html("所在分组："+verifyData(data.data.F_GroupName));
+            ele.find(".aui-row").html();
+            if(data.data.F_HeadIcon){
+                var url=data.data.F_HeadIcon.split(";");
+                for(var i=0;i<url.length;i++){
+                    ele.find(".aui-row").append('<div class="aui-col-xs-3">'+
+                                                    '<img src="'+url[i]+'"/>'+
+                                                '</div>');
+                }
+            }
         },
         error:function(error){
 
         }
     })
+}
+
+/*
+空数据验证
+*/
+function verifyData(data){
+    return data?data:"空";
 }
 
 /*
@@ -1038,7 +1064,7 @@ function getgroup(num,ele){
                                         '<div class="aui-list-item-inner">'+
                                             '<div class="aui-list-item-text">'+
                                                 '<div class="aui-list-item-title aui-font-size-14"  onclick="'+(num?'userList':'getdeviceByGroup')+'(\''+(num?data.data[i].UserGroupId:data.data[i].DeviceGroupId)+'\',\''+(num?data.data[i].UserGroupName:data.data[i].DeviceGroupName)+'\')">'+(num?data.data[i].UserGroupName:data.data[i].DeviceGroupName)+'</div>'+
-                                                '<div class="aui-list-item-right sit-position" onclick="openActionsheet('+num+',\''+(num?data.data[i].UserGroupId:data.data[i].DeviceGroupId)+'\',\''+(num?data.data[i].UserGroupName:data.data[i].UserGroupName)+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
+                                                '<div class="aui-list-item-right sit-position" onclick="openActionsheet('+num+',\''+(num?data.data[i].UserGroupId:data.data[i].DeviceGroupId)+'\',\''+(num?data.data[i].UserGroupName:data.data[i].DeviceGroupName)+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
                                             '</div>'+
                                             '<div class="aui-list-item-text">'+
                                                 (num?"":(data.data[i].DeviceCount+'台'))+
@@ -1357,7 +1383,7 @@ function turnsitDeviceGroup(id){
     turnPage("#sit-group","devList");
     $("#sit-group header .aui-pull-right").attr("onclick","sitGroup(0,'"+id+"')");
     var ele=$("#sit-group .content-block .aui-list");
-    getDeviceGroup(ele);
+    getgroup(0,ele);
 }
 
 /*
@@ -1438,6 +1464,7 @@ turn 添加设备
 */
 function turnAddDev(){
     $("#add-dev form")[0].reset()
+    $("#add-dev header .aui-pull-right").attr("onclick","addDev()");
     turnPage("#add-dev","task2");
 }
 
@@ -1449,7 +1476,7 @@ function addDev(){
     formData.company_id=sessionStorage.getItem("CompanyId");
     formData.user_id=sessionStorage.getItem("UserId");
     formData.group_id=$("#add-dev #groupName div.aui-list-item-right").attr("data-id");
-    formData.annex="";
+    formData.annex=$("devFile").attr("data-url");
     $.ajax({
         url:baseurl+"device/add",
         type:"POST",
@@ -1594,7 +1621,7 @@ function editGroup(id,name,num){
 删除分组
 设备：0；人员：1
 */
-function deleteGroup(id,num){
+function deleteGroup(num,id){
     dialog.alert({
         title:"删除分组",
         msg:'确认删除该分组?',
@@ -1609,7 +1636,7 @@ function deleteGroup(id,num){
             }
             $.ajax({
                 url:baseurl+url+id,
-                type:"delete",
+                type:"DELETE",
                 // data:{"group_id":id},
                 dataType: "json",
                 success: function(data, textStatus){
@@ -2564,26 +2591,11 @@ function turnMyAccount(){
 }
 
 /*
-上传文件
+turn 上传头像
 */
-function uploadFile(){
-    var form = $("form#repaireFile");
-    var options  = {
-        url:baseurl+'device/upld_annex',
-        type:'post',
-        success:function(data){
-            if(data.code==0){
-                
-            }
-            else{
-                showToast(data.msg)
-            }
-        },
-        error:function(error){
-            showToast("上传失败！请重试")
-        }
-    };
-    form.ajaxSubmit(options);
+function turnUploadPic(){
+    $("#headIcon-upload #headIcon")[0].src=sessionStorage.getItem("HeadIcon");
+    turnPage("#headIcon-upload","")
 }
 
 /*

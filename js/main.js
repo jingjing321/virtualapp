@@ -95,16 +95,8 @@ var filechooser = document.getElementById("choose");
         if (result.length <= maxsize) {
           img = null;
           // upload(result, file.type, $(li));
-          var form = $("form#repaireFile");
-          var options  = {
-              url:baseurl+'device/upld_annex',
-              type:'post',
-              success:function(data)
-              {
-                  console.log(data);
-              }
-          };
-          form.ajaxSubmit(options);
+          uploadFile()
+
           return;
         }
 //      图片加载完毕之后进行压缩，然后上传
@@ -116,7 +108,7 @@ var filechooser = document.getElementById("choose");
         function callback() {
           var data = compress(img);
           // upload(data, file.type, $(li));
-          
+          uploadFile();
           img = null;
         }
       };
@@ -168,6 +160,34 @@ var filechooser = document.getElementById("choose");
     tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
     return ndata;
   }
+/*
+上传文件
+*/
+function uploadFile(){
+    var form = $("form#devFile");
+    var options  = {
+        url:baseurl+'device/upld_annex',
+        type:'post',
+        async:false,
+        success:function(data){
+            if(data.code==0){
+              if($("form#devFile").attr("data-url")){
+                $("form#devFile").attr("data-url",$("form#repaireFile").attr("data-url")+";"+baseurl+data.data.AnnexUrl);
+              }
+              else{
+                $("form#devFile").attr("data-url",baseurl+data.data.AnnexUrl);
+              }
+            }
+            else{
+                showToast(data.msg)
+            }
+        },
+        error:function(error){
+            showToast("上传失败！请重试")
+        }
+    };
+    form.ajaxSubmit(options);
+}
   //    图片上传，将base64的图片转成二进制对象，塞进formdata上传
   function upload(basestr, type, $li) {
     var text = window.atob(basestr.split(",")[1]);
