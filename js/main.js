@@ -62,15 +62,7 @@ var filechooser = document.getElementById("choose");
   var tCanvas = document.createElement("canvas");
   var tctx = tCanvas.getContext("2d");
   var maxsize = 100 * 1024;
-  $("#upload").on("click", function() {
-        filechooser.click();
-      })
-      .on("touchstart", function() {
-        $(this).addClass("touch")
-      })
-      .on("touchend", function() {
-        $(this).removeClass("touch")
-      });
+  
   filechooser.onchange = function() {
     if (!this.files.length) return;
     var files = Array.prototype.slice.call(this.files);
@@ -115,6 +107,7 @@ var filechooser = document.getElementById("choose");
       reader.readAsDataURL(file);
     })
   };
+ 
   //    使用canvas对大图片进行压缩
   function compress(img) {
     var initSize = img.src.length;
@@ -188,6 +181,7 @@ function uploadFile(){
     };
     form.ajaxSubmit(options);
 }
+
   //    图片上传，将base64的图片转成二进制对象，塞进formdata上传
   function upload(basestr, type, $li) {
     var text = window.atob(basestr.split(",")[1]);

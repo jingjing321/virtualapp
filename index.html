@@ -420,6 +420,11 @@
                             <div class="aui-list-item-title">设备管理</div>
                         </div>
                     </li>
+                    <li class="aui-list-item" onclick="turnUserManage()">
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-title">人员管理</div>
+                        </div>
+                    </li>
                 </ul>
             </div>
             <div class="aui-content aui-margin-b-15">
@@ -471,6 +476,37 @@
                                 </div>
                                 <div class="aui-list-item-text">
                                     11台
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+<!-- 人员管理 -->
+    <div class="page nofooter" id="user-manage" style="display: none;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+            <a class="aui-pull-left" onclick="pageBackturnDeviceDetailSitGroup()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title ">人员管理</div>
+            <a class="aui-pull-right aui-btn" onclick="addGroup(1)">
+                添加分组
+            </a>
+        </header>
+        <div class="content">
+            <div class="aui-content aui-margin-b-15">
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title aui-font-size-14">未分组人员</div>
+                                    <div class="aui-list-item-right sit-position"><i class="fa fa-ellipsis-h"></i></div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    11人
                                 </div>
                             </div>
                         </div>
@@ -2166,7 +2202,14 @@
         </header>
         <div class="content">
             <img src="" id="headIcon" style="width: 15rem;height: 15rem;margin: 1rem auto;" alt="我的头像">
-            <p><div class="aui-btn aui-btn-info aui-btn-block aui-btn-sm">上传头像</div></p>
+            <form id="headFile" enctype="multipart/form-data" method="post">
+                <p>
+                    <div class="aui-btn aui-btn-info aui-btn-block aui-btn-sm">
+                        <input type="file" id="choosehead" accept="image/*" multiple name="file" style="opacity: 0;position: absolute;">
+                        更换头像
+                    </div>
+                </p>
+            </form>
         </div>
     </div>
 </body>

@@ -125,8 +125,8 @@ function login(thiz){
                     sessionStorage.setItem("Email",data.data[0].Email);
                     setCookie("Gender",data.data[0].Gender,30);
                     sessionStorage.setItem("Gender",data.data[0].Gender);
-                    setCookie("HeadIcon",data.data[0].HeadIcon,30);
-                    sessionStorage.setItem("HeadIcon",data.data[0].HeadIcon);
+                    setCookie("HeadIcon",(data.data[0].HeadIcon?baseurl+data.data[0].HeadIcon:data.data[0].HeadIcon),30);
+                    sessionStorage.setItem("HeadIcon",(data.data[0].HeadIcon?baseurl+data.data[0].HeadIcon:data.data[0].HeadIcon));
                     setCookie("NickName",data.data[0].NickName,30);
                     sessionStorage.setItem("NickName",data.data[0].NickName);
                     setCookie("position",data.data[0].position,30);
@@ -141,7 +141,6 @@ function login(thiz){
                         turnPage("#select-identity","login");
                     }
                     else{
-                        console.log(data.data);
                         sessionStorage.setItem("CompanyId",data.data[0].CompanyId);
                         $.ajax({
                             type: "get",
@@ -1037,6 +1036,14 @@ function turnDevManage(){
 }
 
 /*
+turn 人员管理
+*/
+function turnUserManage(){
+    getgroup(1,$("#user-manage .content .aui-list"));
+    turnPage("#user-manage","mine");
+}
+
+/*
 获取设备/人员分组列表；
 num 0：设备；1：人员；
 ele 父元素；
@@ -1095,7 +1102,8 @@ group_id
 group_name
 */
 function getdeviceByGroup(group_id,group_name){
-    turnPage("#devList","task2");
+    // turnPage("#devList","task2");
+    turnPage("#devList","dev-manage");
     if(group_name){
         $("#devList header .aui-title").html(group_name);
     }
@@ -1314,9 +1322,13 @@ function turnEditDevice(id){
             ele.find("input[name=factory]").val(data.F_Factory);
             ele.find("input[name=description]").val(data.F_Description);
             ele.find("input[name=made_time]").val(data.F_CreatorTime.split("T")[0].replace(/-/g,"/"));
-            elel.find("input[name=time_storage]")
-            turnPage("#add-dev","devList");
+            ele.find("input[name=time_storage]").val(data.F_StorageTime.split("T")[0].replace(/-/g,"/"));
+            ele.find("input[name=price]").val(data.F_Price);
+            ele.find("input[name=encoding]").val(data.encoding);
+            ele.find("#groupName").attr("onclick","turnDeviceDetailSitGroup('"+data.F_GroupId+"')");
+            ele.find("#groupName .aui-list-item-right").html(data.F_GroupName);
             
+            turnPage("#add-dev","devList"); 
         },
         error:function(error){
             showToast("获取设备详情失败！")
@@ -1383,7 +1395,7 @@ function turnsitDeviceGroup(id){
     turnPage("#sit-group","devList");
     $("#sit-group header .aui-pull-right").attr("onclick","sitGroup(0,'"+id+"')");
     var ele=$("#sit-group .content-block .aui-list");
-    getgroup(0,ele);
+    getGroupRadio(0,ele);
 }
 
 /*
@@ -1391,7 +1403,7 @@ function turnsitDeviceGroup(id){
 num 0:设备；1：人员；
 ele 父元素
 */
-function getGroupRadio(num,ele){
+function getGroupRadio(num,ele,val){
     var url=(num?"usergroup/getlist?comp_id=":"devicegroup/get_list_comp?comp_id=")
     $.ajax({
         url:baseurl+url+sessionStorage.getItem("CompanyId"),
@@ -1408,6 +1420,9 @@ function getGroupRadio(num,ele){
                                     '<div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white" type="radio" name="radio" value="'+(num?data.data[i].UserGroupId:data.data[i].DeviceGroupId)+'" checked data-name="'+(num?data.data[i].UserGroupName:data.data[i].DeviceGroupName)+'"></div>'+
                                 '</li>');
 
+                }
+                if(val){
+                    $("radio[name=radio][value="+val+"]").prop("checked","checked");
                 }
             }
             else{
@@ -1445,9 +1460,18 @@ function sitGroup(num,id){
         success:function(data){
             if(data.code==0){
                 showToast("设置分组成功！");
-                var ele=$("#task2 .tab").eq(num).find(".aui-content ul");
+                if(num){
+                    var ele=$("#user-manage .aui-list")
+                    turnPage("#user-manage",'sit-group');
+                }
+                else{
+                    var ele=$("#dev-manage .aui-list");
+                    turnPage("#dev-manage",'sit-group');
+                }
+                // var ele=$("#task2 .tab").eq(num).find(".aui-content ul");
                 getgroup(num,ele);
-                turnPage("#task2",'sit-group');
+                // turnPage("#task2",'sit-group');
+                // turnPage("#dev-manage",'sit-group');
             }
             else{
                 showToast(data.msg);
@@ -1502,11 +1526,11 @@ function addDev(){
 /*
 turn设备详情中 设置分组
 */
-function turnDeviceDetailSitGroup(){
+function turnDeviceDetailSitGroup(val){
     $("#sit-group header .aui-pull-right").attr("onclick","deviceDetailSitGroup()");
     turnPage("#sit-group","add-dev");
     var ele=$("#sit-group .aui-content .aui-list");
-    getDeviceGroup(ele);
+    getGroupRadio(0,ele,val);
 }
 
 /*
@@ -1598,7 +1622,8 @@ function editGroup(id,name,num){
                     if(data.code==0){
                         showToast("修改成功！");
                         if(num==0){
-                            var ele=$("#task2 .tab").eq(1).find(".aui-content ul");
+                            // var ele=$("#task2 .tab").eq(1).find(".aui-content ul");
+                            var ele=$("#dev-manage .aui-list");
                             getgroup(0,ele);
                         }
                         else{
@@ -1706,7 +1731,8 @@ function addUser(){
 turn 人员列表
 */
 function userList(usergroupid,usergroupname){
-    turnPage("#user_list","task2");
+    // turnPage("#user_list","task2");
+    turnPage("#user_list","user-manage");
     var ele=$("#user_list .aui-content ul");
     $("#user_list header .aui-title").html(usergroupname).attr("data-id",usergroupid);
     ele.html("");
@@ -2595,8 +2621,31 @@ turn 上传头像
 */
 function turnUploadPic(){
     $("#headIcon-upload #headIcon")[0].src=sessionStorage.getItem("HeadIcon");
-    turnPage("#headIcon-upload","")
+    turnPage("#headIcon-upload","my-info");
 }
+
+$("#choosehead").change(function(){
+    var form = $("form#headFile");
+    var options  = {
+        url:baseurl+'user/user_icon?user_id='+sessionStorage.getItem("UserId"),
+        type:'post',
+        async:false,
+        success:function(data){
+            if(data.code==0){
+              $("#headIcon")[0].src=baseurl+data.data.IconUrl;
+              sessionStorage.setItem("HeadIcon",baseurl+data.data.IconUrl);
+            }
+            else{
+                showToast(data.msg)
+            }
+        },
+        error:function(error){
+            showToast("上传失败！请重试")
+        }
+    };
+    form.ajaxSubmit(options);
+})
+
 
 /*
 获取企业设备分组列表

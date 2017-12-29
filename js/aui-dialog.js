@@ -24,7 +24,7 @@
             var headerHtml = params.title ? '<div class="aui-dialog-header">' + params.title + '</div>' : '<div class="aui-dialog-header">' + self.params.title + '</div>';
             if(params.input){
                 params.text = params.text ? params.text: '';
-                var msgHtml = '<div class="aui-dialog-body"><input type="text" placeholder="'+params.text+'" value="'+params.value+'"></div>';
+                var msgHtml = '<div class="aui-dialog-body"><input type="text" placeholder="'+params.text+'" value="'+(params.value?params.value:"")+'"></div>';
             }else{
                 var msgHtml = params.msg ? '<div class="aui-dialog-body">' + params.msg + '</div>' : '<div class="aui-dialog-body">' + self.params.msg + '</div>';
             }
@@ -46,7 +46,7 @@
                             if(params.input){
                                 callback({
                                     buttonIndex: parseInt(this.getAttribute("button-index"))+1,
-                                    text: document.querySelector("input").value
+                                    text: $(".aui-dialog input").val()
                                 });
                             }else{
                                 callback({
