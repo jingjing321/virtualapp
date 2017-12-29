@@ -1489,7 +1489,7 @@ turn 添加设备
 function turnAddDev(){
     $("#add-dev form")[0].reset()
     $("#add-dev header .aui-pull-right").attr("onclick","addDev()");
-    turnPage("#add-dev","task2");
+    turnPage("#add-dev","dev-manage");
 }
 
 /*
