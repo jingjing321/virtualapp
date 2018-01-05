@@ -69,7 +69,7 @@
             <!-- <a class="aui-pull-left">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a> -->
-            <div class="aui-title">海尔</div>
+            <div class="aui-title" style="position: initial;">海尔</div>
         </header>
 		<div class="content">
 			<div class="content-block">
@@ -487,7 +487,7 @@
 <!-- 人员管理 -->
     <div class="page nofooter" id="user-manage" style="display: none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
-            <a class="aui-pull-left" onclick="pageBackturnDeviceDetailSitGroup()">
+            <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
             <div class="aui-title ">人员管理</div>
@@ -1855,9 +1855,9 @@
                             <div class="left">
                                 正常运行 
                                 <select class="form-control" style="display:inline-block;width: 57%;">
-                                    <option>按周查看</option>
-                                    <option>按月查看</option>
-                                    <option>按年查看</option>
+                                    <option value="7">按周查看</option>
+                                    <option value="30">按月查看</option>
+                                    <option value="0">按年查看</option>
                                 </select>
                             </div>
                             <div class="right">
@@ -1865,36 +1865,6 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="line" id="line-1" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
-                        </div>
-                         <div class="line-block">
-                            <div class="left">
-                                故障运行 
-                                <select class="form-control" style="display:inline-block;width: 57%;">
-                                    <option>按周查看</option>
-                                    <option>按月查看</option>
-                                    <option>按年查看</option>
-                                </select>
-                            </div>
-                            <div class="right">
-                                <span style="font-size: 1rem;font-weight: 600;">85%</span><br> <span>周运行率</span>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="line" id="line-2" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
-                        </div>
-                         <div class="line-block">
-                            <div class="left">
-                                正常停机 
-                                <select class="form-control" style="display:inline-block;width: 57%;">
-                                    <option>按周查看</option>
-                                    <option>按月查看</option>
-                                    <option>按年查看</option>
-                                </select>
-                            </div>
-                            <div class="right">
-                                <span style="font-size: 1rem;font-weight: 600;">85%</span><br> <span>周运行率</span>
-                            </div>
-                            <div class="clearfix"></div>
-                            <div class="line" id="line-3" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
                         </div>
                     </div>
                 </div>

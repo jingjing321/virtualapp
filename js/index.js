@@ -255,7 +255,7 @@ function searchCompany(){
         type: "get",
         dataType: "json",
         url: baseurl+"company/find",
-        data:{name:$("#select-company input[name=company-name]").val()} ,
+        data:{comp_name:$("#select-company input[name=company-name]").val()} ,
         success: function(data, textStatus){
             var ele=$("#select-company .user ul");
             ele.html("");
@@ -560,52 +560,7 @@ var line_1_option = {
 };
 line_1.setOption(line_1_option);
 
-var line_2= echarts.init(document.getElementById('line-2'));
-var line_2_option = {
-    grid: {
-        left: '0',
-        right: '4%',
-        bottom: '3%',
-        top:'4%',
-        containLabel: true
-    },
-    xAxis : [
-        {
-            type : 'category',
-            boundaryGap : false,
-            splitLine: { //网格线
-                show: true
-            },
-            axisLine:{
-                show:false
-            },
-            data : ['周一','周二','周三','周四','周五','周六','周日']
-        }
-    ],
-    yAxis : [
-        {
-            type : 'value',
-            splitLine: { //网格线
-                show: false
-            },
-            axisLine:{
-                show:false
-            },
-            axisLabel:{
-                show:false
-            },
-        }
-    ],
-    series : [
-        {
-            name:'邮件营销',
-            type:'line',
-            stack: '总量',
-            data:[120, 132, 101, 134, 90, 230, 210]
-        }
-    ]
-};
-line_2.setOption(line_2_option);
+
 $("#index-detail").css("display","none");
 
 /*
@@ -614,8 +569,30 @@ deviceid 设备id
 */
 function turnDeviceDetail(id,num){
     turnPage("#index-detail","index");
+    if(num==7){
+        var day=new Date();
+        var dayEnd=day.getTime()-1000*3600*24*7;
+        day=day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate();
+        dayEnd=dayEnd.getFullYear()+"-"+(dayEnd.getMonth()+1)+"-"+dayEnd.getDate();
+
+    }
+    else if(num==30){
+        var day=new Date();
+        var dayEnd=new Date();
+        dayEnd.setMonth(day.getMonth()-1);
+        day=day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate();
+        dayEnd=dayEnd.getFullYear()+"-"+(dayEnd.getMonth()+1)+"-"+dayEnd.getDate();
+    }
+    else{
+        var day=new Date();
+        var dayEnd=new Date();
+        dayEnd.setFullYear(day.getFillYear()-1);
+        day=day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate();
+        dayEnd=dayEnd.getFullYear()+"-"+(dayEnd.getMonth()+1)+"-"+dayEnd.getDate();
+
+    }
     $.ajax({
-        url:baseurl+"records/datecountsperwmy?comp_id="+sessionStorage.getItem("CompanyId")+"&state=0&startdate=2017-12-22&enddate=2017-11-22",
+        url:baseurl+"records/datecountsperwmy?comp_id="+sessionStorage.getItem("CompanyId")+"&state=0&startdate="+day+"&enddate="+dayEnd,
         type:"get",
         dataType:"json",
         success:function(data){
@@ -640,8 +617,7 @@ function getDeviceDetail(id){
         dataType:"json",
         success:function(data){
             if(data.code==0){
-                $("#index-detail #tabs2 li").eq(0).find(".aui-list-item-right").value(daata.data.userName);
-                
+                $("#index-detail #tabs2 li").eq(0).find(".aui-list-item-right").value(daata.data.userName);          
             }
             else{
                 showToast(data.msg)
@@ -2172,6 +2148,9 @@ function submitResult(num,taskid){
                 if(num!=1){
                     pageBack();
                 }
+                else{
+                    $("input[type=radio]").removeAttr("checked");
+                }
             }
             else{
                 showToast(data.msg);
@@ -2573,7 +2552,7 @@ function turnMessageDetail(){
                         if(!data.data.pgList[i].ReadFlag){
                             $.ajax({
                                 url:baseurl+"message/setread?msg_id="+data.data.pgList[i].MsgId,
-                                type:"get",
+                                type:"post",
                                 dataType:"json",
                                 success:function(data){
                                     if(data.code==0){
