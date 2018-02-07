@@ -137,6 +137,12 @@ function login(thiz){
                     sessionStorage.setItem("UserId",data.data[0].UserId);
                     setCookie("UserType",data.data[0].UserType,30);
                     sessionStorage.setItem("UserType",data.data[0].UserType);
+                    if(data.data[0].UserType==2){
+                        $(".adminFunc").css("display","");
+                    }
+                    else{
+                        $(".adminFunc").css("display","none");
+                    }
                     if(data.data[0].UserType==0){
                         turnPage("#select-identity","login");
                     }
@@ -513,8 +519,14 @@ $('#table').bootstrapTable({
     }
 });
 
-var line_1= echarts.init(document.getElementById('line-1'));
-var line_1_option = {
+    var line_0=echarts.init(document.getElementById('line-0')),
+    line_1=echarts.init(document.getElementById('line-1')),
+    line_2=echarts.init(document.getElementById('line-2')),
+    line_3=echarts.init(document.getElementById('line-3')),
+    line_4=echarts.init(document.getElementById('line-4')),
+    line_5=echarts.init(document.getElementById('line-5'));
+
+var line_option = {
     grid: {
         left: '0',
         right: '4%',
@@ -558,22 +570,49 @@ var line_1_option = {
         }
     ]
 };
-line_1.setOption(line_1_option);
+line_0.setOption(line_option);
+line_1.setOption(line_option);
+line_2.setOption(line_option);
+line_3.setOption(line_option);
+line_4.setOption(line_option);
+line_5.setOption(line_option);
 
 
 $("#index-detail").css("display","none");
 
 /*
 turn 设备详情-设备状态
-deviceid 设备id
+id deviceid 设备ID
 */
-function turnDeviceDetail(id,num){
+function turnDeviceDetail(id){
     turnPage("#index-detail","index");
+    $("#index-detail header .aui-title").attr("data-deviceId",id);
+    for(var i=0;i<6;i++){
+        deviceDetailLine(i,7);
+    }
+}
+
+/*
+设备详情-设备状态 折线图 时间select
+num 设备状态
+thiz select
+*/
+function LineTimeSelect(num,thiz){
+    deviceDetailLine(num,$(thiz).val());
+}
+
+/*
+设备详情-设备状态 折线图
+state 设备状态:正常运行:0 故障运行:1 正常停机:2 故障停机:3 维修保养:4 调试:5
+num 查看日期 7=按周 30=按月 other=按年
+*/
+function deviceDetailLine(state,num){
     if(num==7){
         var day=new Date();
-        var dayEnd=day.getTime()-1000*3600*24*7;
+        var dayEnd=new Date(day.getTime()-1000*3600*24*7);
         day=day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate();
         dayEnd=dayEnd.getFullYear()+"-"+(dayEnd.getMonth()+1)+"-"+dayEnd.getDate();
+        $("#line-"+state).siblings(".right").find("span").eq(1).html("周运行率");
 
     }
     else if(num==30){
@@ -582,23 +621,47 @@ function turnDeviceDetail(id,num){
         dayEnd.setMonth(day.getMonth()-1);
         day=day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate();
         dayEnd=dayEnd.getFullYear()+"-"+(dayEnd.getMonth()+1)+"-"+dayEnd.getDate();
+        $("#line-"+state).siblings(".right").find("span").eq(1).html("月运行率");
     }
     else{
         var day=new Date();
         var dayEnd=new Date();
-        dayEnd.setFullYear(day.getFillYear()-1);
+        dayEnd.setFullYear(day.getFullYear()-1);
         day=day.getFullYear()+"-"+(day.getMonth()+1)+"-"+day.getDate();
         dayEnd=dayEnd.getFullYear()+"-"+(dayEnd.getMonth()+1)+"-"+dayEnd.getDate();
-
+        $("#line-"+state).siblings(".right").find("span").eq(1).html("年运行率");
     }
     $.ajax({
-        url:baseurl+"records/datecountsperwmy?comp_id="+sessionStorage.getItem("CompanyId")+"&state=0&startdate="+day+"&enddate="+dayEnd,
+        url:baseurl+"records/datecountsperwmy?comp_id="+sessionStorage.getItem("CompanyId")+"&state="+state+"&startdate="+day+"&enddate="+dayEnd,
         type:"get",
         dataType:"json",
         success:function(data){
             console.log(data);
-            $("#index-detail header .aui-title").attr("data-deviceId",id);
-            turnPage("#index-detail","index");
+            $("#line-"+state).siblings(".right").find("span").eq(0).html(data.data.Rate);
+            line_option.xAxis[0].data=[];
+            line_option.series[0].data=[];
+            for(var i=0;i<data.data.DateCounts.length;i++){
+                line_option.xAxis[0].data.push(data.data.DateCounts[i].CheckDate);
+                line_option.series[0].data.push(data.data.DateCounts[i].CheckCount);
+            }
+            if(state==0){
+                line_0.setOption(line_option);
+            }
+            else if(state==1){
+                line_1.setOption(line_option);
+            }
+            else if(state==2){
+                line_2.setOption(line_option);
+            }
+            else if(state==3){
+                line_3.setOption(line_option);
+            }
+            else if(state==4){
+                line_4.setOption(line_option);
+            }
+            else{
+                line_5.setOption(line_option);
+            }
         },
         error:function(error){
 
@@ -617,7 +680,7 @@ function getDeviceDetail(id){
         dataType:"json",
         success:function(data){
             if(data.code==0){
-                $("#index-detail #tabs2 li").eq(0).find(".aui-list-item-right").value(daata.data.userName);          
+                $("#index-detail #tab2 li").eq(0).find(".aui-list-item-right").value(data.data.userName);          
             }
             else{
                 showToast(data.msg)
@@ -627,10 +690,10 @@ function getDeviceDetail(id){
 
         }
     })
-    $("#index-detail #tabs2 li").eq(0).attr("onclick","turnSitPrincipal("+id+")");
-    $("#index-detail #tabs2 li").eq(3).attr("onclick","turnRunRecord("+id+")");
-    $("#index-detail #tabs2 li").eq(4).attr("onclick","turnRecord(2,"+id+")");
-    $("#index-detail #tabs2 li").eq(5).attr("onclick","turnRecord(3,"+id+")");
+    $("#index-detail #tab2 li").eq(0).attr("onclick","turnSitPrincipal('"+id+"')");
+    $("#index-detail #tab2 li").eq(3).attr("onclick","turnRunRecord('"+id+"')");
+    $("#index-detail #tab2 li").eq(4).attr("onclick","turnRecord(2,'"+id+"')");
+    $("#index-detail #tab2 li").eq(5).attr("onclick","turnRecord(3,'"+id+"')");
 }
 
 /*
@@ -660,17 +723,23 @@ function turnRunRecord(id){
                                         '</div>'+
                                     '</div>');
                     }
+                    turnPage("#run-record","index-detail");
                 }
                 else{
                     ele.html("无记录");
+                    turnPage("#run-record","index-detail");
                 }
             }
             else{
+                ele.html("无记录");
                 showToast(data.msg)
+                turnPage("#run-record","index-detail");
             }
         },
         error:function(error){
-            showToast("获取记录失败！请重试")
+            showToast("获取记录失败！请重试");
+            ele.html("无记录");
+            turnPage("#run-record","index-detail");
         }
     })
 }
@@ -730,18 +799,23 @@ function turnRecord(num,id){
                                         '</div>'+
                                     '</div>');
                     }
+                    turnPage("#index-record","index-detail");
                 }
                 else{
                     ele.html("无记录");
+                    turnPage("#index-record","index-detail");
                 }
             }
             else{
+                ele.html("无记录");
+                turnPage("#index-record","index-detail");
                 showToast(data.msg);
-                ele.html(data.msg);
             }
         },
         error:function(error){
-
+            ele.html("无记录");
+            turnPage("#index-record","index-detail");
+            showToast("获取失败！请重试");
         }
     })
 }
@@ -777,7 +851,26 @@ function deviceDetail(id){
             }
         },
         error:function(error){
-
+            showToast("详情获取失败");
+            var ele=$("#index-detail .tab").eq(2);
+            ele.find("span").eq(0).html("详情获取失败");
+            ele.find("span").eq(1).html("功能描述："+"");
+            ele.find("span").eq(3).html("设备型号："+"");
+            ele.find("span").eq(4).html("生产厂家："+"");
+            ele.find("span").eq(5).html("出厂时间："+"");
+            ele.find("span").eq(6).html("购买单价："+"");
+            ele.find("span").eq(7).html("入库时间："+"");
+            ele.find("span").eq(8).html("设备编号："+"");
+            ele.find("span").eq(9).html("所在分组："+"");
+            ele.find(".aui-row").html("");
+            if(data.data.F_HeadIcon){
+                var url=data.data.F_HeadIcon.split(";");
+                for(var i=0;i<url.length;i++){
+                    ele.find(".aui-row").append('<div class="aui-col-xs-3">'+
+                                                    '<img src="'+url[i]+'"/>'+
+                                                '</div>');
+                }
+            }
         }
     })
 }
@@ -836,6 +929,13 @@ function getPieData(){
         success:function(data){
             if(data.code==0){
                 var todayRun=0,yesRun=0,todayDev=0,yesDev=0;
+                option.series[0].data=[{value:0, name:'正常运行'},
+                                        {value:0, name:'故障运行'},
+                                        {value:0, name:'正常停机'},
+                                        {value:0, name:'调试'},
+                                        {value:0, name:'维修保养'},
+                                        {value:0, name:'故障停机'}
+                                    ];
                 for(var i=0;i<data.data.length;i++){
                     option.series[0].data[i].value=data.data[i].CurCount;
                     if(data.data[i].State==0||data.data[i].State==1){
@@ -1111,7 +1211,7 @@ function getdeviceByGroup(group_id,group_name){
                     
                 }
                 else{
-                    ele.html("该分组下没有设备！");
+                    ele.html("<div class='noContent'>该分组下没有设备！</div>");
                 }
             }
             else{
@@ -1740,7 +1840,7 @@ function userList(usergroupid,usergroupname){
                     }
                 }
                 else{
-                    ele.html("该分组下没有用户！");
+                    ele.html("<div class='noContent'>该分组下没有用户！</div>");
                 }
                 
             }
@@ -1871,7 +1971,7 @@ function getUserTask(num,ele){
                     
                 }
                 else{
-                    ele.html("没有任务");
+                    ele.html("<div class='noContent'>没有任务</div>");
                 }
             }
             else{
@@ -1893,9 +1993,9 @@ user：负责人姓名；
 */
 function turnTaskDetail(taskid,num,name,user){
     $("#repair-detail header a.aui-pull-right").attr("onclick","submitResult("+num+",\'"+taskid+"\')");
-    $("#repair-detail .content-block .white-back").eq(0).find("span").eq(0).html(name);
-    $("#repair-detail .content-block .white-back").eq(0).find("span").eq(1).html("负责人："+user);
-    $("#repair-detail .content-block textarea").val("");
+    $("#repair-detail .content .white-back").eq(0).find("span").eq(0).html(name);
+    $("#repair-detail .content .white-back").eq(0).find("span").eq(1).html("负责人："+user);
+    $("#repair-detail .content textarea").val("");
     turnPage("#repair-detail","task");
 }
 
@@ -2347,7 +2447,7 @@ function turnHistoryTask(num){
                     turnPage("#history-task","my-task");
                 }
                 else{
-                    ele.html("没有历史任务");
+                    ele.html("<div class='noContent'>没有历史任务</div>");
                     turnPage("#history-task","my-task");
                 }
             }

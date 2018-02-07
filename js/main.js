@@ -333,6 +333,7 @@ $('#time_start').mobiscroll().time({
 $('#time_end').mobiscroll().time({
     theme: "android-holo-light",     // Specify theme like: theme: 'ios' or omit setting to use default 
     mode: "mixed",       // Specify scroller mode like: mode: 'mixed' or omit setting to use default 
+    startTime:"08:00",
     display: "modal", // Specify display mode like: display: 'bottom' or omit setting to use default 
     lang: "zh"        // Specify language like: lang: 'pl' or omit setting to use default 
 });

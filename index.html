@@ -65,7 +65,7 @@
     </div>
 <!-- index -->
     <div class="page" id="index" style="">
-		<header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+		<header class="aui-bar aui-bar-nav" ><!--style="25px"-->
             <!-- <a class="aui-pull-left">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a> -->
@@ -151,7 +151,7 @@
 	</div>
 <!-- task -->
     <div class="page" id="task" style="display:none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <div class="aui-title">任务</div>
             <a class="aui-pull-right aui-btn" onclick="submitResult(1)">
                 提交
@@ -166,7 +166,7 @@
             <div class="content-block">
                 <div class="tabs">
                     <div id="taskTab1" class="tab">
-                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(1)" style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
+                        <p><div class="aui-btn aui-btn-info adminFunc" onclick="turnAddTask(1)" style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
                         <div class="aui-content">
                             <div class="check">
                                 <span class="title">
@@ -184,7 +184,7 @@
                         </div>
                     </div>
                     <div class="taskTab2 tab" id="taskTab2" class="tab active" style="display: none;">
-                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(2)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加维修任务</div></p>
+                        <p><div class="aui-btn aui-btn-info adminFunc" onclick="turnAddTask(2)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加维修任务</div></p>
                         <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-media-list">
                                 <li class="aui-list-item aui-list-item-middle">
@@ -218,7 +218,7 @@
                         </div>
                     </div>
                     <div class="taskTab3 tab" id="taskTab3" class="tab active" style="display: none;">
-                        <p><div class="aui-btn aui-btn-info" onclick="turnAddTask(3)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加保养任务</div></p>
+                        <p class="adminFunc"><div class="aui-btn aui-btn-info" onclick="turnAddTask(3)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加保养任务</div></p>
                         <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-media-list">
                                 <li class="aui-list-item aui-list-item-middle">
@@ -258,7 +258,7 @@
     </div>
 <!-- task2 -->
     <div class="page" id="task2"  style="display: none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             任务
         </header>
         <div class="content">
@@ -364,7 +364,7 @@
     </div>
 <!-- mine -->
     <div class="page" id="mine"  style="display: none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-right aui-btn" onclick="turnMessage()">
                 <span class="fa fa-commenting-o" style="margin-right: 1rem"></span>
                 <!-- <div class="aui-badge" style="left: 30%;">88</div> -->
@@ -415,12 +415,12 @@
                             <div class="aui-list-item-title">我的任务</div>
                         </div>
                     </li>
-                    <li class="aui-list-item" onclick="turnDevManage()">
+                    <li class="aui-list-item adminFunc" onclick="turnDevManage()">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">设备管理</div>
                         </div>
                     </li>
-                    <li class="aui-list-item" onclick="turnUserManage()">
+                    <li class="aui-list-item adminFunc" onclick="turnUserManage()">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">人员管理</div>
                         </div>
@@ -455,7 +455,7 @@
     </footer>
 <!-- 设备管理 -->
     <div class="page nofooter" id="dev-manage" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -486,7 +486,7 @@
     </div>
 <!-- 人员管理 -->
     <div class="page nofooter" id="user-manage" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -517,7 +517,7 @@
     </div>
 <!-- 添加设备 -->
     <div class="page nofooter" id="add-dev" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -644,7 +644,7 @@
 <!-- 设置分组 -->
 
     <div class="page nofooter" id="sit-group" style="display:none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -689,7 +689,7 @@
     </div>
 <!-- 设备列表 -->
     <div class="page" id="devList" style="display:none">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -744,7 +744,7 @@
     </div>
 <!-- 选择负责人 -->
     <div class="page nofooter" id="sit-principal" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -827,7 +827,7 @@
     </div>
 <!-- 我的人员-分组 -->
     <div class="page" id="user_list" style="display:none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -872,7 +872,7 @@
     </div>
 <!-- 添加人员 -->
     <div class="page nofooter" id="add-user" style="display:none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn">取消
             </a  onclick="pageBack()">
             <div class="aui-title ">添加人员</div>
@@ -933,7 +933,7 @@
     </div>
 <!-- 配置模块 -->
     <div class="page nofooter" id="sit-group" style="display:none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn">取消
             </a  onclick="pageBack()">
             <div class="aui-title ">添加人员</div>
@@ -1002,7 +1002,7 @@
     </div>
 <!-- 分配任务 -->
     <div class="page nofooter" id="add-task" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">取消
             </a>
             <div class="aui-title ">分配任务</div>
@@ -1072,7 +1072,7 @@
     </div>
 <!-- 设置重复 -->
     <div class="page nofooter" id="sit-repeat" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1170,7 +1170,7 @@
     </div>
 <!-- 提醒 -->
     <div class="page nofooter" id="sit-remind" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1204,7 +1204,7 @@
     </div>
 <!-- 选择设备 -->
     <div class="page nofooter" id="select-device" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1255,7 +1255,7 @@
     </div>
 <!-- 我的资料 -->
     <div class="page nofooter" id="my-info" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1297,7 +1297,7 @@
     </div>
 <!-- 设置 -->
     <div class="page nofooter" id="set" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1347,7 +1347,7 @@
     </div>
 <!-- 我的账号 -->
     <div class="page nofooter" id="my-account" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1382,7 +1382,7 @@
     </div>
 <!-- 修改手机号 -->
     <div class="page nofooter" id="alert-phone" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1431,7 +1431,7 @@
     </div>
 <!-- 找回密码 -->
     <div class="page nofooter" id="find-password" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 取消
             </a>
@@ -1475,7 +1475,7 @@
     </div>
 <!-- 我的任务 -->
     <div class="page nofooter" id="my-task" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1507,7 +1507,7 @@
     </div>
 <!-- 维修任务 -->
     <div class="page nofooter" id="history-task" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1551,7 +1551,7 @@
     </div>
 <!-- 消息 -->
     <div class="page nofooter" id="message" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1605,7 +1605,7 @@
     </div>
 <!-- 注册 -->
     <div class="page nofooter" id="register" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 取消
             </a>
@@ -1656,7 +1656,7 @@
     </div>
 <!-- 选择你的身份 -->
     <div class="page nofooter" id="select-identity" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 取消
             </a>
@@ -1691,7 +1691,7 @@
     </div>
 <!-- 请填写企业资料 -->
     <div class="page nofooter" id="sit-company" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 取消
             </a>
@@ -1729,7 +1729,7 @@
     </div>
 <!-- 选择企业 -->
     <div class="page nofooter" id="select-company" style="display: none;">
-        <header class="aui-bar aui-bar-nav aui-bar-light" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
             <a class="aui-pull-left aui-btn" onclick="pageBack()">
                 取消
             </a>
@@ -1775,7 +1775,7 @@
     </div>
 <!-- 维修任务详情 -->
     <div class="page" id="repair-detail" style="display: none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1784,8 +1784,8 @@
         </header>
         <div class="content">
             <div class="white-back">
-                  <span>A01:YQBD-25液压起拔道机</span> <br>
-                  <span>负责人：王学东</span>
+                  <span></span> <br>
+                  <span></span>
             </div>
             <div class="white-back">
                 <textarea placeholder="请描述你的维修过程..." style="height: 10rem;"></textarea>
@@ -1800,7 +1800,7 @@
     </div>
 <!-- 历史维修任务详情 -->
     <div class="page" id="history-repair-detail" style="display: none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1836,7 +1836,7 @@
     </div>
 <!-- 设备详情 -->
     <div class="page nofooter" id="index-detail" style="">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -1854,7 +1854,22 @@
                         <div class="line-block">
                             <div class="left">
                                 正常运行 
-                                <select class="form-control" style="display:inline-block;width: 57%;">
+                                <select class="form-control" style="display:inline-block;width: 57%;" onclick="LineTimeSelect(0,this)">
+                                    <option value="7">按周查看</option>
+                                    <option value="30">按月查看</option>
+                                    <option value="0">按年查看</option>
+                                </select>
+                            </div>
+                            <div class="right">
+                                <span style="font-size: 1rem;font-weight: 600;">85%</span><br> <span>周运行率</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="line" id="line-0" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
+                        </div>
+                        <div class="line-block">
+                            <div class="left">
+                                故障运行 
+                                <select class="form-control" style="display:inline-block;width: 57%;" onclick="LineTimeSelect(1,this)">
                                     <option value="7">按周查看</option>
                                     <option value="30">按月查看</option>
                                     <option value="0">按年查看</option>
@@ -1865,6 +1880,66 @@
                             </div>
                             <div class="clearfix"></div>
                             <div class="line" id="line-1" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
+                        </div>
+                        <div class="line-block">
+                            <div class="left">
+                                正常停机 
+                                <select class="form-control" style="display:inline-block;width: 57%;" onclick="LineTimeSelect(2,this)">
+                                    <option value="7">按周查看</option>
+                                    <option value="30">按月查看</option>
+                                    <option value="0">按年查看</option>
+                                </select>
+                            </div>
+                            <div class="right">
+                                <span style="font-size: 1rem;font-weight: 600;">85%</span><br> <span>周运行率</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="line" id="line-2" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
+                        </div>
+                        <div class="line-block">
+                            <div class="left">
+                                故障停机 
+                                <select class="form-control" style="display:inline-block;width: 57%;" onclick="LineTimeSelect(3,this)">
+                                    <option value="7">按周查看</option>
+                                    <option value="30">按月查看</option>
+                                    <option value="0">按年查看</option>
+                                </select>
+                            </div>
+                            <div class="right">
+                                <span style="font-size: 1rem;font-weight: 600;">85%</span><br> <span>周运行率</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="line" id="line-3" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
+                        </div>
+                        <div class="line-block">
+                            <div class="left">
+                                维修保养 
+                                <select class="form-control" style="display:inline-block;width: 57%;" onclick="LineTimeSelect(4,this)">
+                                    <option value="7">按周查看</option>
+                                    <option value="30">按月查看</option>
+                                    <option value="0">按年查看</option>
+                                </select>
+                            </div>
+                            <div class="right">
+                                <span style="font-size: 1rem;font-weight: 600;">85%</span><br> <span>周运行率</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="line" id="line-4" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
+                        </div>
+                        <div class="line-block">
+                            <div class="left">
+                                调 &nbsp; &nbsp; &nbsp; 试 
+                                <select class="form-control" style="display:inline-block;width: 57%;" onclick="LineTimeSelect(5,this)">
+                                    <option value="7">按周查看</option>
+                                    <option value="30">按月查看</option>
+                                    <option value="0">按年查看</option>
+                                </select>
+                            </div>
+                            <div class="right">
+                                <span style="font-size: 1rem;font-weight: 600;">85%</span><br> <span>周运行率</span>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="line" id="line-5" style="width:100%;height:10rem;margin: auto;background-color: white"></div>
                         </div>
                     </div>
                 </div>
@@ -2034,7 +2109,7 @@
     </div>
 <!-- 维修记录 -->
     <div class="page nofooter" id="index-record" style="display: none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -2121,7 +2196,7 @@
     </div>
 <!-- 运行记录 -->
     <div class="page nofooter" id="run-record" style="display: none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -2164,7 +2239,7 @@
     </div>
 <!-- 头像上传 -->
     <div class="page nofooter" id="headIcon-upload" style="display: none;">
-        <header class="aui-bar aui-bar-nav" style="padding-top:25px;">
+        <header class="aui-bar aui-bar-nav" style="">
             <a class="aui-pull-left" onclick="pageBack()">
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
@@ -2354,7 +2429,7 @@
         });
     }
 
-//扩展jquery的格式化方法
+    //扩展jquery的格式化方法
     (function($){
         $.fn.parseForm=function(){
             var serializeObj={};
@@ -2398,18 +2473,18 @@ $("#clipArea").photoClip({
 });
 </script>
 <script>
-$(function(){
-$("#logoBox,#s_dpage").click(function(){
-$(".htmleaf-container").fadeIn(300);
-$("#dpage").addClass("show");
-})
-    $("#clipBtn").click(function(){
-        $("#logoBox").empty();
-        $('#logoBox').append('<img src="' + imgsource + '" align="absmiddle" style=" width:100%;">');
-        $(".htmleaf-container").hide();
-        $("#dpage").removeClass("show");
-    })
-});
+    $(function(){
+        $("#logoBox,#s_dpage").click(function(){
+            $(".htmleaf-container").fadeIn(300);
+            $("#dpage").addClass("show");
+        })
+        $("#clipBtn").click(function(){
+            $("#logoBox").empty();
+            $('#logoBox').append('<img src="' + imgsource + '" align="absmiddle" style=" width:100%;">');
+            $(".htmleaf-container").hide();
+            $("#dpage").removeClass("show");
+        })
+    });
 </script>
 <script type="text/javascript">
 $(function(){

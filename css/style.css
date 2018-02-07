@@ -178,3 +178,8 @@ li p{
 .aui-btn-white.disabled{
   color: rgba(4, 169, 243, 0.53) !important;
 }
+
+.noContent{
+    text-align: center;
+    padding: 1rem;
+}
