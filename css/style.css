@@ -182,4 +182,6 @@ li p{
 .noContent{
     text-align: center;
     padding: 1rem;
+    font-size: 0.8rem;
+    background-color: #ffffff;
 }

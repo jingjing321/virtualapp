@@ -180,13 +180,16 @@ function register(thiz){
     if($(thiz).hasClass("disabled")){
         return;
     }
-    if((/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/.test($("#register input[name=userPassword").val()))){
+    var registerPassword=$("#register input[name=userPassword]").val();
+    if((/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/.test($("#register input[name=userPassword]").val()))){
+    // if((/[A-Za-z0-9]{8,20}$/.test(registerPassword))){
+    // if(registerPassword<16&&registerPassword>7){
         $.ajax({
             type: "post",
             dataType: "json",
             url: baseurl+"user/register",
             data:{ac:$("#register input[name=userPhone]").val(),pw:$("#register input[name=userPassword]").val(),pv:$("#register input[name=verify]").val()},
-            success: function(data, textStatus){
+            success: function(data){
                 if(data.code==0){
                     turnPage("#select-identity",'register');
                     setCookie("UserId",data.data.UserId,30);
@@ -204,7 +207,7 @@ function register(thiz){
         })
     }
     else{
-        showToast("密码为8-20位，必须包含字母、数字")
+        showToast("密码必须为8-15位,有字母和数字组成");
     }
 }
 
@@ -359,7 +362,7 @@ function find_password(thiz){
     if($(thiz).hasClass("disabled")){
         return ;
     }
-    if((/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/.test($("#find-password input[name=newPassword").val()))){
+    if((/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,20}$/.test($("#find-password input").eq(2).val()))){
         $.ajax({
             type: "post",
             dataType: "json",
@@ -691,9 +694,9 @@ function getDeviceDetail(id){
         }
     })
     $("#index-detail #tab2 li").eq(0).attr("onclick","turnSitPrincipal('"+id+"')");
-    $("#index-detail #tab2 li").eq(3).attr("onclick","turnRunRecord('"+id+"')");
-    $("#index-detail #tab2 li").eq(4).attr("onclick","turnRecord(2,'"+id+"')");
-    $("#index-detail #tab2 li").eq(5).attr("onclick","turnRecord(3,'"+id+"')");
+    $("#index-detail #tab2 li").eq(1).attr("onclick","turnRunRecord('"+id+"')");
+    $("#index-detail #tab2 li").eq(2).attr("onclick","turnRecord(2,'"+id+"')");
+    $("#index-detail #tab2 li").eq(3).attr("onclick","turnRecord(3,'"+id+"')");
 }
 
 /*
@@ -1300,21 +1303,20 @@ function initPrincipal(ele){
                 console.log(data.data);
                 if(data.data.length>0){
                     for(var i=0;i<data.data.length;i++){
-                        ele.append('<div class="aui-collapse-item"><li class="aui-list-item aui-collapse-header" tapmode>'+
-                            '<div class="aui-list-item-inner">'+
-                                '<div class="aui-list-item-text">'+
-                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].UserGroupName+'</div> &nbsp;&nbsp;'+
-                                    '<div class="aui-list-item-text">'+
-                                        data.data[i].UserCount+'人'+
-                                    '</div>'+
-                                '</div>'+
-                                '<div class="aui-list-item-right">'+
-                                    '<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>'+
-                                '</div>'+
-                            '</div> '+
-                        '</li></div>');
+                        ele.append('<div class="aui-collapse-item">'+
+                                        '<li class="aui-list-item aui-collapse-header" tapmode>'+
+                                            '<div class="aui-list-item-inner">'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].UserGroupName+'</div> &nbsp;&nbsp;'+
+                                                    '<div class="aui-list-item-text">'+data.data[i].UserCount+'人'+'</div>'+
+                                                '</div>'+
+                                                '<div class="aui-list-item-right">'+
+                                                    '<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>'+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</li></div>');
                         $.ajax({
-                            url:baseurl+"user/getlistbygroupid?group_id="+data.data[i].UserGroupId,
+                            url:baseurl+"user/getlistbygroupid?comp_id="+sessionStorage.getItem("CompanyId")+'&group_id='+data.data[i].UserGroupId,
                             type:'get',
                             async:false,
                             dataType:"json",
@@ -1324,24 +1326,20 @@ function initPrincipal(ele){
                                     if(data.data.length>0){
                                         user_ele.append('<div class="aui-collapse-content"></div>');
                                         for(var user_i=0;user_i<data.data.length;user_i++){
-                                            user_ele.find(".aui-collapse-content").append('<li class="aui-list-item" style="display: block;">'+
-                                                '<div class="aui-media-list-item-inner">'+
-                                                    '<div class="aui-list-item-media" style="width: 3rem;">'+
-                                                        '<img src="images/demo5.png" class="aui-img-round aui-list-img-sm">'+
-                                                    '</div>'+
-                                                    '<div class="aui-list-item-inner aui-padded-t-10 aui-padded-b-10" style="display: block;">'+
-                                                        '<div class="aui-list-item-text">'+
-                                                            '<div class="aui-list-item-title">王学东</div>'+
-                                                        '</div>'+
-                                                        '<div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white top" type="radio" name="radio" checked></div>'+
-                                                        '<div class="aui-list-item-text">'+
-                                                            '<div class="aui-ellipsis-2">电气组组长</div>'+
-                                                        '</div>'+
-                                                    '</div>'+
-                                                '</div>'+
-                                            '</li>');
+                                            user_ele.find(".aui-collapse-content").append('<li class="aui-list-item">'+
+                                                                                                '<div class="aui-list-item-inner">'+
+                                                                                                    '<div class="aui-list-item-title">'+data.data[user_i].NickName+'</div>'+
+                                                                                                    '<div class="aui-list-item-right">'+
+                                                                                                        '<input class="aui-radio aui-radio-white" type="radio" name="demo1" checked="" value="'+data.data[user_i].UserId+'" data-value="'+data.data[user_i].NickName+'">'+
+                                                                                                    '</div>'+
+                                                                                                '</div>'+
+                                                                                            '</li>');
                                         }
+
                                     }
+                                    var collapse = new auiCollapse({
+                                        autoHide:false //是否自动隐藏已经展开的容器
+                                    });
                                 }
                             },
                             error:function(error){
@@ -1737,7 +1735,7 @@ function deleteGroup(num,id){
             }
             $.ajax({
                 url:baseurl+url+id,
-                type:"DELETE",
+                type:"post",
                 // data:{"group_id":id},
                 dataType: "json",
                 success: function(data, textStatus){
@@ -1811,9 +1809,18 @@ function userList(usergroupid,usergroupname){
     turnPage("#user_list","user-manage");
     var ele=$("#user_list .aui-content ul");
     $("#user_list header .aui-title").html(usergroupname).attr("data-id",usergroupid);
+    getUserList(usergroupid,ele);
+}
+
+/*
+*获取用户列表，根据groupId;
+*groupid 组id
+*ele 父元素
+*/
+function getUserList(groupId,ele){
     ele.html("");
     $.ajax({
-        url:baseurl+"user/getlistbygroupid?group_id="+usergroupid,
+        url:baseurl+"user/getlistbygroupid?comp_id="+sessionStorage.getItem("CompanyId")+"&group_id="+groupId,
         type:"get",
         dataType:"JSON",
         success:function(data){
@@ -1823,16 +1830,13 @@ function userList(usergroupid,usergroupname){
                     for(var i=0;i<data.data.length;i++){
                         ele.append('<li class="aui-list-item aui-list-item-middle">'+
                                         '<div class="aui-media-list-item-inner">'+
-                                            '<div class="aui-list-item-media" style="width: 3rem;">'+
-                                                '<img src="images/demo5.png" class="aui-img-round aui-list-img-sm">'+
-                                            '</div>'+
                                             '<div class="aui-list-item-inner ">'+
                                                 '<div class="aui-list-item-text">'+
-                                                    '<div class="aui-list-item-title aui-font-size-14">王学东</div>'+
-                                                    '<div class="aui-list-item-right sit-position" ><i class="fa fa-ellipsis-h"></i></div>'+
+                                                    '<div class="aui-list-item-title aui-font-size-14">'+(data.data[i].NickName?data.data[i].NickName:'未命名')+'</div>'+
+                                                    '<div class="aui-list-item-right sit-position" onclick="openUserActionSheet(\''+data.data[i].UserId+'\',\''+data.data[i].NickName+'\',\''+data.data[i].MobilePhone+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
                                                 '</div>'+
                                                 '<div class="aui-list-item-text">'+
-                                                    '电气一组  197-9708-9780'+
+                                                    data.data[i].MobilePhone+
                                                 '</div>'+
                                             '</div>'+
                                         '</div>'+
@@ -1871,9 +1875,11 @@ function turnsitUserGroup(id){
 turn 用户编辑
 id:用户id
 */
-function turneditUser(id){
+function turneditUser(id,name,phone){
     $("#add-user header .aui-title").html("用户编辑");
     $("#add-user header .aui-pull-right").attr("onclick","editUser('"+id+"')");
+    $("#add-user input[name=F_Account]").val(name);
+    $("#add-user input[name=F_MobilePhone]").val(phone);
     turnPage("#add-user","user_list");
 }
 
@@ -1882,6 +1888,21 @@ editUser 编辑用户信息；
 id 用户id；
 */
 function editUser(id){
+    var userData={"F_Id":id,"F_NickName":$("#add-user input[name=F_Account]").val(),"F_MobilePhone":$("#add-user input[name=F_MobilePhone]").val()};
+    $.ajax({
+        url:baseurl+'user/patch',
+        type:"PATCH",
+        dataType:"JSON",
+        data:userData,
+        success:function(data){
+            if(data.data==1){
+                showToast("用户修改成功");
+                var ele=$("#sit-group .content-block .aui-list");
+                getUserList($("#user_list header .aui-title").attr("data-id"),ele);
+                pageBack();
+            }
+        }
+    })
 
 }
 

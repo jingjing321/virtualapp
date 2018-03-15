@@ -168,7 +168,7 @@
                     <div id="taskTab1" class="tab">
                         <p><div class="aui-btn aui-btn-info adminFunc" onclick="turnAddTask(1)" style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加点检任务</div></p>
                         <div class="aui-content">
-                            <div class="check">
+                            <!-- <div class="check">
                                 <span class="title">
                                     A01:YQBD-25液压起拔道机
                                 </span> <br> <br>
@@ -180,7 +180,15 @@
                                 <label class="aui-col-xs-4"><input class="aui-radio aui-radio-yellow" type="radio" name="demo1" checked> 维修保养</label> 
                                 <label class="aui-col-xs-4"><input class="aui-radio aui-radio-red" type="radio" name="demo1" checked> 故障停机</label>
                                 <div class="clearfix"></div>
-                            </div>
+                            </div> -->
+                            <ul class="aui-list aui-list-in">
+                                <li class="aui-list-item aui-list-item-middle" onclick="opentaskAction()">
+                                    <div class="aui-list-item-inner aui-list-item-arrow">
+                                        <div class="aui-list-item-title">device name</div>
+                                        <div class="aui-list-item-right">正常运行</div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                     <div class="taskTab2 tab" id="taskTab2" class="tab active" style="display: none;">
@@ -218,7 +226,7 @@
                         </div>
                     </div>
                     <div class="taskTab3 tab" id="taskTab3" class="tab active" style="display: none;">
-                        <p class="adminFunc"><div class="aui-btn aui-btn-info" onclick="turnAddTask(3)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加保养任务</div></p>
+                        <p class=""><div class="aui-btn aui-btn-info adminFunc" onclick="turnAddTask(3)"  style="margin: -.5rem 0px 5px 5px;"><span class="fa fa-plus-circle"></span> &nbsp;添加保养任务</div></p>
                         <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-media-list">
                                 <li class="aui-list-item aui-list-item-middle">
@@ -663,28 +671,6 @@
                     </li>
                 </ul>
             </div>
-            <div class="aui-content aui-margin-b-15">
-                <ul class="aui-list aui-form-list">
-                    <li class="aui-list-item">
-                        <div class="aui-list-item-inner">
-                            <div class="aui-list-item-title">电气分组</div>
-                        </div>
-                        <div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white" type="radio" name="radio" checked></div>
-                    </li>
-                    <li class="aui-list-item">
-                        <div class="aui-list-item-inner">
-                            <div class="aui-list-item-title">电气分组</div>
-                        </div>
-                        <div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white" type="radio" name="radio" checked></div>
-                    </li>
-                    <li class="aui-list-item">
-                        <div class="aui-list-item-inner">
-                            <div class="aui-list-item-title">电气分组</div>
-                        </div>
-                        <div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white" type="radio" name="radio" checked></div>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 <!-- 设备列表 -->
@@ -754,7 +740,7 @@
                 </a>
         </header>
         <div class="content">
-            <ul class="aui-list aui-collapse aui-border">
+            <!-- <ul class="aui-list aui-collapse aui-border">
                 <div class="aui-collapse-item">
                     <li class="aui-list-item aui-collapse-header" tapmode>
                         <div class="aui-list-item-inner">
@@ -788,41 +774,32 @@
                         </li>
                     </div>
                 </div>
-                <div class="aui-collapse-item">
-                    <li class="aui-list-item aui-collapse-header" tapmode>
-                        <div class="aui-list-item-inner">
-                            <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-14">电气组</div> &nbsp;&nbsp;
-                                <div class="aui-list-item-text">
-                                    3人
-                                </div>
-                            </div>
-                            <div class="aui-list-item-right">
-                                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
-                            </div>
-                        </div> 
-                    </li>
-                    <div class="aui-collapse-content">
-                        <li class="aui-list-item" style="display: block;">
-                            <div class="aui-media-list-item-inner">
-                                <div class="aui-list-item-media" style="width: 3rem;">
-                                    <img src="images/demo5.png" class="aui-img-round aui-list-img-sm">
-                                </div>
-                                <div class="aui-list-item-inner aui-padded-t-10 aui-padded-b-10" style="display: block;">
-                                    <div class="aui-list-item-text">
-                                        <div class="aui-list-item-title">王学东</div>
-                                    </div>
-                                    <div class="aui-list-item-right sit-position"><input class="aui-radio aui-radio-white top" type="radio" name="radio" checked></div>
-                                    <div class="aui-list-item-text">
-                                        <div class="aui-ellipsis-2">电气组组长</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </div>
-                </div>
-            </ul>
+            </ul> -->
             
+             <ul class="aui-list aui-collapse aui-border">
+                 <div class="aui-collapse-item">
+                    <li class="aui-list-item aui-collapse-header" tapmode>
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title aui-font-size-14">14QQ</div> &nbsp;&nbsp;
+                                <div class="aui-list-item-text">1台</div>
+                            </div>
+                            <div class="aui-list-item-right">
+                                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                            </div>
+                        </div>
+                    </li><div class="aui-collapse-content">
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-title">设备四null</div>
+                                <div class="aui-list-item-right">
+                                    <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked="" value="b59078a0-d4d2-43ee-b8f0-ce732f6e5170" data-value="设备四null">
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </div>
+             </ul>
         </div>
     </div>
 <!-- 我的人员-分组 -->
@@ -832,9 +809,9 @@
                 <span class="aui-iconfont aui-icon-left"></span>
             </a>
             <div class="aui-title ">未分组人员</div>
-            <a class="aui-pull-right aui-btn">
+            <!-- <a class="aui-pull-right aui-btn">
                 编辑
-            </a>
+            </a> -->
         </header>
         <div class="content">
             <div class="aui-searchbar" id="search">
@@ -873,12 +850,12 @@
 <!-- 添加人员 -->
     <div class="page nofooter" id="add-user" style="display:none;">
         <header class="aui-bar aui-bar-nav aui-bar-light" style="">
-            <a class="aui-pull-left aui-btn">取消
-            </a  onclick="pageBack()">
+            <a class="aui-pull-left aui-btn" onclick="pageBack()">取消
+            </a>
             <div class="aui-title ">添加人员</div>
-                <a class="aui-pull-right aui-btn">
-                    确定
-                </a>
+            <a class="aui-pull-right aui-btn">
+                确定
+            </a>
         </header>
         <div class="content-block">
             <form>
@@ -904,7 +881,7 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="aui-list-item">
+                        <!-- <li class="aui-list-item">
                             <div class="aui-list-item-inner">
                                 <div class="aui-list-item-label">
                                     职位
@@ -913,10 +890,10 @@
                                     <input type="text" placeholder="请填写职位" name='F_Position'>
                                 </div>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
-                <div class="aui-content aui-margin-b-15">
+                <!-- <div class="aui-content aui-margin-b-15">
                     <ul class="aui-list aui-list-in">
                         <li class="aui-list-item">
                             <div class="aui-list-item-inner aui-list-item-arrow">
@@ -927,7 +904,7 @@
                             </div>
                         </li>
                     </ul>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>
@@ -1226,25 +1203,23 @@
             </div> -->
             <ul class="aui-list aui-collapse aui-border">
                 <div class="aui-collapse-item">
-                    <li class="aui-list-item aui-collapse-header" tapmode>
+                    <li class="aui-list-item aui-collapse-header aui-active" tapmode="">
                         <div class="aui-list-item-inner">
                             <div class="aui-list-item-text">
-                                <div class="aui-list-item-title aui-font-size-14">加工设备</div> &nbsp;&nbsp;
-                                <div class="aui-list-item-text">
-                                    20台
-                                </div>
+                                <div class="aui-list-item-title aui-font-size-14">14QQ</div> &nbsp;&nbsp;
+                                <div class="aui-list-item-text">1台</div>
                             </div>
                             <div class="aui-list-item-right">
                                 <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
                             </div>
                         </div> 
                     </li>
-                    <div class="aui-collapse-content">
-                        <li class="aui-list-item">
-                            <div class="aui-list-item-inner">
-                                <div class="aui-list-item-title">A01 567-454液压起拔道机</div>
-                                <div class="aui-list-item-right">
-                                    <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked>
+                <div class="aui-collapse-content aui-show">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">设备四null</div>
+                            <div class="aui-list-item-right">
+                                <input class="aui-radio aui-radio-white" type="radio" name="demo1" checked="" value="b59078a0-d4d2-43ee-b8f0-ce732f6e5170" data-value="设备四null">
                                 </div>
                             </div>
                         </li>
@@ -1954,7 +1929,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="aui-content aui-margin-b-15">
+                        <!-- <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-list-in">
                                 <li class="aui-list-item aui-list-item-middle">
                                     <div class="aui-list-item-inner aui-list-item-arrow">
@@ -1965,7 +1940,7 @@
                                         <div class="aui-list-item-title">设置保养</div>
                                 </li>
                             </ul>
-                        </div>
+                        </div> -->
                         <div class="aui-content aui-margin-b-15">
                             <ul class="aui-list aui-list-in">
                                 <li class="aui-list-item aui-list-item-middle">
@@ -2294,6 +2269,9 @@
         api.parseTapmode();
     }
     
+    var collapse = new auiCollapse({
+        autoHide:false //是否自动隐藏已经展开的容器
+    });
     var searchBar = document.querySelector(".aui-searchbar");
     var searchBarInput = document.querySelector(".aui-searchbar input");
     var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
@@ -2375,12 +2353,31 @@
             }
         })
     }
-    function openUserActionSheet(id,name){
+    function openUserActionSheet(id,name,phone){
         actionsheet.init({
             frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
             cancelTitle:'取消',
             destructiveTitle:'删除',
             buttons:["设置分组",'编辑']
+        },function(ret){
+            if(ret){
+                if(ret.buttonIndex==1){
+                    turnsitUserGroup(id);
+                }
+                else if(ret.buttonIndex==2){
+                    turneditUser(id,name,phone);
+                }
+                else{
+                    deleteUser(id)
+                }
+            }
+        })
+    }
+    function opentaskAction(){
+        actionsheet.init({
+            frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+            cancelTitle:'取消',
+            buttons:["正常运行",'故障运行','正常停机','调试','维修保养','']
         },function(ret){
             if(ret){
                 if(ret.buttonIndex==1){
