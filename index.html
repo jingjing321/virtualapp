@@ -433,6 +433,11 @@
                             <div class="aui-list-item-title">人员管理</div>
                         </div>
                     </li>
+                    <li class="aui-list-item adminFunc" onclick="turnUserCheck()">
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-title">人员审核</div>
+                        </div>
+                    </li>
                 </ul>
             </div>
             <div class="aui-content aui-margin-b-15">
@@ -814,7 +819,7 @@
             </a> -->
         </header>
         <div class="content">
-            <div class="aui-searchbar" id="search">
+            <!-- <div class="aui-searchbar" id="search">
                 <i class="fa fa-plus-circle plus-icon" onclick="showPopup('top-left')"></i>
                 <div class="aui-searchbar-input aui-border-radius">
                     <i class="aui-iconfont aui-icon-search"></i>
@@ -824,7 +829,7 @@
                     </div>
                 </div>
                 <div class="aui-searchbar-btn" tapmode>取消</div>
-            </div>
+            </div> -->
             <div class="aui-content aui-margin-b-15">
                 <ul class="aui-list aui-media-list">
                     <li class="aui-list-item aui-list-item-middle">
@@ -2232,6 +2237,31 @@
             </form>
         </div>
     </div>
+<!-- 用户审核 -->
+    <div class="page nofooter" id="user-check" style="display: none;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
+            <a class="aui-pull-left aui-btn" onclick="pageBack()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title ">用户审核</div>
+            <!-- <a class="aui-pull-right aui-btn">
+                确定
+            </a> -->
+        </header>
+        <div class="content">
+            <div class="aui-content aui-margin-b-15">
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner aui-list-item-arrow">
+                            <div class="aui-list-item-title">
+                                用户名 &nbsp; 身份:操作员
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div> 
+        </div>
+    </div> 
 </body>
 <script type="text/javascript" src="js/api.js" ></script>
 <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
@@ -2389,6 +2419,21 @@
                 else{
                     deleteUser(id)
                 }
+            }
+        })
+    }
+
+    function openCheckUser(id){
+        actionsheet.init({
+            frameBounces:true,//当前页面是否弹动，（主要针对安卓端）
+            cancelTitle:'取消',
+            buttons:['通过审核']
+        },function(ret){
+            if(ret.buttonIndex==1){
+                checkUser(id);
+            }
+            else{
+                // deleteUser(id);
             }
         })
     }

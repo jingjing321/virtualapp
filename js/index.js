@@ -127,8 +127,8 @@ function login(thiz){
                     sessionStorage.setItem("Gender",data.data[0].Gender);
                     setCookie("HeadIcon",(data.data[0].HeadIcon?baseurl+data.data[0].HeadIcon:data.data[0].HeadIcon),30);
                     sessionStorage.setItem("HeadIcon",(data.data[0].HeadIcon?baseurl+data.data[0].HeadIcon:data.data[0].HeadIcon));
-                    setCookie("NickName",data.data[0].NickName,30);
-                    sessionStorage.setItem("NickName",data.data[0].NickName);
+                    // setCookie("NickName",data.data[0].NickName,30);
+                    // sessionStorage.setItem("NickName",data.data[0].NickName);
                     setCookie("position",data.data[0].position,30);
                     sessionStorage.setItem("position",data.data[0].position);
                     setCookie("RealName",data.data[0].RealName,30);
@@ -143,7 +143,7 @@ function login(thiz){
                     else{
                         $(".adminFunc").css("display","none");
                     }
-                    if(data.data[0].UserType==0){
+                    if(data.data[0].UserType==0||!data.data[0].CheckMark){
                         turnPage("#select-identity","login");
                     }
                     else{
@@ -1080,7 +1080,7 @@ function initUser(){
     else{
         ele.find(".avatar").html('<span class="fa fa-user-plus userIcon"></span>');
     }
-    ele.find(".my-title .userName").html(sessionStorage.getItem("NickName"));
+    ele.find(".my-title .userName").html(sessionStorage.getItem("RealName"));
     ele.find(".my-title .userPosition").html(sessionStorage.getItem("Postion"));
     ele.find(".companyInfo img")[0].src=sessionStorage.getItem("CompanyIcon")!="null"?sessionStorage.getItem("CompanyIcon"):"images/logoupload.png";
     ele.find(".companyInfo .aui-list-item-title").html(sessionStorage.getItem("CompanyName"));
@@ -1129,7 +1129,7 @@ ele 父元素；
 */
 function getgroup(num,ele){
     if(num){
-        var url="usergroup/getlist?comp_id=";
+        var url="usergroup/group_list?comp_id=";
     }
     else{
         var url="devicegroup/get_list_comp?comp_id=";
@@ -1269,7 +1269,7 @@ function deleteDevice(id){
     },function(ret){
         if(ret.buttonIndex==2){
             $.ajax({
-                url:baseurl+"device/del?device_id="+id,
+                url:baseurl+"device/delete?device_id="+id,
                 type:"DELETE",
                 dataType:"json",
                 success:function(data){
@@ -1328,9 +1328,9 @@ function initPrincipal(ele){
                                         for(var user_i=0;user_i<data.data.length;user_i++){
                                             user_ele.find(".aui-collapse-content").append('<li class="aui-list-item">'+
                                                                                                 '<div class="aui-list-item-inner">'+
-                                                                                                    '<div class="aui-list-item-title">'+data.data[user_i].NickName+'</div>'+
+                                                                                                    '<div class="aui-list-item-title">'+(data.data[user_i].RealName?data.data[user_i].RealName:data.data[user_i].MobilePhone)+'</div>'+
                                                                                                     '<div class="aui-list-item-right">'+
-                                                                                                        '<input class="aui-radio aui-radio-white" type="radio" name="demo1" checked="" value="'+data.data[user_i].UserId+'" data-value="'+data.data[user_i].NickName+'">'+
+                                                                                                        '<input class="aui-radio aui-radio-white" type="radio" name="demo1" checked="" value="'+data.data[user_i].UserId+'" data-value="'+(data.data[user_i].RealName?data.data[user_i].RealName:data.data[user_i].MobilePhone)+'">'+
                                                                                                     '</div>'+
                                                                                                 '</div>'+
                                                                                             '</li>');
@@ -1383,7 +1383,7 @@ id 设备id
 */
 function turnEditDevice(id){
     $("#add-dev header .aui-title").html("编辑设备");
-    $("#add-dev header .aui-pull-right").attr("onclick","editDevice("+id+")");
+    $("#add-dev header .aui-pull-right").attr("onclick","editDevice('"+id+"')");
     
     $.ajax({
         url:baseurl+"device/getdevicedetail?device_id="+id,
@@ -1415,14 +1415,22 @@ editDevice 编辑设备详情
 id 设备id
 */
 function editDevice(id){
+    var formData=$("#add-dev form").parseForm();
+    formData.company_id=sessionStorage.getItem("CompanyId");
+    formData.user_id=sessionStorage.getItem("UserId");
+    formData.group_id=$("#add-dev #groupName div.aui-list-item-right").attr("data-id");
+    formData.annex=$("devFile").attr("data-url");
+    formData.device_id=id;
+    formData.storage_time=formData.storage_time.replace(/\//g,"-")+"T00:00:00"
     $.ajax({
         url:baseurl+"device/edit",
         type:"PATCH",
-        data:$("#add-dev form").serialize(),
+        data:formData,
         dataType:"json",
         success:function(data){
             if(data.code==0){
                 showToast("设备详情修改成功");
+                getdeviceByGroup($("#devList header .aui-title").attr("data-groupId"));
                 pageBack();
             }
             else{
@@ -1633,10 +1641,12 @@ function addGroup(num){
             if(num==0){
                 var url="devicegroup/add";
                 data['group_name']=ret.text;
+                var ele=$("#dev-manage .content .aui-list");
             }
             else{
                 var url="usergroup/add";
                 data['dt_name']=ret.text;
+                var ele=$("#user-manage .content .aui-list");
             }
             if(ret.text.length>0&&ret.text.length<5){
                 $.ajax({
@@ -1647,7 +1657,7 @@ function addGroup(num){
                     success: function(data, textStatus){
                         if(data.code==0){
                             showToast("添加分组成功！");
-                            var ele=$("#task2 .tab").eq(num/1+1).find(".aui-content ul");
+                            // var ele=$("#task2 .tab").eq(num/1+1).find(".aui-content ul");
                             getgroup(num,ele);
                         }
                         else{
@@ -1671,7 +1681,6 @@ function addGroup(num){
 num 设备：0；人员：1
 */
 function editGroup(id,name,num){
-    console.log(name);
     var dialog = new auiDialog();
     dialog.prompt({
         title:"编辑分类",
@@ -1683,9 +1692,11 @@ function editGroup(id,name,num){
             var data={comp_id:sessionStorage.getItem("CompanyId"),user_id:sessionStorage.getItem("UserId"),dt_id:id,dt_name:ret.text};
             if(num==0){
                 var url="devicegroup/edit";
+                var ele=$("#dev-manage .aui-list");
             }
             else{
                 var url="usergroup/edit";
+                var ele=$("#user-manage .aui-list");
             }
             $.ajax({
                 url:baseurl+url,
@@ -1695,14 +1706,7 @@ function editGroup(id,name,num){
                 success:function(data){
                     if(data.code==0){
                         showToast("修改成功！");
-                        if(num==0){
-                            // var ele=$("#task2 .tab").eq(1).find(".aui-content ul");
-                            var ele=$("#dev-manage .aui-list");
-                            getgroup(0,ele);
-                        }
-                        else{
-                            getUserGroup();
-                        }
+                        getgroup(num,ele);
                     }
                     else{
                         showToast(data.msg);
@@ -1729,18 +1733,21 @@ function deleteGroup(num,id){
         if(ret.buttonIndex==2){
             if(num){
                 var url="usergroup/delete?dt_id=";
+                var ele=$("#user-manage .content .aui-list");
             }
             else{
-                var url="devicegroup/del?group_id=";
+                var url="devicegroup/delete?group_id=";
+                var ele=$("#dev-manage .content .aui-list");
             }
             $.ajax({
                 url:baseurl+url+id,
-                type:"post",
+                type:"get",
                 // data:{"group_id":id},
                 dataType: "json",
                 success: function(data, textStatus){
                     if(data.code==0){
                         showToast("删除分组成功！");
+                        getgroup(num,ele);
                     }
                     else{
                         showToast(data.msg);
@@ -1827,20 +1834,27 @@ function getUserList(groupId,ele){
             if(data.code==0){
                 console.log(data.data);
                 if(data.data.length>0){
+                    var num=0;
                     for(var i=0;i<data.data.length;i++){
-                        ele.append('<li class="aui-list-item aui-list-item-middle">'+
-                                        '<div class="aui-media-list-item-inner">'+
-                                            '<div class="aui-list-item-inner ">'+
-                                                '<div class="aui-list-item-text">'+
-                                                    '<div class="aui-list-item-title aui-font-size-14">'+(data.data[i].NickName?data.data[i].NickName:'未命名')+'</div>'+
-                                                    '<div class="aui-list-item-right sit-position" onclick="openUserActionSheet(\''+data.data[i].UserId+'\',\''+data.data[i].NickName+'\',\''+data.data[i].MobilePhone+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
-                                                '</div>'+
-                                                '<div class="aui-list-item-text">'+
-                                                    data.data[i].MobilePhone+
+                        if(data.data[i].UserType==3){
+                            ele.append('<li class="aui-list-item aui-list-item-middle">'+
+                                            '<div class="aui-media-list-item-inner">'+
+                                                '<div class="aui-list-item-inner ">'+
+                                                    '<div class="aui-list-item-text">'+
+                                                        '<div class="aui-list-item-title aui-font-size-14">'+(data.data[i].RealName?data.data[i].RealName:'未命名')+'</div>'+
+                                                        '<div class="aui-list-item-right sit-position" onclick="openUserActionSheet(\''+data.data[i].UserId+'\',\''+data.data[i].RealName+'\',\''+data.data[i].MobilePhone+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
+                                                    '</div>'+
+                                                    '<div class="aui-list-item-text">'+
+                                                        data.data[i].MobilePhone+
+                                                    '</div>'+
                                                 '</div>'+
                                             '</div>'+
-                                        '</div>'+
-                                    '</li>');
+                                        '</li>');
+                            num++;
+                        }
+                    }
+                    if(num==0){
+                        ele.html("<div class='noContent'>该分组下没有用户！</div>");
                     }
                 }
                 else{
@@ -1876,10 +1890,11 @@ turn 用户编辑
 id:用户id
 */
 function turneditUser(id,name,phone){
+    console.log(name+","+phone);
     $("#add-user header .aui-title").html("用户编辑");
     $("#add-user header .aui-pull-right").attr("onclick","editUser('"+id+"')");
-    $("#add-user input[name=F_Account]").val(name);
-    $("#add-user input[name=F_MobilePhone]").val(phone);
+    $("#add-user input[name=F_Account]").val((name!="null"?name:""));
+    $("#add-user input[name=F_MobilePhone]").val((phone!="null"?phone:""));
     turnPage("#add-user","user_list");
 }
 
@@ -1888,16 +1903,16 @@ editUser 编辑用户信息；
 id 用户id；
 */
 function editUser(id){
-    var userData={"F_Id":id,"F_NickName":$("#add-user input[name=F_Account]").val(),"F_MobilePhone":$("#add-user input[name=F_MobilePhone]").val()};
+    var userData={"F_Id":id,"F_RealName":$("#add-user input[name=F_Account]").val(),"F_MobilePhone":$("#add-user input[name=F_MobilePhone]").val()};
     $.ajax({
-        url:baseurl+'user/patch',
-        type:"PATCH",
+        url:baseurl+'user/edit',
+        type:"post",
         dataType:"JSON",
         data:userData,
         success:function(data){
             if(data.data==1){
                 showToast("用户修改成功");
-                var ele=$("#sit-group .content-block .aui-list");
+                var ele=$("#user_list .content .aui-list");
                 getUserList($("#user_list header .aui-title").attr("data-id"),ele);
                 pageBack();
             }
@@ -1912,8 +1927,8 @@ id 用户id
 */
 function deleteUser(id){
     $.ajax({
-        url:baseurl+"user/delete?id="+id,
-        type:"delete",
+        url:baseurl+"user/delete?user_id="+id,
+        type:"get",
         dataType:"json",
         success:function(data){
             if(data.code==0){
@@ -1965,7 +1980,7 @@ function getUserTask(num,ele){
                                                         '<div class="aui-list-item-right sit-position">查看详情</div>'+
                                                     '</div>'+
                                                     '<div class="aui-list-item-text">'+
-                                                        '负责人：'+data.data.pgList[i].UserName+
+                                                        '负责人：'+((data.data.pgList[i].UserName==null)?sessionStorage.getItem("phone"):data.data.pgList[i].UserName)+
                                                     '</div>'+
                                                 '</div>'+
                                             '</div>'+
@@ -2015,7 +2030,7 @@ user：负责人姓名；
 function turnTaskDetail(taskid,num,name,user){
     $("#repair-detail header a.aui-pull-right").attr("onclick","submitResult("+num+",\'"+taskid+"\')");
     $("#repair-detail .content .white-back").eq(0).find("span").eq(0).html(name);
-    $("#repair-detail .content .white-back").eq(0).find("span").eq(1).html("负责人："+user);
+    $("#repair-detail .content .white-back").eq(0).find("span").eq(1).html("负责人："+(user=='null'?sessionStorage.getItem("phone"):user));
     $("#repair-detail .content textarea").val("");
     turnPage("#repair-detail","task");
 }
@@ -2204,12 +2219,12 @@ function addTask(num){
             "type":num,
             "device_id":ele.find("li").eq(0).find(".aui-list-item-right").attr("data-value"),
             "comp_id":sessionStorage.getItem("CompanyId"),
-            "user_id":sessionStorage.getItem("UserId"),
+            "user_id":ele.find("ul").eq(1).find("li .aui-list-item-right").attr("data-value"),
             "start_time":ele.find("input").eq(0).val(),
             "end_time":ele.find("input").eq(0).val(),
             "repeat":ele.find("#sitRepeat .aui-list-item-right").attr("data-value"),
             "remind":ele.find("li").eq(3).find(".aui-list-item-right").attr("data-value"),
-            "admin_id":ele.find("ul").eq(1).find("li .aui-list-item-right").attr("data-value")};
+            "admin_id":sessionStorage.getItem("UserId")};
     $.ajax({
         url:baseurl+"task/submit",
         type:"post",
@@ -2256,7 +2271,7 @@ function submitResult(num,taskid){
     }
     else{
         data["tast_id"]=taskid;
-        data["solution"]=$("#repair-detail .content-block textarea").val();
+        data["solution"]=$("#repair-detail .content textarea").val();
     }
     $.ajax({
         url:baseurl+"task/result",
@@ -2289,20 +2304,27 @@ turn 用户信息
 function turnUserInfo(){
     var ele=$("#my-info .content li");
     ele.eq(0).find("img")[0].src=sessionStorage.getItem("HeadIcon");
-    ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("NickName")).parent().attr("onclick","alterUserInfo(0,'"+sessionStorage.getItem("NickName")+"')");
+    ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("RealName")).parent().attr("onclick","alterUserInfo(0,'"+sessionStorage.getItem("RealName")+"')");
     ele.eq(2).find(".aui-list-item-right").html(sessionStorage.getItem("position")).parent().attr("onclick","alterUserInfo(1,'"+sessionStorage.getItem("position")+"')");
     turnPage("#my-info","mine");
 }
 
 /*
-修改 Nickname
-num 0:NickName;1:position;
+修改 RealName
+num 0:RealName;1:position;
 text 原名称;
 */
 function alterUserInfo(num,text){
     var dialog = new auiDialog();
+    var dialog_title=""
+    if(num){
+        dialog_title="修改职位";
+    }
+    else{
+        dialog_title="修改用户名";
+    }
     dialog.prompt({
-        title:"修改用户名",
+        title:dialog_title,
         value:text,
         type:'text',
         buttons:['取消','确定']
@@ -2314,12 +2336,12 @@ function alterUserInfo(num,text){
                     data["F_Position"]=ret.text;
                 }
                 else{
-                    data["F_NickName"]=ret.text
+                    data["F_RealName"]=ret.text
                 }
                 $.ajax({
-                    url:baseurl+"user/patch",
+                    url:baseurl+"user/edit",
                     data:data,
-                    type:"PATCH",
+                    type:"post",
                     dataType:"json",
                     success:function(data){
                         if(data.code==0){
@@ -2330,8 +2352,8 @@ function alterUserInfo(num,text){
                                 ele.eq(2).find(".aui-list-item-right").html(sessionStorage.getItem("position"));
                             }
                             else{
-                                sessionStorage.setItem("NickName",ret.text);
-                                ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("NickName"));
+                                sessionStorage.setItem("RealName",ret.text);
+                                ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("RealName"));
                             }
                         }
                         else{
@@ -2784,3 +2806,93 @@ $("#choosehead").change(function(){
 //     })
 // }
 
+function turnUserCheck(){
+    turnPage("#user-check","mine");
+    getUnCheckList()
+}
+
+/*
+*获取未审核用户列表
+*/
+function getUnCheckList(){
+    var ele=$("#user-check .content .aui-list");
+    ele.html("");
+    $.ajax({
+        url:baseurl+"user/add_check?comp_id="+sessionStorage.getItem("CompanyId")+"&idx=1&size=100",
+        type: "get",
+        dataType: "json",
+        success: function(data){
+            if(data.code==0){
+                if(data.data.lists.length>0){
+                    for(var i=0;i<data.data.lists.length;i++){
+                        var userType="";
+                        switch(data.data.lists[i].UserType){
+                            case 0:
+                                userType="普通用户";
+                                break;
+                            case 1:
+                                userType="企业管理员";
+                                break;
+                            case 2:
+                                userType="设备管理员";
+                                break;
+                            default:
+                                userType="职员"
+                        }
+                        ele.append('<li class="aui-list-item aui-list-item-arrow" onclick="openCheckUser(\''+data.data.lists[i].UserId+'\')">'+
+                                        '<div class="aui-media-list-item-inner">'+
+                                            '<div class="aui-list-item-inner">'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '<div class="aui-list-item-title">'+"手机号："+data.data.lists[i].MobilePhone+'</div>'+
+                                                    '<div class="aui-list-item-right"></div>'+
+                                                '</div>'+
+                                                '<div class="aui-list-item-text aui-ellipsis-2">'+
+                                                    '类型：'+userType+
+                                                '</div>'+
+                                            '</div>'+
+                                        '</div>'+
+                                    '</li>');
+                    }
+                    
+                }
+                else{
+                    ele.html("<div class='noContent'>没有未审核用户</div>");
+                }
+            }
+            else{
+                ele.html("<div class='noContent'>没有未审核用户</div>");
+                showToast("获取未审核用户失败！");
+            }
+        },
+        error:function(error){
+            ele.html("<div class='noContent'>没有未审核用户</div>");
+            showToast("获取未审核用户失败！");
+        }
+    })
+}
+
+/*
+*用户通过审核
+*id 用户id
+*/
+function checkUser(id){
+    var data={"user_id":id,check_user_id:sessionStorage.getItem("UserId"),check_user__name:sessionStorage.getItem("RealName")}
+    dialog.alert({
+        title:"提示",
+        msg:'确认通过审核？',
+        buttons:['取消','确定']
+    },function(ret){
+        if(ret.buttonIndex==2){
+            $.ajax({
+                url:baseurl+"user/add_check",
+                type: "post",
+                data:data,
+                dataType: "json",
+                success: function(data){
+                    showToast(data.msg);
+                    getUnCheckList();
+                }
+            })
+        }
+    })
+}
