@@ -1972,7 +1972,8 @@ function getUserTask(num,ele){
                     }
                     else{
                         for(var i=0;i<data.data.pgList.length;i++){
-                            ele.append('<li class="aui-list-item aui-list-item-middle" onclick="turnTaskDetail(\''+data.data.pgList[i].TaskId+'\','+num+',\''+data.data.pgList[i].DeviceName+'\',\''+data.data.pgList[i].UserName+'\')">'+
+                            if(data.data.pgList[i].TaskState==0){
+                                ele.append('<li class="aui-list-item aui-list-item-middle" onclick="turnTaskDetail(\''+data.data.pgList[i].TaskId+'\','+num+',\''+data.data.pgList[i].DeviceName+'\',\''+data.data.pgList[i].UserName+'\')">'+
                                             '<div class="aui-media-list-item-inner">'+
                                                 '<div class="aui-list-item-inner aui-list-item-arrow">'+
                                                     '<div class="aui-list-item-text">'+
@@ -1985,6 +1986,7 @@ function getUserTask(num,ele){
                                                 '</div>'+
                                             '</div>'+
                                         '</li>');
+                            }
                         }
                     }
                     // else{
@@ -2283,6 +2285,8 @@ function submitResult(num,taskid){
                 showToast("提交成功！");
                 if(num!=1){
                     pageBack();
+                    var ele=$("#task .tabs .tab").eq(num-1).find("ul");
+                    getUserTask(num,ele);
                 }
                 else{
                     $("input[type=radio]").removeAttr("checked");
@@ -2467,42 +2471,42 @@ function turnHistoryTask(num){
         $("#history-task header .aui-title").html("保养任务");
     }
     $.ajax({
-        url:baseurl+"task/gettaskbyuserid?user_id="+sessionStorage.getItem("UserId")+"&type="+num,
+        url:baseurl+"task/gettaskbyuser?user_id="+sessionStorage.getItem("UserId")+"&type="+num,
         type:"get",
         dataType:"json",
         success:function(data){
+            console.log(data);
             if(data.code==0){
-                console.log(data.data);
                 if(data.data.pgList.length>0){
-                    ele.append('<li class="aui-list-item aui-list-item-middle" onclick="getTaskDetail(\''+data.data.pgList[i].TaskId+'\','+(num-2)+')">'+
-                                    '<div class="aui-media-list-item-inner">'+
-                                        '<div class="aui-list-item-inner aui-list-item-arrow">'+
-                                            '<div class="aui-list-item-text">'+
-                                                '<div class="aui-list-item-title aui-font-size-14">'+data.data.pgList[i].DeviceName+'</div>'+
-                                                '<div class="aui-list-item-right sit-position">查看详情</div>'+
-                                            '</div>'+
-                                            '<div class="aui-list-item-text">'+
-                                                '负责人：'+data.data.pgList[i].UserName+
+                    for(var i=0;i<data.data.pgList.length;i++){
+                        if(data.data.pgList[i].TaskState!=0){
+                            ele.append('<li class="aui-list-item aui-list-item-middle" onclick="getTaskDetail(\''+data.data.pgList[i].TaskId+'\','+num+',\''+data.data.pgList[i].DeviceName+'\')">'+
+                                        '<div class="aui-media-list-item-inner">'+
+                                            '<div class="aui-list-item-inner aui-list-item-arrow">'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data.pgList[i].DeviceName+'</div>'+
+                                                    '<div class="aui-list-item-right sit-position">查看详情</div>'+
+                                                '</div>'+
+                                                '<div class="aui-list-item-text">'+
+                                                    '负责人：'+((data.data.pgList[i].UserName==null)?sessionStorage.getItem("phone"):data.data.pgList[i].UserName)+
+                                                '</div>'+
                                             '</div>'+
                                         '</div>'+
-                                    '</div>'+
-                                '</li>');
-                    turnPage("#history-task","my-task");
+                                    '</li>');
+                        }
+                    }
                 }
                 else{
                     ele.html("<div class='noContent'>没有历史任务</div>");
-                    turnPage("#history-task","my-task");
                 }
             }
             else{
                 showToast(data.msg);
-                ele.html("获取任务失败");
-                turnPage("#history-task","my-task");
             }
+            turnPage("#history-task","my-task");
         },
         error:function(error){
-            showToast("获取任务失败！");
-            turnPage("#history-task","my-task");
+            showToast("获取任务列表失败！");
         }
     })
 }
@@ -2512,7 +2516,7 @@ function turnHistoryTask(num){
 taskId 任务id 
 num 任务类型（维修：0 保养：1 默认：0）
 */
-function getTaskDetail(taskId,num){
+function getTaskDetail(taskId,num,devName){
     $.ajax({
         url:baseurl+"task/getdetails?task_id="+taskId+"&type="+num,
         type:"get",
@@ -2520,10 +2524,10 @@ function getTaskDetail(taskId,num){
         success:function(data){
             if(data.code==0){
                 console.log(data.data);
-                $("#history-repair-detail header .aui-title").attr("data-value",data.data.TaskId).attr("data-type",num);
-                $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(0).html(data.data.DeviceName).attr("data-value",data.data.DeviceId);
-                $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(1).html(data.data.UserName);  
-                $("#history-repair-detail .content-block .white-back").eq(1).html(data.data.detail);
+                $("#history-repair-detail header .aui-title").attr("data-value",data.data[0].TaskId).attr("data-type",num);
+                $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(0).html((data.data[0].DeviceName?data.data[0].DeviceName:devName)).attr("data-value",data.data[0].DeviceId);
+                $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(1).html("负责人："+(sessionStorage.getItem('RealName')=='null'?sessionStorage.getItem('phone'):sessionStorage.getItem('RealName')));  
+                $("#history-repair-detail .content-block .white-back").eq(1).html(data.data[0].Solution);
                 turnPage("#history-repair-detail","history-task");
             }
             else{
@@ -2542,8 +2546,8 @@ function getTaskDetail(taskId,num){
 编辑历史任务
 */
 function editHistoryTask(){
-    var text=$("#history-repair-detail .white-back").eq(1).html();
-    $("#history-repair-detail .white-back").eq(1).html('<textarea placeholder="请描述你的维修过程..." style="height: 10rem;" value="'+text+'"></textarea>');
+    var text=$("#history-repair-detail .white-back").eq(1).text();
+    $("#history-repair-detail .white-back").eq(1).html('<textarea placeholder="请描述你的维修过程..." style="height: 10rem;">'+$.trim(text)+'</textarea>');
     $("#history-repair-detail .content-block p").css("display","none");
     $("#history-repair-detail header .aui-pull-right").css("display","").attr("onclick","submitHistoryTask()");
 }
@@ -2552,7 +2556,7 @@ function editHistoryTask(){
 提交编辑的历史任务
 */
 function submitHistoryTask(){
-    var data={"type":($("#history-repair-detail header .aui-title").attr("data-type")/1+2),"task_id":$("#history-repair-detail header .aui-title").attr("data-value"),solution:$("$history-repair-detail textarea").val()};
+    var data={"type":($("#history-repair-detail header .aui-title").attr("data-type")/1),"task_id":$("#history-repair-detail header .aui-title").attr("data-value"),solution:$("#history-repair-detail textarea").val()};
     $.ajax({
         url:baseurl+"task/result",
         type:"post",
