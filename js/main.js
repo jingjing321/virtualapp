@@ -224,17 +224,34 @@ function imgChange(obj1, obj2) {
   var imgArr = [];
   //遍历获取到得图片文件
   for (var i = 0; i < fileList.length; i++) {
-      var imgUrl = window.URL.createObjectURL(file.files[i]);
-      imgArr.push(imgUrl);
-      var img = document.createElement("img");
-      img.setAttribute("src", imgArr[i]);
-      var imgAdd = document.createElement("div");
-      imgAdd.setAttribute("class", "z_addImg");
-      imgAdd.appendChild(img);
-      imgContainer.appendChild(imgAdd);
-  };
-  imgRemove();
-};
+      var form = $("form#headFile");
+      var options  = {
+          url:baseurl+'device/upld_annex',
+          type:'post',
+          async:false,
+          success:function(data){
+              if(data.code==1){
+                showToast(data.msg);
+              }
+              else{
+                var imgUrl = window.URL.createObjectURL(file.files[i]);
+                imgArr.push(imgUrl);
+                var img = document.createElement("img");
+                img.setAttribute("src", imgArr[i]);
+                var imgAdd = document.createElement("div");
+                imgAdd.setAttribute("class", "z_addImg");
+                imgAdd.appendChild(img);
+                imgContainer.appendChild(imgAdd);
+              }
+          },
+          error:function(error){
+              showToast("上传失败！请重试")
+          }
+      };
+      form.ajaxSubmit(options);
+  }
+  // imgRemove();
+}
 
 function imgRemove() {
   var imgList = document.getElementsByClassName("z_addImg");
@@ -248,12 +265,11 @@ function imgRemove() {
           mask.style.display = "block";
           cancel.onclick = function() {
               mask.style.display = "none";
-          };
+          }
           sure.onclick = function() {
               mask.style.display = "none";
               t.style.display = "none";
-          };
-
+          }
       }
-  };
-};
+  }
+}

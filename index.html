@@ -641,7 +641,9 @@
             <div class="aui-content aui-margin-b-15">
                 <div class="z_photo">
                     <div class="z_file">
-                        <input type="file" name="file" id="file" value="" accept="image/*" multiple onchange="imgChange('z_photo','z_file');" />
+                        <form ac tion="http://xnapi.sanlogic.cn/device/upld_annex" method="post">
+                            <input type="file" name="file" id="file" value="" accept="image/*" multiple onchange="imgChange('z_photo','z_file');" />
+                        </form>
                     </div>
                 </div>
                 <!--遮罩层-->
@@ -655,6 +657,80 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+<!-- 设备详情 -->
+    <div class="page nofooter" id="dev-detail" style="display: none;">
+        <header class="aui-bar aui-bar-nav aui-bar-light" style="">
+            <a class="aui-pull-left" onclick="pageBack()">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title ">设备详情</div>
+            <a class="aui-pull-right aui-btn">编辑</a>
+        </header>
+        <div class="content">
+            <div class="aui-content aui-margin-b-15">
+                <ul class="aui-list aui-list-in">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">设备名称</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">设备型号</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">生产厂家</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">功能描述</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="aui-list aui-list-in">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">出厂时间</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">入库时间</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">购买单价</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="aui-list aui-list-in">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">编号</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">分组</div>
+                            <div class="aui-list-item-right"></div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -1267,14 +1343,14 @@
                             </div>
                         </div>
                     </li>
-                    <li class="aui-list-item">
+                    <!-- <li class="aui-list-item">
                         <div class="aui-list-item-inner aui-list-item-arrow">
                             <div class="aui-list-item-title">职位</div>
                             <div class="aui-list-item-right">
                                 电气组一组组长
                             </div>
                         </div>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>

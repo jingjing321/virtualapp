@@ -1201,7 +1201,7 @@ function getdeviceByGroup(group_id,group_name){
                                         '<div class="aui-media-list-item-inner">'+
                                             '<div class="aui-list-item-inner">'+
                                                 '<div class="aui-list-item-text">'+
-                                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].DeviceName+'</div>'+
+                                                    '<div class="aui-list-item-title aui-font-size-14" onclick="turnDevDetail(\''+data.data[i].DeviceId+'\')">'+data.data[i].DeviceName+'</div>'+
                                                     '<div class="aui-list-item-right sit-position" onclick="openDeviceAction(\''+data.data[i].DeviceId+'\',\''+data.data[i].DeviceName+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
                                                 '</div>'+
                                                 '<div class="aui-list-item-text">'+
@@ -1396,16 +1396,49 @@ function turnEditDevice(id){
             ele.find("input[name=factory]").val(data.F_Factory);
             ele.find("input[name=description]").val(data.F_Description);
             ele.find("input[name=made_time]").val(data.F_CreatorTime.split("T")[0].replace(/-/g,"/"));
-            ele.find("input[name=time_storage]").val(data.F_StorageTime.split("T")[0].replace(/-/g,"/"));
+            ele.find("input[name=time_storage]").val(data.F_StorageTime?data.F_StorageTime.split("T")[0].replace(/-/g,"/"):"");
             ele.find("input[name=price]").val(data.F_Price);
             ele.find("input[name=encoding]").val(data.encoding);
             ele.find("#groupName").attr("onclick","turnDeviceDetailSitGroup('"+data.F_GroupId+"')");
+            ele.find("#groupName .aui-list-item-right").attr("data-id",data.F_GroupId);
             ele.find("#groupName .aui-list-item-right").html(data.F_GroupName);
             
             turnPage("#add-dev","devList"); 
         },
         error:function(error){
             showToast("获取设备详情失败！")
+        }
+    })
+}
+
+/*
+*查看设备详情
+*/
+function turnDevDetail(id){
+    $("#dev-detail header a.aui-btn").attr("onclick","turnEditDevice('"+id+"')");
+
+    var ele=$("#dev-detail .content")
+    ele.find(".aui-list-item-right").html("");
+    $.ajax({
+        url:baseurl+"device/getdevicedetail?device_id="+id,
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            var ele_right=ele.find(".aui-list-item-right")
+            ele_right.eq(0).html(data.F_Name);
+            ele_right.eq(1).html(data.F_Model);
+            ele_right.eq(2).html(data.F_Factory);
+            ele_right.eq(3).html(data.F_Description);
+            ele_right.eq(4).html(data.F_CreatorTime.split("T")[0].replace(/-/g,"/"));
+            ele_right.eq(5).html(data.F_StorageTime?data.F_StorageTime.split("T")[0].replace(/-/g,"/"):"");
+            ele_right.eq(6).html(data.F_Price);
+            ele_right.eq(7).html(data.encoding);
+            ele_right.eq(8).html(data.F_GroupName);
+
+            turnPage("#dev-detail","devList");
+        },
+        error:function(data){
+            showToast("获取设备详情失败！");
         }
     })
 }
@@ -2308,25 +2341,18 @@ turn 用户信息
 function turnUserInfo(){
     var ele=$("#my-info .content li");
     ele.eq(0).find("img")[0].src=sessionStorage.getItem("HeadIcon");
-    ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("RealName")).parent().attr("onclick","alterUserInfo(0,'"+sessionStorage.getItem("RealName")+"')");
-    ele.eq(2).find(".aui-list-item-right").html(sessionStorage.getItem("position")).parent().attr("onclick","alterUserInfo(1,'"+sessionStorage.getItem("position")+"')");
+    ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("RealName")).parent().attr("onclick","alterUserInfo('"+sessionStorage.getItem("RealName")+"')");
+    // ele.eq(2).find(".aui-list-item-right").html(sessionStorage.getItem("position")).parent().attr("onclick","alterUserInfo(1,'"+sessionStorage.getItem("position")+"')");
     turnPage("#my-info","mine");
 }
 
 /*
 修改 RealName
-num 0:RealName;1:position;
 text 原名称;
 */
-function alterUserInfo(num,text){
+function alterUserInfo(text){
     var dialog = new auiDialog();
-    var dialog_title=""
-    if(num){
-        dialog_title="修改职位";
-    }
-    else{
-        dialog_title="修改用户名";
-    }
+    var dialog_title="修改用户名";
     dialog.prompt({
         title:dialog_title,
         value:text,
@@ -2335,13 +2361,8 @@ function alterUserInfo(num,text){
     },function(ret){
         if(ret.text!=""){
             if(ret.buttonIndex == 2){
-                var data={"F_Id":sessionStorage.getItem("UserId")};
-                if(num){
-                    data["F_Position"]=ret.text;
-                }
-                else{
-                    data["F_RealName"]=ret.text
-                }
+                var data={"F_Id":sessionStorage.getItem("UserId"),"F_MobilePhone":sessionStorage.getItem("phone")};
+                data["F_RealName"]=ret.text
                 $.ajax({
                     url:baseurl+"user/edit",
                     data:data,
@@ -2351,14 +2372,9 @@ function alterUserInfo(num,text){
                         if(data.code==0){
                             showToast("修改成功！");
                             var ele=$("#my-info .content li");
-                            if(num){
-                                sessionStorage.setItem("position",ret.text);
-                                ele.eq(2).find(".aui-list-item-right").html(sessionStorage.getItem("position"));
-                            }
-                            else{
-                                sessionStorage.setItem("RealName",ret.text);
-                                ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("RealName"));
-                            }
+                            sessionStorage.setItem("RealName",ret.text);
+                            ele.eq(1).find(".aui-list-item-right").html(sessionStorage.getItem("RealName"));
+                            ele.eq(1).find(".aui-list-item-inner").attr("onclick","alterUserInfo('"+sessionStorage.getItem("RealName")+"')");
                         }
                         else{
                             showToast(data.msg);
@@ -2459,7 +2475,7 @@ function quit(){
 
 /*
 turn 任务记录
-num 2：维修任务；2：保养任务；
+num 2：维修任务；3：保养任务；
 */
 function turnHistoryTask(num){
     var ele=$("#history-task .content ul");
@@ -2528,6 +2544,7 @@ function getTaskDetail(taskId,num,devName){
                 $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(0).html((data.data[0].DeviceName?data.data[0].DeviceName:devName)).attr("data-value",data.data[0].DeviceId);
                 $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(1).html("负责人："+(sessionStorage.getItem('RealName')=='null'?sessionStorage.getItem('phone'):sessionStorage.getItem('RealName')));  
                 $("#history-repair-detail .content-block .white-back").eq(1).html(data.data[0].Solution);
+                $("#history-repair-detail .content-block p").css("display","");
                 turnPage("#history-repair-detail","history-task");
             }
             else{
