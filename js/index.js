@@ -1308,7 +1308,7 @@ function initPrincipal(ele){
                                             '<div class="aui-list-item-inner">'+
                                                 '<div class="aui-list-item-text">'+
                                                     '<div class="aui-list-item-title aui-font-size-14">'+data.data[i].UserGroupName+'</div> &nbsp;&nbsp;'+
-                                                    '<div class="aui-list-item-text">'+data.data[i].UserCount+'人'+'</div>'+
+                                                    // '<div class="aui-list-item-text">'+data.data[i].UserCount+'人'+'</div>'+
                                                 '</div>'+
                                                 '<div class="aui-list-item-right">'+
                                                     '<i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>'+
@@ -1326,7 +1326,8 @@ function initPrincipal(ele){
                                     if(data.data.length>0){
                                         user_ele.append('<div class="aui-collapse-content"></div>');
                                         for(var user_i=0;user_i<data.data.length;user_i++){
-                                            user_ele.find(".aui-collapse-content").append('<li class="aui-list-item">'+
+                                            if(data.data[user_i].UserType==3){
+                                                user_ele.find(".aui-collapse-content").append('<li class="aui-list-item">'+
                                                                                                 '<div class="aui-list-item-inner">'+
                                                                                                     '<div class="aui-list-item-title">'+(data.data[user_i].RealName?data.data[user_i].RealName:data.data[user_i].MobilePhone)+'</div>'+
                                                                                                     '<div class="aui-list-item-right">'+
@@ -1334,6 +1335,7 @@ function initPrincipal(ele){
                                                                                                     '</div>'+
                                                                                                 '</div>'+
                                                                                             '</li>');
+                                            }
                                         }
 
                                     }
@@ -1874,12 +1876,12 @@ function getUserList(groupId,ele){
                                             '<div class="aui-media-list-item-inner">'+
                                                 '<div class="aui-list-item-inner ">'+
                                                     '<div class="aui-list-item-text">'+
-                                                        '<div class="aui-list-item-title aui-font-size-14">'+(data.data[i].RealName?data.data[i].RealName:'未命名')+'</div>'+
-                                                        '<div class="aui-list-item-right sit-position" onclick="openUserActionSheet(\''+data.data[i].UserId+'\',\''+data.data[i].RealName+'\',\''+data.data[i].MobilePhone+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
+                                                        '<div class="aui-list-item-title aui-font-size-14">'+(data.data[i].RealName?data.data[i].RealName:'未命名')+' &nbsp; &nbsp; &nbsp; <span style="color:#757575">'+ data.data[i].MobilePhone+'</span></div>'+
+                                                        '<div class="aui-list-item-right" onclick="openUserActionSheet(\''+data.data[i].UserId+'\',\''+data.data[i].RealName+'\',\''+data.data[i].MobilePhone+'\')"><i class="fa fa-ellipsis-h"></i></div>'+
                                                     '</div>'+
-                                                    '<div class="aui-list-item-text">'+
-                                                        data.data[i].MobilePhone+
-                                                    '</div>'+
+                                                    // '<div class="aui-list-item-text">'+
+                                                    //     data.data[i].MobilePhone+
+                                                    // '</div>'+
                                                 '</div>'+
                                             '</div>'+
                                         '</li>');
@@ -1936,7 +1938,7 @@ editUser 编辑用户信息；
 id 用户id；
 */
 function editUser(id){
-    var userData={"F_Id":id,"F_RealName":$("#add-user input[name=F_Account]").val(),"F_MobilePhone":$("#add-user input[name=F_MobilePhone]").val()};
+    var userData={"F_Id":id,"F_RealName":$("#add-user input[name=F_Account]").val(),"F_MobilePhone":$("#add-user input[name=F_MobilePhone]").val(),"F_Position":$("#add-user input[name=F_Position]").val()};
     $.ajax({
         url:baseurl+'user/edit',
         type:"post",
@@ -1959,23 +1961,32 @@ deleteUser 删除用户
 id 用户id
 */
 function deleteUser(id){
-    $.ajax({
-        url:baseurl+"user/delete?user_id="+id,
-        type:"get",
-        dataType:"json",
-        success:function(data){
-            if(data.code==0){
-                showToast("用户删除成功！");
-                userList($("#user_list header .aui-title").attr("data-id"),$("#user_list header .aui-title").html());
-            }
-            else{
-                showToast(data.msg);
-            }
-        },
-        error:function(error){
-            showToast("用户删除失败！请重试");
+    dialog.alert({
+        title:"删除用户",
+        msg:'确认删除该用户?',
+        buttons:['取消','确定']
+    },function(ret){
+        if(ret.buttonIndex==2){
+            $.ajax({
+                url:baseurl+"user/delete?user_id="+id,
+                type:"get",
+                dataType:"json",
+                success:function(data){
+                    if(data.code==0){
+                        showToast("用户删除成功！");
+                        userList($("#user_list header .aui-title").attr("data-id"),$("#user_list header .aui-title").html());
+                    }
+                    else{
+                        showToast(data.msg);
+                    }
+                },
+                error:function(error){
+                    showToast("用户删除失败！请重试");
+                }
+            })
         }
     })
+    
 }
 
 /*
@@ -2004,8 +2015,10 @@ function getUserTask(num,ele){
                         }
                     }
                     else{
+                        var taskNum=0;
                         for(var i=0;i<data.data.pgList.length;i++){
                             if(data.data.pgList[i].TaskState==0){
+                                taskNum++;
                                 ele.append('<li class="aui-list-item aui-list-item-middle" onclick="turnTaskDetail(\''+data.data.pgList[i].TaskId+'\','+num+',\''+data.data.pgList[i].DeviceName+'\',\''+data.data.pgList[i].UserName+'\')">'+
                                             '<div class="aui-media-list-item-inner">'+
                                                 '<div class="aui-list-item-inner aui-list-item-arrow">'+
@@ -2020,6 +2033,9 @@ function getUserTask(num,ele){
                                             '</div>'+
                                         '</li>');
                             }
+                        }
+                        if(taskNum==0){
+                            ele.html("<div class='noContent'>没有任务</div>");
                         }
                     }
                     // else{
@@ -2053,6 +2069,39 @@ function getUserTask(num,ele){
             showToast("获取任务列表失败！");
         }
     })
+}
+
+/*
+获取管理员任务列表
+num 任务类型 点检:1 维修：2 保养：3 默认：0
+ele 父元素
+*/
+function getTastListAdmin(num,ele){
+    ele.html("");
+    $.ajax({
+        url:baseurl+"task/gettaskbycompany?comp_id="+sessionStorage.getItem("CompanyId")+"&type="+num+"idx=1&size=500",
+        type:"get",
+        dataType:"json",
+        success:function(data){
+            console.log(data);
+            if(data.code==0){
+                if(data.data.pgList.length>0){
+                    if(num==1){
+                        
+                    }
+                    else{
+                        for(var i=0;i<data.data.pgList.length;i++){
+                            
+                        }
+                    }
+                }
+            }
+        },
+        error:function(error){
+            
+        }
+    })
+
 }
 
 /*
@@ -2495,12 +2544,12 @@ function turnHistoryTask(num){
             if(data.code==0){
                 if(data.data.pgList.length>0){
                     for(var i=0;i<data.data.pgList.length;i++){
-                        if(data.data.pgList[i].TaskState!=0){
+                        // if(data.data.pgList[i].TaskState!=0){
                             ele.append('<li class="aui-list-item aui-list-item-middle" onclick="getTaskDetail(\''+data.data.pgList[i].TaskId+'\','+num+',\''+data.data.pgList[i].DeviceName+'\')">'+
                                         '<div class="aui-media-list-item-inner">'+
                                             '<div class="aui-list-item-inner aui-list-item-arrow">'+
                                                 '<div class="aui-list-item-text">'+
-                                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data.pgList[i].DeviceName+'</div>'+
+                                                    '<div class="aui-list-item-title aui-font-size-14">'+data.data.pgList[i].DeviceName+(data.data.pgList[i].TaskState?'<span style="color: #03a9f4;">（已完成）</span>':'')+'</div>'+
                                                     '<div class="aui-list-item-right sit-position">查看详情</div>'+
                                                 '</div>'+
                                                 '<div class="aui-list-item-text">'+
@@ -2509,7 +2558,7 @@ function turnHistoryTask(num){
                                             '</div>'+
                                         '</div>'+
                                     '</li>');
-                        }
+                        // }
                     }
                 }
                 else{
