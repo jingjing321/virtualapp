@@ -141,7 +141,12 @@ var tab = new auiTab({
         }
         else if(ret.index==2){
           var ele=$("#task .tab").eq(0).find(".aui-content");
-          getUserTask(1,ele);
+          if(sessionStorage.getItem("UserType")==1||sessionStorage.getItem("UserType")==2){
+            getTastListAdmin(1,ele)
+          }
+          else{
+            getUserTask(1,ele);
+          }
         }
         else if(ret.index==3){
           initUser();
@@ -153,12 +158,12 @@ var tab2=new auiTab({
     },function(ret){
       $("#index .tabs").find(".tab").css("display","none");
       $("#index .tabs").find("#indexTab"+ret.index).css("display","");
-      if(ret.index==1){
-        getPieData()
-      }
-      else{
-        generateBar();
-      }
+      // if(ret.index==1){
+      //   getPieData()
+      // }
+      // else{
+      //   generateBar();
+      // }
 })
 
 var tab3=new auiTab({
@@ -175,7 +180,12 @@ var tab3=new auiTab({
       else{
         var ele=$("#task .tabs .tab").eq(2).find("ul");
       }
-      getUserTask(ret.index,ele);
+      if(sessionStorage.getItem("UserType")==1||sessionStorage.getItem("UserType")==2){
+        getTastListAdmin(ret.index,ele)
+      }
+      else{
+        getUserTask(ret.index,ele);
+      }
 })
 
 var tab_task2=new auiTab({
