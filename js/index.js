@@ -3078,15 +3078,15 @@ $("#fileUploadContent").initUpload({
     "beforeUpload":beforeUploadFun,//在上传前执行的函数
     "isHiddenUploadBt":true,//是否隐藏上传按钮
     "isHiddenCleanBt":true,//是否隐藏清除按钮  
-    //"onUpload":onUploadFun，//在上传后执行的函数
-    autoCommit:true,//文件是否自动上传
+    "onUpload":onUploadFun,//在上传后执行的函数
+    // autoCommit:true,//文件是否自动上传
     "fileType":['png','jpg','docx','doc']//文件类型限制，默认不限制，注意写的是文件后缀
 });
 function beforeUploadFun(opt){
     opt.otherData =[{"name":"name","value":"zxm"}];
 }
 function onUploadFun(opt,data){
-    alert(data);
+    console.log(data);
     uploadTools.uploadError(opt);//显示上传错误
     uploadTools.uploadSuccess(opt);//显示上传成功
 }

@@ -136,11 +136,11 @@ var uploadTools = {
         modelStr+=showTypeStr;
         modelStr+=" </div>";
         modelStr+="<div class='status'>";
-        modelStr+="<i class='iconfont icon-shanchu'></i>";
+        modelStr+="<i class='fa fa-close'></i>";
         modelStr+="</div>";
-        modelStr+=" <div class='fileName'>";
-        modelStr+=fileName;
-        modelStr+="</div>";
+        // modelStr+=" <div class='fileName'>";
+        // modelStr+=fileName;
+        // modelStr+="</div>";
         modelStr+=" </div>";
         return modelStr;
     },
@@ -336,7 +336,7 @@ var uploadTools = {
     "uploadSuccess":function(opt){
         var uploadId = opt.uploadId;
         $("#"+uploadId+" .box .fileItem .status>i").off();
-        $("#"+uploadId+" .box .fileItem .status>i").addClass("iconfont icon-gou");
+        // $("#"+uploadId+" .box .fileItem .status>i").addClass("iconfont icon-gou");
         var progressBar = $("#"+uploadId+" .subberProgress .progress>div");
         progressBar.css("width","0%");
         progressBar.html("0%");
@@ -363,7 +363,7 @@ var uploadTools = {
         var uploadUrl = opt.uploadUrl;
         var fileList = uploadFileList.getFileList(opt);
 
-        var formData = new FormData();
+        
         var fileNumber = uploadTools.getFileNumber(opt);
         if(fileNumber<=0){
             alert("没有文件，不支持上传");
@@ -371,46 +371,51 @@ var uploadTools = {
         }
 
         for(var i=0;i<fileList.length;i++){
+            var formData = new FormData();
             if(fileList[i]!=null){
                 formData.append("file",fileList[i]);
-            }
-        }
-        if(opt.otherData!=null&&opt.otherData!=""){
-            for(var j=0;j<opt.otherData.length;j++){
-                formData.append(opt.otherData[j].name,opt.otherData[j].value);
-            }
-        }
-
-        formData.append("filelSavePath",opt.filelSavePath);
-        if(uploadUrl!="#"&&uploadUrl!=""){
-            uploadTools.disableFileUpload(opt);//禁用文件上传
-            uploadTools.disableCleanFile(opt);//禁用清除文件
-
-            $.ajax({
-                type:"post",
-                url:uploadUrl,
-                data:formData,
-                processData : false,
-                contentType : false,
-                success:function(data){
-                		uploadTools.initWithCleanFile(opt);
-                    setTimeout(function(){opt.onUpload(opt,data)},500);
-                    if(opt.isAutoClean){
-                        setTimeout(function () {uploadEvent.cleanFileEvent(opt);},2000) ;
+                if(opt.otherData!=null&&opt.otherData!=""){
+                    for(var j=0;j<opt.otherData.length;j++){
+                        formData.append(opt.otherData[j].name,opt.otherData[j].value);
                     }
-                },
-                error:function(e){
-
                 }
-            });
 
-        }else{
-            uploadTools.disableFileUpload(opt);//禁用文件上传
-            uploadTools.disableCleanFile(opt);//禁用清除文件
+                formData.append("filelSavePath",opt.filelSavePath);
+                if(uploadUrl!="#"&&uploadUrl!=""){
+                    uploadTools.disableFileUpload(opt);//禁用文件上传
+                    uploadTools.disableCleanFile(opt);//禁用清除文件
+                    setTimeout(function () {
+                        $.ajax({
+                            type:"post",
+                            async:false,
+                            url:uploadUrl,
+                            data:formData,
+                            processData : false,
+                            contentType : false,
+                            success:function(data){
+                                uploadTools.initWithCleanFile(opt);
+                                opt.onUpload(opt,data);
+                                if(opt.isAutoClean){
+                                    setTimeout(function () {uploadEvent.cleanFileEvent(opt);},2000) ;
+                                }
+                            },
+                            error:function(e){
+
+                            }
+                        });
+                    },10)
+                    
+
+                }else{
+                    uploadTools.disableFileUpload(opt);//禁用文件上传
+                    uploadTools.disableCleanFile(opt);//禁用清除文件
+                }
+                if(opt.uploadUrl=="#"||opt.uploadUrl=="") {
+                    uploadTools.getFileUploadPregressMsg(opt);
+                }
+            }
         }
-        if(opt.uploadUrl=="#"||opt.uploadUrl=="") {
-            uploadTools.getFileUploadPregressMsg(opt);
-        }
+        
 
     },
     /**

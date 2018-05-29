@@ -54,12 +54,14 @@
 .fileUploadContent .fileItem .status{
     font-size: 15px;
     text-align: center;
+    position: relative;
+    top: -104px;
 }
 .fileUploadContent .fileItem .status i{
     display: block;
     float: left;
     padding: 2px 5px;
-    color: red;
+    color: #03a9f4;
     margin-left: 3px;
     border-radius: 5px;;
     font-size: 15px;
