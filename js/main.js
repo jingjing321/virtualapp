@@ -171,8 +171,12 @@ var tab3=new auiTab({
     },function(ret){
       $("#task .tabs").find(".tab").css("display","none");
       $("#task .tabs").find("#taskTab"+ret.index).css("display","");
+      $("#task header .aui-pull-right").css("display","none")
       if(ret.index==1){
         var ele=$("#task .tabs .tab").eq(0).find(".aui-content");
+        if(sessionStorage.getItem("UserType")==3){
+          $("#task header .aui-pull-right").css("display","")
+        }
       }
       else if(ret.index==2){
         var ele=$("#task .tabs .tab").eq(1).find("ul");

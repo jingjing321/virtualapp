@@ -2171,6 +2171,9 @@ function turnTaskDetail(taskid,num,name,user){
     $("#repair-detail .content .white-back").eq(0).find("span").eq(0).html(name);
     $("#repair-detail .content .white-back").eq(0).find("span").eq(1).html("负责人："+(user=='null'?sessionStorage.getItem("phone"):user));
     $("#repair-detail .content textarea").val("");
+    $("repair-detail #fileUploadContent").html("");
+    $("repair-detail #fileUploadContent").attr("data-img","");
+    initFileUpload();
     turnPage("#repair-detail","task");
 }
 
@@ -2202,7 +2205,7 @@ function turnAddTask(num){
     }
     else{
         $("#add-task #sitRepeat").css("display","");
-        $("#add-task .content-block li").eq(0).attr("onclick","turnSelectDevice(1)")
+        $("#add-task .content-block li").eq(0).attr("onclick","turnSelectDevice()")
     }
     turnPage("#add-task","task");
     $("#add-task header .aui-pull-right").attr("onclick","addTask("+num+")");
@@ -2296,7 +2299,7 @@ function selectDevice(){
         for(var i=0;i<data.length;i++){
             deviceId+=data[i].value+",";
         }
-        deviceId.substring(0,deviceId.length);
+        deviceId = deviceId.substring(0,deviceId.length-1);
     }
     if(deviceId.length>0){
         $("#add-task .content-block li").eq(0).find(".aui-list-item-right").html((data.length>1?("已选择"+data.length+"台设备"):data.attr("data-value"))).attr("data-value",deviceId);
@@ -2458,7 +2461,7 @@ function submitResult(num,taskid){
     else{
         data["tast_id"]=taskid;
         data["solution"]=$("#repair-detail .content textarea").val();
-        data['annex']='';
+        data['annex']=$("#repair-detail #fileUploadContent").attr("data-img");
         $.ajax({
             url:baseurl+"task/result",
             type:"post",
@@ -2697,6 +2700,12 @@ function getTaskDetail(taskId,num,devName){
                 $("#history-repair-detail .content-block .white-back").eq(0).find("span").eq(1).html("负责人："+(sessionStorage.getItem('RealName')=='null'?sessionStorage.getItem('phone'):sessionStorage.getItem('RealName')));  
                 $("#history-repair-detail .content-block .white-back").eq(1).html(data.data[0].Solution);
                 $("#history-repair-detail .content-block p").css("display","");
+                $("#history-repair-detail .content-block .aui-row-padded").html("")
+                if(data.data[0].annex!==undefined&&data.data[0].annex!=""){
+                    $("#history-repair-detail .content-block .aui-row-padded").append('<div class="aui-col-xs-3">'+
+                                                                                        '<img src="images/demo1.png"/>'+
+                                                                                      '</div>')
+                }
                 turnPage("#history-repair-detail","history-task");
             }
             else{
@@ -3070,29 +3079,35 @@ function checkUser(id){
     })
 }
 
-$("#fileUploadContent").initUpload({
-    "uploadUrl":baseurl+"task/upld_annex",//上传文件信息地址
-    //"size":350,//文件大小限制，单位kb,默认不限制
-    //"maxFileNumber":3,//文件个数限制，为整数
-    //"filelSavePath":"",//文件上传地址，后台设置的根目录
-    "beforeUpload":beforeUploadFun,//在上传前执行的函数
-    "isHiddenUploadBt":true,//是否隐藏上传按钮
-    "isHiddenCleanBt":true,//是否隐藏清除按钮  
-    "onUpload":onUploadFun,//在上传后执行的函数
-    // autoCommit:true,//文件是否自动上传
-    "fileType":['png','jpg','docx','doc']//文件类型限制，默认不限制，注意写的是文件后缀
-});
+function initFileUpload(){
+    $("#fileUploadContent").initUpload({
+        "uploadUrl":baseurl+"task/upld_annex",//上传文件信息地址
+        //"size":350,//文件大小限制，单位kb,默认不限制
+        //"maxFileNumber":3,//文件个数限制，为整数
+        //"filelSavePath":"",//文件上传地址，后台设置的根目录
+        "beforeUpload":beforeUploadFun,//在上传前执行的函数
+        "isHiddenUploadBt":true,//是否隐藏上传按钮
+        "isHiddenCleanBt":true,//是否隐藏清除按钮  
+        "onUpload":onUploadFun,//在上传后执行的函数
+        autoCommit:true,//文件是否自动上传
+        "fileType":['png','jpg','docx','doc']//文件类型限制，默认不限制，注意写的是文件后缀
+    });
+}
+
 function beforeUploadFun(opt){
     opt.otherData =[{"name":"name","value":"zxm"}];
 }
+
 function onUploadFun(opt,data){
     console.log(data);
+    var url=$("#repair-detail #fileUploadContent").attr("data-img");
+    if(url==undefined||url==""){
+        url=data.data.AnnexUrl;
+    }
+    else{
+        url=url+','+data.data.AnnexUrl;
+    }
+    $("#repair-detail #fileUploadContent").attr("data-img",url)
     uploadTools.uploadError(opt);//显示上传错误
     uploadTools.uploadSuccess(opt);//显示上传成功
-}
-
-
-function testUpload(){
-    var opt = uploadTools.getOpt("fileUploadContent");
-    uploadEvent.uploadFileEvent(opt);
 }
